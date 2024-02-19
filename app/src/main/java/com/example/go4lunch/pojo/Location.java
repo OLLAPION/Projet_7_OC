@@ -1,5 +1,5 @@
 
-package com.example;
+package com.example.go4lunch.pojo;
 
 import javax.annotation.Generated;
 import com.google.gson.annotations.Expose;

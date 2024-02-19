@@ -1,5 +1,5 @@
 
-package com.example;
+package com.example.go4lunch.pojo;
 
 import java.util.List;
 import javax.annotation.Generated;
