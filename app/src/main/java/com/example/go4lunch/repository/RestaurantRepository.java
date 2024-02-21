@@ -1,7 +1,8 @@
-package com.example.go4lunch.services;
+package com.example.go4lunch.repository;
 
 import com.example.go4lunch.pojo.RestaurantsAnswer;
 import com.example.go4lunch.pojo.Result;
+import com.example.go4lunch.services.RetrofitMapsApi;
 
 import retrofit2.Call;
 

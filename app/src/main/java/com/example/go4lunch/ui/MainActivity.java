@@ -13,8 +13,7 @@ import android.widget.Button;
 import com.example.go4lunch.R;
 import com.example.go4lunch.pojo.RestaurantsAnswer;
 import com.example.go4lunch.pojo.Result;
-import com.example.go4lunch.services.RestaurantRepository;
-import com.example.go4lunch.services.RetrofitMapsApi;
+import com.example.go4lunch.repository.RestaurantRepository;
 import com.example.go4lunch.services.RetrofitService;
 
 import retrofit2.Call;
