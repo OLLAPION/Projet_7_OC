@@ -9,8 +9,7 @@ import java.util.List;
 public class Restaurant {
 
     /** restaurant Identifier */
-    // int ou Interger ???
-    private int id;
+    private String id;
 
     /** restaurant name */
     private String name;
@@ -35,10 +34,10 @@ public class Restaurant {
 
 
 
-    public int getId() {
+    public String getId() {
         return id;
     }
-    public void setId(int id) {
+    public void setId(String id) {
         this.id = id;
     }
 
@@ -95,7 +94,7 @@ public class Restaurant {
     /**
      * Constructor
      */
-    public Restaurant(int id, String name, String address, String photo, String openingHours, String stars, String website, String typeOfRestaurant) {
+    public Restaurant(String id, String name, String address, String photo, String openingHours, String stars, String website, String typeOfRestaurant) {
         this.id = id;
         this.name = name;
         this.address = address;
