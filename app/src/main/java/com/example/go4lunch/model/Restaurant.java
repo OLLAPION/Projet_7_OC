@@ -1,12 +1,13 @@
 package com.example.go4lunch.model;
 
+import java.io.Serializable;
 import java.util.Date;
 import java.util.List;
 
 /**
  * Model class representing a restaurant item.
  */
-public class Restaurant {
+public class Restaurant implements Serializable {
 
     /** Unique identifier of the restaurant */
     private String id;

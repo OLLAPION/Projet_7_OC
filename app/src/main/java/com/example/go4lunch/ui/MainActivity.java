@@ -79,7 +79,7 @@ public class MainActivity extends AppCompatActivity {
 
 
                 // j'appelle ma fonction qui a ma petite requete pour recolter la liste des resto
-                // getRestaurants();
+                 //getRestaurants();
                 // OK
 
                 // je test la création d'un lunch
@@ -97,7 +97,7 @@ public class MainActivity extends AppCompatActivity {
                 // OK
 
                 // Va chercher l'id du user connecté
-                //testGetWormate();
+                testGetWormate();
                 // OK
 
                 // après une deconnexion le testGetWormate() renvoi aucun User connecté !!!

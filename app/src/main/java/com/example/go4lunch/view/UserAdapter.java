@@ -1,5 +1,6 @@
 package com.example.go4lunch.view;
 // UserAdapter.java
+import android.annotation.SuppressLint;
 import android.content.Context;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -12,15 +13,17 @@ import androidx.recyclerview.widget.RecyclerView;
 import com.example.go4lunch.R;
 import com.example.go4lunch.model.User;
 
+import java.util.ArrayList;
 import java.util.List;
 
 public class UserAdapter extends RecyclerView.Adapter<UserAdapter.UserViewHolder> {
 
     private List<User> userList;
 
-    public UserAdapter(List<User> userList) {
-        this.userList = userList;
+    public UserAdapter() {
+        this.userList = new ArrayList<>();
     }
+
 
     @NonNull
     @Override
@@ -39,6 +42,13 @@ public class UserAdapter extends RecyclerView.Adapter<UserAdapter.UserViewHolder
     @Override
     public int getItemCount() {
         return userList.size();
+    }
+
+    // utiliser DiffUtil pour gagner en perfomance et éviter de regenerer l'affichage d'element qui n'ont pas changé
+    @SuppressLint("NotifyDataSetChanged")
+    public void updateList(List<User> list){
+        this.userList = list;
+        notifyDataSetChanged();
     }
 
     static class UserViewHolder extends RecyclerView.ViewHolder {
