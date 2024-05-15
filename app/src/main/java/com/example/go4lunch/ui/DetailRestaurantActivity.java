@@ -42,12 +42,55 @@ public class DetailRestaurantActivity extends AppCompatActivity {
         configureComponante();
         configureRecyclerView();
         configureLike();
-        // configure du choix du restaurant
+        configureRestaurantChoice();
+        configureFab();
 
+    }
 
+    private void configureFab() {
         FloatingActionButton fab = findViewById(R.id.fabWorkmateWantToEat);
         fab.setOnClickListener(view -> {
+            checkIfWorkmateChoseThisRestaurantForLunch();
+        });
+    }
 
+    // modifier le nom de la methode car ce n'est pas un check !!!
+    private void checkIfWorkmateChoseThisRestaurantForLunch() {
+
+        User currentUser_2 = new User();
+        currentUser_2.setId("loZeOfSdeMYU7WF8ilcWCMLsdLJ2");
+
+        LunchRepository lunchRepository = LunchRepository.getInstance(MainApplication.getApplication());
+
+        LiveData<Boolean> isChosenLiveData = lunchRepository.checkIfCurrentWorkmateChoseThisRestaurantForLunch(restaurant, currentUser_2.getId());
+
+        isChosenLiveData.observe(this, isChosen -> {
+            if (isChosen) {
+                Log.d("WKM_2024", "delete Lunch > restaurant : " + restaurant.getId() + " User : " + currentUser_2.getId());
+                lunchRepository.deleteLunch(restaurant, currentUser_2.getId());
+            } else {
+                Log.d("WKM_2024", "create Lunch > restaurant : " + restaurant.getId() + " User : " + currentUser_2.getId());
+                lunchRepository.createLunch(restaurant, currentUser_2);
+            }
+        });
+    }
+
+    private void configureRestaurantChoice() {
+
+        User currentUser_1 = new User();
+        currentUser_1.setId("loZeOfSdeMYU7WF8ilcWCMLsdLJ2");
+
+        LunchRepository lunchRepository = LunchRepository.getInstance(MainApplication.getApplication());
+
+        LiveData<Boolean> isChosenLiveData = lunchRepository.checkIfCurrentWorkmateChoseThisRestaurantForLunch(restaurant, currentUser_1.getId());
+
+        isChosenLiveData.observe(this, isChosen -> {
+            FloatingActionButton fab = findViewById(R.id.fabWorkmateWantToEat);
+            if (isChosen) {
+                fab.setImageResource(R.drawable.ic_chosen);
+            } else {
+                fab.setImageResource(R.drawable.ic_not_chosen);
+            }
         });
     }
 

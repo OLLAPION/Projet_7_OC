@@ -17,6 +17,8 @@ import com.google.firebase.firestore.Query;
 import com.google.firebase.firestore.QueryDocumentSnapshot;
 import com.google.firebase.firestore.QuerySnapshot;
 
+import java.time.Instant;
+import java.time.temporal.ChronoUnit;
 import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Date;
@@ -39,8 +41,8 @@ public class LunchRepository {
         return sLunchRepository;
     }
 
-    private static Date toDay() {
-        return Calendar.getInstance().getTime();
+    private static Long toDay() {
+        return Instant.now().truncatedTo(ChronoUnit.DAYS).toEpochMilli();
     }
 
     public void createLunch(Restaurant restaurantChosen, User workmate) {
@@ -86,7 +88,7 @@ public class LunchRepository {
             Log.e("LR_getBaseQuery_1", "Error: Invalid parameters in getBaseQuery");
             return null;
         }
-
+        Log.d("LR_GetBaseQuery_1", "getBaseQuery1 > restaurant : " + restaurant.getId() + " User : " + userId + " Day : " + toDay());
         return firestore.collection("Lunch")
                 .whereEqualTo("restaurant.id", restaurant.getId())
                 .whereEqualTo("dayDate", toDay())

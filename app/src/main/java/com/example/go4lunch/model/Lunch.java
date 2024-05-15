@@ -2,6 +2,7 @@ package com.example.go4lunch.model;
 
 import com.google.firebase.firestore.ServerTimestamp;
 
+import java.time.Instant;
 import java.util.Date;
 
 /**
@@ -16,7 +17,7 @@ public class Lunch {
     private Restaurant restaurant;
 
     /** Date when the meal was taken */
-    private Date dayDate;
+    private Long dayDate;
 
     /**
      * Get the user who took the meal.
@@ -54,8 +55,7 @@ public class Lunch {
      * Get the date when the meal was taken.
      * @return The date when the meal was taken.
      */
-    @ServerTimestamp
-    public Date getDayDate() {
+    public Long getDayDate() {
         return dayDate;
     }
 
@@ -63,7 +63,7 @@ public class Lunch {
      * Set the date when the meal was taken.
      * @param dayDate The date when the meal was taken.
      */
-    public void setDayDate(Date dayDate) {
+    public void setDayDate(Long dayDate) {
         this.dayDate = dayDate;
     }
 

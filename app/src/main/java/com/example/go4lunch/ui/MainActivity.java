@@ -5,6 +5,7 @@ import static com.example.go4lunch.BuildConfig.google_maps_api;
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.core.app.ActivityCompat;
+import androidx.lifecycle.LiveData;
 import androidx.lifecycle.Observer;
 import androidx.lifecycle.ViewModelProvider;
 
@@ -97,7 +98,7 @@ public class MainActivity extends AppCompatActivity {
                 // OK
 
                 // Va chercher l'id du user connecté
-                testGetWormate();
+                //testGetWormate();
                 // OK
 
                 // après une deconnexion le testGetWormate() renvoi aucun User connecté !!!
@@ -121,6 +122,9 @@ public class MainActivity extends AppCompatActivity {
                 // notification désactivé
                 //notificationOff();
                 //OK
+
+                // test checkIfWorkmateChooseRestaurant
+                testCheckIfWorkmateChooseRestaurant();
             }
         });
 
@@ -150,6 +154,32 @@ public class MainActivity extends AppCompatActivity {
             }
         });
 
+    }
+
+    private void testCheckIfWorkmateChooseRestaurant() {
+        Restaurant restaurant = new Restaurant("R1",
+                "Chez Ollapion",
+                "1 rue de la jeunesse",
+                "![](C:/Users/Ollapion/AppData/Local/Temp/kross.jpg)",
+                "10h",
+                "3 étoiles",
+                "www.ollapion.com",
+                "Restaurant_Café_Jeu");
+
+        User currentUser_2 = new User();
+        currentUser_2.setId("loZeOfSdeMYU7WF8ilcWCMLsdLJ2");
+
+        LunchRepository lunchRepository = LunchRepository.getInstance(MainApplication.getApplication());
+
+        LiveData<Boolean> isChosenLiveData = lunchRepository.checkIfCurrentWorkmateChoseThisRestaurantForLunch(restaurant, currentUser_2.getId());
+
+        isChosenLiveData.observe(this, isChosen -> {
+            if (isChosen) {
+                Log.d("Main_2024", "delete Lunch > restaurant : " + restaurant.getId() + " User : " + currentUser_2.getId());
+            } else {
+                Log.d("Main_2024", "create Lunch > restaurant : " + restaurant.getId() + " User : " + currentUser_2.getId());
+            }
+        });
     }
 
     private void detailRestaurant() {
