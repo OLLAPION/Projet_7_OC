@@ -2,6 +2,7 @@ package com.example.go4lunch.view;
 // UserAdapter.java
 import android.annotation.SuppressLint;
 import android.content.Context;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -49,6 +50,7 @@ public class UserAdapter extends RecyclerView.Adapter<UserAdapter.UserViewHolder
     public void updateList(List<User> list){
         this.userList = list;
         notifyDataSetChanged();
+        Log.d("AdapterDebug", "User list updated. New size: " + userList.size());
     }
 
     static class UserViewHolder extends RecyclerView.ViewHolder {

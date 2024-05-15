@@ -51,14 +51,18 @@ public class DetailRestaurantActivity extends AppCompatActivity {
         FloatingActionButton fab = findViewById(R.id.fabWorkmateWantToEat);
         fab.setOnClickListener(view -> {
             checkIfWorkmateChoseThisRestaurantForLunch();
+            //configureRestaurantChoice();
         });
     }
+
 
     // modifier le nom de la methode car ce n'est pas un check !!!
     private void checkIfWorkmateChoseThisRestaurantForLunch() {
 
         User currentUser_2 = new User();
         currentUser_2.setId("D7rZ2O9j8vVHuLwxHrgnrLTT3mv1");
+        currentUser_2.setName("Name_2");
+        currentUser_2.setAvatar("Avatar_2");
 
         LunchRepository lunchRepository = LunchRepository.getInstance(MainApplication.getApplication());
 
@@ -72,6 +76,7 @@ public class DetailRestaurantActivity extends AppCompatActivity {
                 Log.d("WKM_2024", "create Lunch > restaurant : " + restaurant.getId() + " User : " + currentUser_2.getId());
                 lunchRepository.createLunch(restaurant, currentUser_2);
             }
+            configureRecyclerView();
         });
     }
 
@@ -79,9 +84,10 @@ public class DetailRestaurantActivity extends AppCompatActivity {
 
         User currentUser_1 = new User();
         currentUser_1.setId("D7rZ2O9j8vVHuLwxHrgnrLTT3mv1");
+        currentUser_1.setName("Name_2");
+        currentUser_1.setAvatar("Avatar_2");
 
         LunchRepository lunchRepository = LunchRepository.getInstance(MainApplication.getApplication());
-
         LiveData<Boolean> isChosenLiveData = lunchRepository.checkIfCurrentWorkmateChoseThisRestaurantForLunch(restaurant, currentUser_1.getId());
 
         isChosenLiveData.observe(this, isChosen -> {
@@ -92,6 +98,26 @@ public class DetailRestaurantActivity extends AppCompatActivity {
                 fab.setImageResource(R.drawable.ic_not_chosen);
             }
         });
+
+        /*
+        findViewById(R.id.fabWorkmateWantToEat).setOnClickListener(view -> {
+            LiveData<Boolean> isChosenLiveData2 = lunchRepository.checkIfCurrentWorkmateChoseThisRestaurantForLunch(restaurant, currentUser_1.getId());
+
+            isChosenLiveData2.observe(this, isChosen -> {
+                FloatingActionButton fab = findViewById(R.id.fabWorkmateWantToEat);
+                if (isChosen) {
+                    fab.setImageResource(R.drawable.ic_not_chosen);
+                    Log.d("WKM_2024", "delete Lunch > restaurant : " + restaurant.getId() + " User : " + currentUser_1.getId());
+                    lunchRepository.deleteLunch(restaurant, currentUser_1.getId());
+                } else {
+                    fab.setImageResource(R.drawable.ic_chosen);
+                    Log.d("WKM_2024", "create Lunch > restaurant : " + restaurant.getId() + " User : " + currentUser_1.getId());
+                    lunchRepository.createLunch(restaurant, currentUser_1);
+                }
+            });
+        });
+
+         */
     }
 
     private void configureLike() {
@@ -132,22 +158,23 @@ public class DetailRestaurantActivity extends AppCompatActivity {
         recyclerView.setLayoutManager(new LinearLayoutManager(this));
         recyclerView.setAdapter(adapter);
 
-        // utiliser le viewModel du LunchRepository
+        // Utiliser le viewModel du LunchRepository
         LunchRepository lunchRepository = LunchRepository.getInstance(MainApplication.getApplication());
         LiveData<ArrayList<User>> workmateLiveData = lunchRepository.getWorkmatesThatAlreadyChooseRestaurantForTodayLunchForThatRestaurant(restaurant);
         workmateLiveData.observe(this, workmates -> {
             if (workmates != null) {
+                Log.d("RecyclerViewDebug_1", "Number of users retrieved: " + workmates.size());
                 for (User workmate : workmates) {
-                    Log.d("getAllWorkmates", "Workmate: " + workmate.getName());
+                    Log.d("RecyclerViewDebug_2", "Workmate name: " + workmate.getName());
                 }
                 adapter.updateList(workmates);
             } else {
-                Log.d("getAllWorkmates", "No workmates found.");
+                Log.d("RecyclerViewDebug_3", "No workmates found.");
                 adapter.updateList(new ArrayList<>());
             }
         });
-
     }
+
 
     private void configureComponante(){
 
