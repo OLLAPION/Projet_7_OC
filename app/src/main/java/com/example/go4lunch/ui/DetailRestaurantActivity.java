@@ -58,7 +58,7 @@ public class DetailRestaurantActivity extends AppCompatActivity {
     private void checkIfWorkmateChoseThisRestaurantForLunch() {
 
         User currentUser_2 = new User();
-        currentUser_2.setId("loZeOfSdeMYU7WF8ilcWCMLsdLJ2");
+        currentUser_2.setId("D7rZ2O9j8vVHuLwxHrgnrLTT3mv1");
 
         LunchRepository lunchRepository = LunchRepository.getInstance(MainApplication.getApplication());
 
@@ -78,7 +78,7 @@ public class DetailRestaurantActivity extends AppCompatActivity {
     private void configureRestaurantChoice() {
 
         User currentUser_1 = new User();
-        currentUser_1.setId("loZeOfSdeMYU7WF8ilcWCMLsdLJ2");
+        currentUser_1.setId("D7rZ2O9j8vVHuLwxHrgnrLTT3mv1");
 
         LunchRepository lunchRepository = LunchRepository.getInstance(MainApplication.getApplication());
 

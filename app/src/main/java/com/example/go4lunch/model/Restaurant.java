@@ -175,4 +175,8 @@ public class Restaurant implements Serializable {
         this.typeOfRestaurant = typeOfRestaurant;
     }
 
+    public Restaurant (){
+
+    }
+
 }

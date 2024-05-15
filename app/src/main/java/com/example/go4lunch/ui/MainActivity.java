@@ -93,7 +93,7 @@ public class MainActivity extends AppCompatActivity {
 
                 // Création d'un compte puis recuperation de l'id de ce compte
                 //BUG lorsque j'ajoute la possibilité de me connecter avec GOOGLE
-                //startSignInActivity();
+                startSignInActivity();
                 //testGetWormateWithDelay();
                 // OK
 
@@ -124,7 +124,7 @@ public class MainActivity extends AppCompatActivity {
                 //OK
 
                 // test checkIfWorkmateChooseRestaurant
-                testCheckIfWorkmateChooseRestaurant();
+                //testCheckIfWorkmateChooseRestaurant();
             }
         });
 
@@ -167,7 +167,7 @@ public class MainActivity extends AppCompatActivity {
                 "Restaurant_Café_Jeu");
 
         User currentUser_2 = new User();
-        currentUser_2.setId("loZeOfSdeMYU7WF8ilcWCMLsdLJ2");
+        currentUser_2.setId("D7rZ2O9j8vVHuLwxHrgnrLTT3mv1");
 
         LunchRepository lunchRepository = LunchRepository.getInstance(MainApplication.getApplication());
 
