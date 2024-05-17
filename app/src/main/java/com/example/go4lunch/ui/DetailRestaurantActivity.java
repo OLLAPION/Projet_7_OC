@@ -4,6 +4,7 @@ import android.content.Intent;
 import android.os.Bundle;
 import android.util.Log;
 import android.widget.ImageButton;
+import android.widget.ImageView;
 import android.widget.TextView;
 
 import androidx.appcompat.app.AppCompatActivity;
@@ -20,6 +21,7 @@ import com.example.go4lunch.repository.LunchRepository;
 import com.example.go4lunch.repository.WorkmateRepository;
 import com.example.go4lunch.view.UserAdapter;
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
+import com.squareup.picasso.Picasso;
 
 import java.io.Serializable;
 import java.util.ArrayList;
@@ -42,19 +44,23 @@ public class DetailRestaurantActivity extends AppCompatActivity {
         configureComponante();
         configureRecyclerView();
         configureLike();
-        configureRestaurantChoice();
+        // Si uniquement ici > fonctionne sans modifier le fab
+        // si aussi dans configureFab dans Listener > ne fonctionne pas du premier coup pour modifier le fab (Sur le clique du fab il y a des fois des doublons)
+        // si aussi dans configureFab hors Listener > fonctionne sans modifier le fab
+        // si uniquement dans configureFab dans Listener > pas de fab au demarrage, mais fonctionne après un clic
+        // si uniquement dans configureFab hors Listener > fonctionne sans modifier le fab
+        // configureRestaurantChoice();
         configureFab();
-
     }
 
     private void configureFab() {
         FloatingActionButton fab = findViewById(R.id.fabWorkmateWantToEat);
         fab.setOnClickListener(view -> {
             checkIfWorkmateChoseThisRestaurantForLunch();
-            //configureRestaurantChoice();
+            configureRestaurantChoice();
         });
-    }
 
+    }
 
     // modifier le nom de la methode car ce n'est pas un check !!!
     private void checkIfWorkmateChoseThisRestaurantForLunch() {
@@ -93,31 +99,11 @@ public class DetailRestaurantActivity extends AppCompatActivity {
         isChosenLiveData.observe(this, isChosen -> {
             FloatingActionButton fab = findViewById(R.id.fabWorkmateWantToEat);
             if (isChosen) {
-                fab.setImageResource(R.drawable.ic_chosen);
-            } else {
                 fab.setImageResource(R.drawable.ic_not_chosen);
+            } else {
+                fab.setImageResource(R.drawable.ic_chosen);
             }
         });
-
-        /*
-        findViewById(R.id.fabWorkmateWantToEat).setOnClickListener(view -> {
-            LiveData<Boolean> isChosenLiveData2 = lunchRepository.checkIfCurrentWorkmateChoseThisRestaurantForLunch(restaurant, currentUser_1.getId());
-
-            isChosenLiveData2.observe(this, isChosen -> {
-                FloatingActionButton fab = findViewById(R.id.fabWorkmateWantToEat);
-                if (isChosen) {
-                    fab.setImageResource(R.drawable.ic_not_chosen);
-                    Log.d("WKM_2024", "delete Lunch > restaurant : " + restaurant.getId() + " User : " + currentUser_1.getId());
-                    lunchRepository.deleteLunch(restaurant, currentUser_1.getId());
-                } else {
-                    fab.setImageResource(R.drawable.ic_chosen);
-                    Log.d("WKM_2024", "create Lunch > restaurant : " + restaurant.getId() + " User : " + currentUser_1.getId());
-                    lunchRepository.createLunch(restaurant, currentUser_1);
-                }
-            });
-        });
-
-         */
     }
 
     private void configureLike() {
@@ -181,20 +167,20 @@ public class DetailRestaurantActivity extends AppCompatActivity {
         recyclerView = findViewById(R.id.recyclerView);
         TextView restaurantNameTextView = findViewById(R.id.restaurantNameTextView);
         TextView restaurantAddressTextView = findViewById(R.id.restaurantAddressTextView);
-        TextView restaurantPhotoTextView = findViewById(R.id.restaurantPhotoTextView);
         TextView restaurantOpeningHoursTextView = findViewById(R.id.restaurantOpeningHoursTextView);
-        TextView restaurantStarsTextView = findViewById(R.id.restaurantStarsTextView);
-        TextView restaurantWebsiteTextView = findViewById(R.id.restaurantWebsiteTextView);
         TextView restaurantTypeOfRestaurantTextView = findViewById(R.id.restaurantTypeOfRestaurantTextView);
+        ImageView restaurantPhotoImageView = findViewById(R.id.restaurantPhotoImageView);
+        ImageView restaurantStarsImageView = findViewById(R.id.restaurantStar);
+        ImageButton restaurantWebsiteImageButton = findViewById(R.id.restaurantWebsiteButton);
 
         restaurantNameTextView.setText(restaurant.getName());
         restaurantAddressTextView.setText(restaurant.getAddress());
-        restaurantPhotoTextView.setText(restaurant.getPhoto());
         restaurantOpeningHoursTextView.setText(restaurant.getOpeningHours());
-        restaurantStarsTextView.setText(restaurant.getStars());
-        restaurantWebsiteTextView.setText(restaurant.getWebsite());
         restaurantTypeOfRestaurantTextView.setText(restaurant.getTypeOfRestaurant());
 
+        Picasso.get().load(restaurant.getPhoto()).into(restaurantPhotoImageView);
+        Picasso.get().load(restaurant.getPhoto()).into(restaurantStarsImageView);
+        Picasso.get().load(restaurant.getPhoto()).into(restaurantWebsiteImageButton);
     }
 
     /**
