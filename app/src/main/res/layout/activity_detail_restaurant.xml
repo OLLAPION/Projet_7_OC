@@ -101,33 +101,76 @@
         app:layout_constraintBottom_toTopOf="@+id/recyclerView"
         app:layout_constraintHeight_percent="0.15">
 
-        <ImageButton
-            android:id="@+id/callButton"
+        <!-- CALL -->
+        <LinearLayout
             android:layout_width="0dp"
             android:layout_height="match_parent"
             android:layout_weight="1"
-            android:src="@drawable/ic_call"
-            android:background="?attr/selectableItemBackgroundBorderless"
-            android:onClick="onClickCallButton"/>
+            android:orientation="vertical"
+            android:gravity="center">
 
-        <ImageButton
-            android:id="@+id/likeButton"
-            android:layout_width="0dp"
-            android:layout_height="match_parent"
-            android:layout_weight="1"
-            android:src="@drawable/ic_star_button"
-            android:background="?attr/selectableItemBackgroundBorderless"
-            android:onClick="onClickLikeButton"/>
+            <ImageButton
+                android:id="@+id/callButton"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:src="@drawable/ic_call"
+                android:background="?attr/selectableItemBackgroundBorderless"
+                android:onClick="onClickCallButton"/>
 
-        <ImageButton
-            android:id="@+id/restaurantWebsiteButton"
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="CALL"
+                android:textColor="#FF0000"/>
+        </LinearLayout>
+
+        <!-- LIKE -->
+        <LinearLayout
             android:layout_width="0dp"
             android:layout_height="match_parent"
             android:layout_weight="1"
-            android:src="@drawable/ic_website"
-            android:background="?attr/selectableItemBackgroundBorderless"
-            android:onClick="onClickWebsiteButton"/>
+            android:orientation="vertical"
+            android:gravity="center">
+
+            <ImageButton
+                android:id="@+id/likeButton"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:src="@drawable/ic_star_button"
+                android:background="?attr/selectableItemBackgroundBorderless"
+                android:onClick="onClickLikeButton"/>
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="LIKE"
+                android:textColor="#FF0000"/>
+        </LinearLayout>
+
+        <!-- WEBSITE -->
+        <LinearLayout
+            android:layout_width="0dp"
+            android:layout_height="match_parent"
+            android:layout_weight="1"
+            android:orientation="vertical"
+            android:gravity="center">
+
+            <ImageButton
+                android:id="@+id/restaurantWebsiteButton"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:src="@drawable/ic_website"
+                android:background="?attr/selectableItemBackgroundBorderless"
+                android:onClick="onClickWebsiteButton"/>
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="WEBSITE"
+                android:textColor="#FF0000"/>
+        </LinearLayout>
     </LinearLayout>
+
 
 
 
