@@ -112,11 +112,11 @@ public class DetailRestaurantActivity extends AppCompatActivity {
 
 
         isLikedLiveData.observe(this, isLiked -> {
-            ImageButton likeButton = findViewById(R.id.likeButton);
+            ImageView restaurantStar = findViewById(R.id.restaurantStar);
             if (isLiked) {
-                likeButton.setImageResource(R.drawable.ic_star_on);
+                restaurantStar.setImageResource(R.drawable.ic_star_on);
             } else {
-                likeButton.setImageResource(R.drawable.ic_star_off);
+                restaurantStar.setImageResource(R.drawable.ic_star_off);
             }
         });
 
@@ -124,13 +124,12 @@ public class DetailRestaurantActivity extends AppCompatActivity {
             LiveData<Boolean> isLikedLiveData2 = workmateRepository.checkIfCurrentWorkmateLikeThisRestaurant(restaurant);
 
             isLikedLiveData2.observe(this, isLiked -> {
-                ImageButton likeButton = findViewById(R.id.likeButton);
+                ImageView restaurantStar2 = findViewById(R.id.restaurantStar);
                 if (isLiked) {
-                    //changer l'image lors du clique donc off et pas on
-                    likeButton.setImageResource(R.drawable.ic_star_off);
+                    restaurantStar2.setImageResource(R.drawable.ic_star_off);
                     workmateRepository.deleteLikedRestaurant(restaurant);
                 } else {
-                    likeButton.setImageResource(R.drawable.ic_star_on);
+                    restaurantStar2.setImageResource(R.drawable.ic_star_on);
                     workmateRepository.addLikedRestaurant(restaurant);
                 }
             });
