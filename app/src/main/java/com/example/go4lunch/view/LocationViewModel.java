@@ -62,28 +62,4 @@ public class LocationViewModel extends AndroidViewModel {
             locationRepository.stopLocationRequest();
         }
     }
-
-
-    /*
-    public void startLocationRequest() {
-        Application application = getApplication();
-        if (ActivityCompat.checkSelfPermission(application, Manifest.permission.ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED && ActivityCompat.checkSelfPermission(application, Manifest.permission.ACCESS_COARSE_LOCATION) != PackageManager.PERMISSION_GRANTED) {
-            // TODO: Consider calling
-            //    ActivityCompat#requestPermissions
-            // here to request the missing permissions, and then overriding
-            //   public void onRequestPermissionsResult(int requestCode, String[] permissions,
-            //                                          int[] grantResults)
-            // to handle the case where the user grants the permission. See the documentation
-            // for ActivityCompat#requestPermissions for more details.
-            return;
-        }
-        locationRepository.startLocationRequest();
-    }
-
-
-    public void stopLocationRequest() {
-        locationRepository.stopLocationRequest();
-    }
-
-     */
 }
