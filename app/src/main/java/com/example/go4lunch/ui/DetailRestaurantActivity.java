@@ -31,7 +31,7 @@ import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.List;
 
-// Utilisation de picasso pour les images c'est bien ???
+// Utilisation de picasso pour les images c'est bien ??? Non faire comme le projet 3-4
 public class DetailRestaurantActivity extends AppCompatActivity {
 
     /** The recyclerview to display the list of workmates who have chosen to eat in the restaurant */
@@ -195,7 +195,6 @@ public class DetailRestaurantActivity extends AppCompatActivity {
         recyclerView = findViewById(R.id.recyclerView);
         TextView restaurantNameTextView = findViewById(R.id.restaurantNameTextView);
         TextView restaurantAddressTextView = findViewById(R.id.restaurantAddressTextView);
-        TextView restaurantOpeningHoursTextView = findViewById(R.id.restaurantOpeningHoursTextView);
         TextView restaurantTypeOfRestaurantTextView = findViewById(R.id.restaurantTypeOfRestaurantTextView);
         ImageView restaurantPhotoImageView = findViewById(R.id.restaurantPhotoImageView);
         ImageView restaurantStarsImageView = findViewById(R.id.restaurantStar);
@@ -203,7 +202,6 @@ public class DetailRestaurantActivity extends AppCompatActivity {
 
         restaurantNameTextView.setText(restaurant.getName());
         restaurantAddressTextView.setText(restaurant.getAddress());
-        restaurantOpeningHoursTextView.setText(restaurant.getOpeningHours());
         restaurantTypeOfRestaurantTextView.setText(restaurant.getTypeOfRestaurant());
 
         // glide
