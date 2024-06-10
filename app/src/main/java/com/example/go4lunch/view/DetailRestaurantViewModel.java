@@ -5,6 +5,8 @@ import androidx.lifecycle.MutableLiveData;
 import androidx.lifecycle.ViewModel;
 
 import com.example.go4lunch.MainApplication;
+import com.example.go4lunch.callback.CreateLunchCallBack;
+import com.example.go4lunch.callback.DeleteLunchCallBack;
 import com.example.go4lunch.model.Restaurant;
 import com.example.go4lunch.model.User;
 import com.example.go4lunch.repository.LunchRepository;
@@ -31,7 +33,7 @@ public class DetailRestaurantViewModel extends ViewModel {
         workmateRepository = new WorkmateRepository();
     }
 
-
+// modifier le commentaire
     /**
      * Checks if the workmate chose the restaurant for lunch.
      * @param restaurant The restaurant to check.
@@ -39,10 +41,7 @@ public class DetailRestaurantViewModel extends ViewModel {
      * @return LiveData representing whether the current workmate likes the restaurant.
      */
     public LiveData<Boolean> checkIfWorkmateChoseThisRestaurantForLunch(Restaurant restaurant, String userId) {
-        MutableLiveData<Boolean> isChosenLiveData = new MutableLiveData<>();
-        lunchRepository.checkIfCurrentWorkmateChoseThisRestaurantForLunch(restaurant, userId)
-                .observeForever(isChosenLiveData::setValue);
-        return isChosenLiveData;
+        return lunchRepository.checkIfCurrentWorkmateChoseThisRestaurantForLunch(restaurant, userId);
     }
 
     /**
@@ -79,8 +78,8 @@ public class DetailRestaurantViewModel extends ViewModel {
      * @param restaurant The restaurant for which to create the lunch.
      * @param currentUser The current workmate.
      */
-    public void createLunch(Restaurant restaurant, User currentUser) {
-        lunchRepository.createLunch(restaurant, currentUser);
+    public void createLunch(Restaurant restaurant, User currentUser, CreateLunchCallBack callBack) {
+        lunchRepository.createLunch(restaurant, currentUser, callBack);
     }
 
     /**
@@ -88,8 +87,8 @@ public class DetailRestaurantViewModel extends ViewModel {
      * @param restaurant The restaurant for which to delete the lunch.
      * @param userId The ID of the workmate.
      */
-    public void deleteLunch(Restaurant restaurant, String userId) {
-        lunchRepository.deleteLunch(restaurant, userId);
+    public void deleteLunch(Restaurant restaurant, String userId, DeleteLunchCallBack callback) {
+        lunchRepository.deleteLunch(restaurant, userId, callback);
     }
 
     /**

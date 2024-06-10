@@ -6,6 +6,8 @@ import android.util.Log;
 import androidx.lifecycle.LiveData;
 import androidx.lifecycle.MutableLiveData;
 
+import com.example.go4lunch.callback.CreateLunchCallBack;
+import com.example.go4lunch.callback.DeleteLunchCallBack;
 import com.example.go4lunch.model.Lunch;
 import com.example.go4lunch.model.Restaurant;
 import com.example.go4lunch.model.User;
@@ -45,7 +47,7 @@ public class LunchRepository {
         return Instant.now().truncatedTo(ChronoUnit.DAYS).toEpochMilli();
     }
 
-    public void createLunch(Restaurant restaurantChosen, User workmate) {
+    public void createLunch(Restaurant restaurantChosen, User workmate, CreateLunchCallBack callback) {
         if (restaurantChosen == null || workmate == null) {
             Log.d("LR_createLunch_1", "Error: restaurantChosen or workmate is null");
             return;
@@ -71,6 +73,7 @@ public class LunchRepository {
                 .addOnCompleteListener(task -> {
                     if (task.isSuccessful()) {
                         Log.d("LR_createLunch_4", "Lunch created successfully! Document ID: " + task.getResult().getId());
+                        callback.onCreated();
                     } else {
                         Log.e("LR_createLunch_5", "Error creating lunch: " + task.getException().getMessage());
                     }
@@ -224,7 +227,7 @@ public class LunchRepository {
         return isChosenLiveData;
     }
 
-    public void deleteLunch(Restaurant restaurant, String userId) {
+    public void deleteLunch(Restaurant restaurant, String userId, DeleteLunchCallBack callback) {
         getBaseQuery1(restaurant, userId)
                 .get()
                 .addOnCompleteListener(task -> {
@@ -235,6 +238,8 @@ public class LunchRepository {
                                 document.getReference().delete();
                             }
                         }
+                        Log.e("LR_deleteLunch_0", "deleteLunch successfull");
+                        callback.onDeleted();
                     } else {
                         // Si la tâche échoue à être en succès
                         Exception exception = task.getException();

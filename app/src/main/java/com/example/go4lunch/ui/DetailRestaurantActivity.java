@@ -1,6 +1,8 @@
 package com.example.go4lunch.ui;
 
 import android.content.Intent;
+import android.content.res.ColorStateList;
+import android.graphics.Color;
 import android.os.Bundle;
 import android.util.Log;
 import android.widget.ImageButton;
@@ -58,12 +60,7 @@ public class DetailRestaurantActivity extends AppCompatActivity {
         configureComponante();
         configureRecyclerView();
         configureLike();
-        // Si uniquement ici > fonctionne sans modifier le fab
-        // si aussi dans configureFab dans Listener > ne fonctionne pas du premier coup pour modifier le fab (Sur le clique du fab il y a des fois des doublons)
-        // si aussi dans configureFab hors Listener > fonctionne sans modifier le fab
-        // si uniquement dans configureFab dans Listener > pas de fab au demarrage, mais fonctionne après un clic
-        // si uniquement dans configureFab hors Listener > fonctionne sans modifier le fab
-        // configureRestaurantChoice();
+        configureRestaurantChoice();
         configureFab();
     }
 
@@ -74,7 +71,7 @@ public class DetailRestaurantActivity extends AppCompatActivity {
         FloatingActionButton fab = findViewById(R.id.fabWorkmateWantToEat);
         fab.setOnClickListener(view -> {
             handleWorkmateLunchChoice();
-            configureRestaurantChoice();
+
         });
 
     }
@@ -95,12 +92,18 @@ public class DetailRestaurantActivity extends AppCompatActivity {
                 .observe(this, isChosen -> {
                     if (isChosen) {
                         Log.d("WKM_2024", "delete Lunch > restaurant : " + restaurant.getId() + " User : " + currentUser_2.getId());
-                        viewModel.deleteLunch(restaurant, currentUser_2.getId());
+                        viewModel.deleteLunch(restaurant, currentUser_2.getId(), () -> {
+                            configureRecyclerView();
+                            configureRestaurantChoice();
+                        });
                     } else {
                         Log.d("WKM_2024", "create Lunch > restaurant : " + restaurant.getId() + " User : " + currentUser_2.getId());
-                        viewModel.createLunch(restaurant, currentUser_2);
+                        viewModel.createLunch(restaurant, currentUser_2, () -> {
+                            configureRecyclerView();
+                            configureRestaurantChoice();
+                        });
                     }
-                    configureRecyclerView();
+
                 });
     }
 
@@ -113,16 +116,20 @@ public class DetailRestaurantActivity extends AppCompatActivity {
         currentUser_1.setId("D7rZ2O9j8vVHuLwxHrgnrLTT3mv1");
         currentUser_1.setName("Name_2");
         currentUser_1.setAvatar("Avatar_2");
+        Log.d("FAB_1", "check fzb : ");
 
         viewModel.getIsRestaurantChosenLiveData(restaurant, currentUser_1.getId()).observe(this, isChosen -> {
             FloatingActionButton fab = findViewById(R.id.fabWorkmateWantToEat);
+            Log.d("FAB_2", "check fzb : " + isChosen);
             if (isChosen) {
-                fab.setImageResource(R.drawable.ic_not_chosen);
-            } else {
                 fab.setImageResource(R.drawable.ic_chosen);
+            } else {
+                fab.setImageResource(R.drawable.ic_not_chosen);
             }
         });
+
     }
+
 
     /**
      * Configures the appearance of the "like" icon based on the workmates like this restaurant.
@@ -199,6 +206,7 @@ public class DetailRestaurantActivity extends AppCompatActivity {
         restaurantOpeningHoursTextView.setText(restaurant.getOpeningHours());
         restaurantTypeOfRestaurantTextView.setText(restaurant.getTypeOfRestaurant());
 
+        // glide
         Picasso.get().load(restaurant.getPhoto()).into(restaurantPhotoImageView);
         Picasso.get().load(restaurant.getPhoto()).into(restaurantStarsImageView);
         Picasso.get().load(restaurant.getPhoto()).into(restaurantWebsiteImageButton);

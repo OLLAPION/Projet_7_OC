@@ -48,6 +48,7 @@ public class MainActivity extends AppCompatActivity {
     private Button btnGetRestaurants;
     private Button btnGetDetailRestaurant;
     private Button btnGetGPSPosition;
+    private Button btnGoCoreActivity;
     private RestaurantRepository restaurantRepository;
     private WorkmateRepository workmateRepository;
     private static final int RC_SIGN_IN = 123;
@@ -64,6 +65,7 @@ public class MainActivity extends AppCompatActivity {
         btnGetRestaurants = findViewById(R.id.btnGetRestaurants);
         btnGetDetailRestaurant = findViewById(R.id.btnGetDetailRestaurant);
         btnGetGPSPosition = findViewById(R.id.btnGetGPSPosition);
+        btnGoCoreActivity= findViewById(R.id.btnGoCoreActivity);
 
         restaurantRepository = new RestaurantRepository(RetrofitService.getRestaurantApi());
         workmateRepository = new WorkmateRepository();
@@ -154,7 +156,16 @@ public class MainActivity extends AppCompatActivity {
             }
         });
 
+        btnGoCoreActivity.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Intent intent = new Intent(v.getContext(), CoreActivity.class);
+                startActivity(intent);
+            }
+        });
+
     }
+
 
     private void testCheckIfWorkmateChooseRestaurant() {
         Restaurant restaurant = new Restaurant("R1",
@@ -372,7 +383,7 @@ public class MainActivity extends AppCompatActivity {
                 "![](C:/Users/Ollapion/AppData/Local/Temp/kross.jpg)"
         );
 
-        LunchRepository.getInstance(MainActivity.this).createLunch(chosenRestaurant, currentUser);
+        //LunchRepository.getInstance(MainActivity.this).createLunch(chosenRestaurant, currentUser);
     }
 
     private void testLunchRepositoryMethods() {
@@ -394,7 +405,7 @@ public class MainActivity extends AppCompatActivity {
                 "![](C:/Users/Ollapion/AppData/Local/Temp/kross.jpg)"
         );
 
-        LunchRepository.getInstance(MainActivity.this).createLunch(chosenRestaurant, currentUser);
+        //LunchRepository.getInstance(MainActivity.this).createLunch(chosenRestaurant, currentUser);
 
         // Test de getTodayLunch
         LunchRepository.getInstance(MainActivity.this).getTodayLunch(currentUser.getId()).observe(this, lunch -> {
@@ -429,7 +440,7 @@ public class MainActivity extends AppCompatActivity {
                 });
 
         // Test de deleteLunch
-        LunchRepository.getInstance(MainActivity.this).deleteLunch(chosenRestaurant, currentUser.getId());
+        //LunchRepository.getInstance(MainActivity.this).deleteLunch(chosenRestaurant, currentUser.getId());
     }
 
 
