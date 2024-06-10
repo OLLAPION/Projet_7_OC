@@ -16,6 +16,9 @@ import androidx.lifecycle.ViewModelProvider;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
+import com.bumptech.glide.Glide;
+import com.bumptech.glide.load.resource.drawable.DrawableTransitionOptions;
+import com.bumptech.glide.request.RequestOptions;
 import com.example.go4lunch.MainApplication;
 import com.example.go4lunch.R;
 import com.example.go4lunch.model.Restaurant;
@@ -31,7 +34,7 @@ import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.List;
 
-// Utilisation de picasso pour les images c'est bien ??? Non faire comme le projet 3-4
+// le like ne fonctionne pas sur l'emulateur, mais uniquement sur mon telephone
 public class DetailRestaurantActivity extends AppCompatActivity {
 
     /** The recyclerview to display the list of workmates who have chosen to eat in the restaurant */
@@ -204,11 +207,30 @@ public class DetailRestaurantActivity extends AppCompatActivity {
         restaurantAddressTextView.setText(restaurant.getAddress());
         restaurantTypeOfRestaurantTextView.setText(restaurant.getTypeOfRestaurant());
 
-        // glide
-        Picasso.get().load(restaurant.getPhoto()).into(restaurantPhotoImageView);
-        Picasso.get().load(restaurant.getPhoto()).into(restaurantStarsImageView);
-        Picasso.get().load(restaurant.getPhoto()).into(restaurantWebsiteImageButton);
+        // Supprimez les lignes de chargement avec Picasso
+        // Picasso.get().load(restaurant.getPhoto()).into(restaurantPhotoImageView);
+        // Picasso.get().load(restaurant.getPhoto()).into(restaurantStarsImageView);
+        // Picasso.get().load(restaurant.getPhoto()).into(restaurantWebsiteImageButton);
+
+        Glide.with(this)
+                .load(restaurant.getPhoto())
+                .apply(new RequestOptions().centerCrop())
+                .transition(DrawableTransitionOptions.withCrossFade())
+                .into(restaurantPhotoImageView);
+
+        Glide.with(this)
+                .load(R.drawable.ic_star_button)
+                .into(restaurantStarsImageView);
+
+        Glide.with(this)
+                .load(R.drawable.ic_call)
+                .into(restaurantStarsImageView);
+
+        Glide.with(this)
+                .load(R.drawable.ic_website)
+                .into(restaurantWebsiteImageButton);
     }
+
 
     /**
      * Used to navigate to this activity
