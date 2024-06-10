@@ -24,6 +24,9 @@
         android:theme="@style/Theme.Go4Lunch"
         tools:targetApi="31">
         <activity
+            android:name=".ui.CoreActivity"
+            android:exported="false" />
+        <activity
             android:name=".ui.DetailRestaurantActivity"
             android:exported="false" />
         <activity
