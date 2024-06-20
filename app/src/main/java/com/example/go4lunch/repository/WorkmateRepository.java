@@ -26,7 +26,8 @@ public class WorkmateRepository {
     private final FirebaseFirestore firestore = FirebaseFirestore.getInstance();
     private final FirebaseAuth auth = FirebaseAuth.getInstance();
     private static final String SUB_COLLECTION = "likedrestaurant" ;
-    public FirebaseUser getWorkmate() {
+    //mettre public
+    private FirebaseUser getWorkmate() {
         return auth.getCurrentUser();
     }
 
@@ -41,6 +42,11 @@ public class WorkmateRepository {
     }
 
     private User getFirebaseUserAsWorkmate() {
+        // je simule une user
+        /*
+        return new User("1", "Benjamin", "test@test.fr", "https://sitechecker.pro/wp-content/uploads/2023/05/URL-meaning.jpg");
+        */
+
         FirebaseUser firebaseUser = auth.getCurrentUser();
             if (firebaseUser != null) {
             String avatarUrl = (firebaseUser.getPhotoUrl() != null) ? firebaseUser.getPhotoUrl().toString() : null;
@@ -175,6 +181,7 @@ public LiveData<Boolean> checkIfCurrentWorkmateLikeThisRestaurant(Restaurant res
                     isLikedLiveData.setValue(false);
                 });
     } else {
+        Log.d("WR_checkIfCurrentWork_4", "Workmate is null");
         isLikedLiveData.setValue(false);
     }
     return isLikedLiveData;

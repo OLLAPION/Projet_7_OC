@@ -3,11 +3,14 @@ package com.example.go4lunch.ui;
 import android.content.Intent;
 import android.content.res.ColorStateList;
 import android.graphics.Color;
+import android.net.Uri;
 import android.os.Bundle;
 import android.util.Log;
+import android.view.View;
 import android.widget.ImageButton;
 import android.widget.ImageView;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.core.app.ActivityCompat;
@@ -34,7 +37,8 @@ import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.List;
 
-// le like ne fonctionne pas sur l'emulateur, mais uniquement sur mon telephone
+// le like ne fonctionne pas sur l'emulateur, mais uniquement sur mon telephone et même le design bug
+// ça reste sur Star on clicked
 public class DetailRestaurantActivity extends AppCompatActivity {
 
     /** The recyclerview to display the list of workmates who have chosen to eat in the restaurant */
@@ -65,6 +69,62 @@ public class DetailRestaurantActivity extends AppCompatActivity {
         configureLike();
         configureRestaurantChoice();
         configureFab();
+        configureClickListeners();
+    }
+
+    /**
+     * Configure les écouteurs de clic pour callButton et restaurantWebsiteButton.
+     */
+    private void configureClickListeners() {
+        ImageButton callButton = findViewById(R.id.callButton);
+        callButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                onClickCallButton();
+            }
+        });
+
+        ImageButton websiteButton = findViewById(R.id.restaurantWebsiteButton);
+        websiteButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                onClickWebsiteButton();
+            }
+        });
+    }
+
+    /**
+     * Méthode pour gérer le clic sur le bouton d'appel.
+     */
+    private void onClickCallButton() {
+        // mon modèle restaurant n'a pas de variable pour le telephoner
+
+        /*
+        String phoneNumber = restaurant.getPhoneNumber();
+
+        if (phoneNumber != null && !phoneNumber.isEmpty()) {
+            Intent intent = new Intent(Intent.ACTION_DIAL, Uri.parse("tel:" + phoneNumber));
+            startActivity(intent);
+        } else {
+            Toast.makeText(this, "No phone number available", Toast.LENGTH_SHORT).show();
+        }
+
+         */
+    }
+
+
+    /**
+     * Méthode pour gérer le clic sur le bouton du site Web du restaurant.
+     */
+    private void onClickWebsiteButton() {
+        String websiteUrl = restaurant.getWebsite();
+
+        if (websiteUrl != null && !websiteUrl.isEmpty()) {
+            Intent intent = new Intent(Intent.ACTION_VIEW, Uri.parse(websiteUrl));
+            startActivity(intent);
+        } else {
+            Toast.makeText(this, "No website URL available", Toast.LENGTH_SHORT).show();
+        }
     }
 
     /**
@@ -74,9 +134,7 @@ public class DetailRestaurantActivity extends AppCompatActivity {
         FloatingActionButton fab = findViewById(R.id.fabWorkmateWantToEat);
         fab.setOnClickListener(view -> {
             handleWorkmateLunchChoice();
-
         });
-
     }
 
     /**
@@ -139,30 +197,38 @@ public class DetailRestaurantActivity extends AppCompatActivity {
      * Add & Delete from firebase using the ViewModel
      */
     private void configureLike() {
+        ImageView restaurantStar = findViewById(R.id.restaurantStar);
+        ImageButton likeButton = findViewById(R.id.likeButton);
+
+        // j'observe l'état initial pour vérifier si le restaurant est aimé
         viewModel.checkIfWorkmateLikeThisRestaurant(restaurant).observe(this, isLiked -> {
-            ImageView restaurantStar = findViewById(R.id.restaurantStar);
             if (isLiked) {
                 restaurantStar.setImageResource(R.drawable.ic_star_on);
+                Log.d("ConfigureLike_1", "Étoile activée");
             } else {
                 restaurantStar.setImageResource(R.drawable.ic_star_off);
+                Log.d("ConfigureLike_2", "Étoile désactivée");
             }
         });
 
-        findViewById(R.id.likeButton).setOnClickListener(view -> {
-            LiveData<Boolean> isLikedLiveData2 = viewModel.checkIfWorkmateLikeThisRestaurant(restaurant);
-
-            isLikedLiveData2.observe(this, isLiked -> {
-                ImageView restaurantStar2 = findViewById(R.id.restaurantStar);
+        // j'applique les modification grace au viewModel et je change l'apparence
+        likeButton.setOnClickListener(view -> {
+            viewModel.checkIfWorkmateLikeThisRestaurant(restaurant).observe(this, isLiked -> {
                 if (isLiked) {
-                    restaurantStar2.setImageResource(R.drawable.ic_star_off);
+                    restaurantStar.setImageResource(R.drawable.ic_star_off);
                     viewModel.deleteLikedRestaurant(restaurant);
+                    Log.d("ConfigureLike_3", "Étoile désactivée cliquée");
                 } else {
-                    restaurantStar2.setImageResource(R.drawable.ic_star_on);
+                    restaurantStar.setImageResource(R.drawable.ic_star_on);
                     viewModel.addLikedRestaurant(restaurant);
+                    Log.d("ConfigureLike_4", "Étoile activée cliquée");
                 }
+                viewModel.checkIfWorkmateLikeThisRestaurant(restaurant).removeObservers(this);
             });
         });
+
     }
+
 
 
     /**
@@ -206,11 +272,6 @@ public class DetailRestaurantActivity extends AppCompatActivity {
         restaurantNameTextView.setText(restaurant.getName());
         restaurantAddressTextView.setText(restaurant.getAddress());
         restaurantTypeOfRestaurantTextView.setText(restaurant.getTypeOfRestaurant());
-
-        // Supprimez les lignes de chargement avec Picasso
-        // Picasso.get().load(restaurant.getPhoto()).into(restaurantPhotoImageView);
-        // Picasso.get().load(restaurant.getPhoto()).into(restaurantStarsImageView);
-        // Picasso.get().load(restaurant.getPhoto()).into(restaurantWebsiteImageButton);
 
         Glide.with(this)
                 .load(restaurant.getPhoto())

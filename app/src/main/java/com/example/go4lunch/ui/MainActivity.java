@@ -443,7 +443,8 @@ public class MainActivity extends AppCompatActivity {
         //LunchRepository.getInstance(MainActivity.this).deleteLunch(chosenRestaurant, currentUser.getId());
     }
 
-
+// J'ai commenté les deux methodes ci dessous pour pouvoir utiliser un User fixe !
+    /*
     private void testGetWormateWithDelay() {
         new Handler().postDelayed(new Runnable() {
             @Override
@@ -453,7 +454,10 @@ public class MainActivity extends AppCompatActivity {
         }, 30000); // Délai de 30 secondes en millisecondes (30000 ms)
     }
 
+     */
 
+
+    /*
     private void testGetWormate() {
 
         FirebaseUser firebaseUser = workmateRepository.getWorkmate();
@@ -465,6 +469,8 @@ public class MainActivity extends AppCompatActivity {
         }
 
     }
+
+     */
 
     private void signOutCurrentUser() {
         workmateRepository.signOut(MainActivity.this)
