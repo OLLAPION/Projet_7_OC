@@ -1,66 +1,175 @@
 package com.example.go4lunch.ui.fragment;
 
+import android.annotation.SuppressLint;
+import android.content.pm.PackageManager;
 import android.os.Bundle;
-
-import androidx.fragment.app.Fragment;
-
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.TextView;
 
+import androidx.annotation.NonNull;
+import androidx.annotation.Nullable;
+import androidx.core.app.ActivityCompat;
+import androidx.core.content.ContextCompat;
+import androidx.fragment.app.Fragment;
+import androidx.lifecycle.Observer;
+import androidx.recyclerview.widget.LinearLayoutManager;
+import androidx.recyclerview.widget.RecyclerView;
+
+import com.example.go4lunch.BuildConfig;
+import com.example.go4lunch.MainApplication;
 import com.example.go4lunch.R;
+import com.example.go4lunch.model.location.GPSStatus;
+import com.example.go4lunch.ui.CoreActivity;
+import com.example.go4lunch.ui.MainActivity;
+import com.example.go4lunch.ui.RestaurantItem;
+import com.example.go4lunch.pojo.RestaurantsAnswer;
+import com.example.go4lunch.pojo.Result;
+import com.example.go4lunch.repository.RestaurantRepository;
+import com.example.go4lunch.services.RetrofitMapsApi;
+import com.example.go4lunch.services.RetrofitService;
+import com.example.go4lunch.view.LocationViewModel;
+import com.example.go4lunch.view.RestaurantAdapter;
 
-/**
- * A simple {@link Fragment} subclass.
- * Use the {@link ListRestaurantFragment#newInstance} factory method to
- * create an instance of this fragment.
- */
+import java.util.ArrayList;
+import java.util.List;
+
+import retrofit2.Call;
+import retrofit2.Callback;
+import retrofit2.Response;
+
 public class ListRestaurantFragment extends Fragment {
 
-    // TODO: Rename parameter arguments, choose names that match
-    // the fragment initialization parameters, e.g. ARG_ITEM_NUMBER
-    private static final String ARG_PARAM1 = "param1";
-    private static final String ARG_PARAM2 = "param2";
+    private static final int LOCATION_PERMISSION_REQUEST_CODE = 0;
 
-    // TODO: Rename and change types of parameters
-    private String mParam1;
-    private String mParam2;
+    private RecyclerView recyclerView;
+    private RestaurantAdapter adapter;
+    private RestaurantRepository restaurantRepository;
+
+    private LocationViewModel locationViewModel;
+    private TextView textViewLatitude;
+    private TextView textViewLongitude;
 
     public ListRestaurantFragment() {
-        // Required empty public constructor
     }
 
-    /**
-     * Use this factory method to create a new instance of
-     * this fragment using the provided parameters.
-     *
-     * @param param1 Parameter 1.
-     * @param param2 Parameter 2.
-     * @return A new instance of fragment ListRestaurantFragment.
-     */
-    // TODO: Rename and change types and number of parameters
-    public static ListRestaurantFragment newInstance(String param1, String param2) {
-        ListRestaurantFragment fragment = new ListRestaurantFragment();
-        Bundle args = new Bundle();
-        args.putString(ARG_PARAM1, param1);
-        args.putString(ARG_PARAM2, param2);
-        fragment.setArguments(args);
-        return fragment;
-    }
-
+    @Nullable
     @Override
-    public void onCreate(Bundle savedInstanceState) {
-        super.onCreate(savedInstanceState);
-        if (getArguments() != null) {
-            mParam1 = getArguments().getString(ARG_PARAM1);
-            mParam2 = getArguments().getString(ARG_PARAM2);
+    public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
+        View view = inflater.inflate(R.layout.fragment_list_restaurant, container, false);
+        recyclerView = view.findViewById(R.id.restaurant_recycler_view);
+        recyclerView.setLayoutManager(new LinearLayoutManager(getContext()));
+
+        adapter = new RestaurantAdapter(new ArrayList<>(), getContext());
+        recyclerView.setAdapter(adapter);
+
+        textViewLatitude = view.findViewById(R.id.textViewLatitude);
+        textViewLongitude = view.findViewById(R.id.textViewLongitude);
+
+        // viewmodel le mettre
+        RetrofitMapsApi retrofitMapsApi = RetrofitService.getRestaurantApi();
+        // faire comme DetailRestaurantActivity
+        restaurantRepository = new RestaurantRepository(retrofitMapsApi);
+        locationViewModel = new LocationViewModel(MainApplication.getApplication());
+
+        // manque un appel au viewmodel pour recuperer la position GPS > observe > fetchrestaurant sur gps workmate
+        // a retirer
+        //fetchRestaurants(48.8566, 2.3522); // position de Paris pour l'exemple
+
+        GPSPosition();
+        return view;
+    }
+
+
+    private void GPSPosition() {
+        requestPermissions();
+        locationViewModel.getLocationLiveData().observe(this, new Observer<GPSStatus>() {
+            @Override
+            public void onChanged(GPSStatus location) {
+
+                updateLocationUI(location);
+
+            }
+        });
+    }
+
+    private void requestPermissions() {
+        requestPermissions(new String[]{
+                android.Manifest.permission.ACCESS_FINE_LOCATION,
+                android.Manifest.permission.ACCESS_COARSE_LOCATION
+        }, LOCATION_PERMISSION_REQUEST_CODE);
+    }
+
+    @SuppressLint("SetTextI18n")
+    private void updateLocationUI(GPSStatus location) {
+        if (location != null) {
+            if (location.getLatitude() != null && location.getLongitude() != null) {
+                double latitude = location.getLatitude();
+                double longitude = location.getLongitude();
+
+                textViewLatitude.setText(String.valueOf(latitude));
+                textViewLongitude.setText(String.valueOf(longitude));
+
+                fetchRestaurants(latitude, longitude);
+
+            } else if (location.getQuerying()) {
+                textViewLatitude.setText("querying");
+                textViewLongitude.setText("querying");
+            } else {
+                textViewLatitude.setText("Permission incorrect");
+                textViewLongitude.setText("Permission incorrect");
+            }
         }
     }
 
+    private void fetchRestaurants(double latitude, double longitude) {
+        String location = latitude + "," + longitude;
+        // les constantes sont à mettre en tant que static final en haut de la classe
+        int radius = 1000;
+        String type = "restaurant";
+        String apiKey = BuildConfig.google_maps_api;
+
+        //utiliser le viewmodel et mettre cette logique dans le viewmodel > renvoi un Livedata
+
+        // ne pas utiliser le result > RestaurantItem
+        // CAD ne pas utiliser les POJO ? Si oui, comment je ne vois pas
+        restaurantRepository.getAllRestaurants(location, radius, type, apiKey).enqueue(new Callback<RestaurantsAnswer>() {
+            @Override
+            public void onResponse(Call<RestaurantsAnswer> call, Response<RestaurantsAnswer> response) {
+                if (response.isSuccessful() && response.body() != null) {
+                    List<Result> results = response.body().getResults();
+                    List<RestaurantItem> restaurantItems = new ArrayList<>();
+                    for (Result result : results) {
+                        String photoUrl = result.getPhotos() != null && !result.getPhotos().isEmpty()
+                                ? "https://maps.googleapis.com/maps/api/place/photo?maxwidth=400&photoreference=" + result.getPhotos().get(0).getPhotoReference() + "&key=" + apiKey
+                                : null;
+                        restaurantItems.add(new RestaurantItem(
+                                result.getName(),
+                                result.getVicinity(),
+                                result.getRating(),
+                                photoUrl
+                        ));
+                    }
+                    adapter.updateData(restaurantItems);
+                } else {
+                    Log.e("ListRestaurantFragment", "Failed to fetch restaurants: " + response.message());
+                }
+            }
+
+            @Override
+            public void onFailure(Call<RestaurantsAnswer> call, Throwable t) {
+                Log.e("ListRestaurantFragment", "Error fetching restaurants", t);
+            }
+        });
+    }
+
     @Override
-    public View onCreateView(LayoutInflater inflater, ViewGroup container,
-                             Bundle savedInstanceState) {
-        // Inflate the layout for this fragment
-        return inflater.inflate(R.layout.fragment_list_restaurant, container, false);
+    public void onResume(){
+        super.onResume();
+        if (locationViewModel != null){
+            locationViewModel.refresh();
+        }
     }
 }

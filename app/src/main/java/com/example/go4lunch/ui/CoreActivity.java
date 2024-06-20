@@ -9,19 +9,20 @@ import com.example.go4lunch.R;
 import com.example.go4lunch.ui.fragment.ListRestaurantFragment;
 import com.example.go4lunch.ui.fragment.ListWorkmatesLunchWithYouFragment;
 import com.example.go4lunch.ui.fragment.MapFragment;
+import com.example.go4lunch.view.LocationViewModel;
 import com.google.android.material.bottomnavigation.BottomNavigationView;
 
 public class CoreActivity extends AppCompatActivity {
+
+    private LocationViewModel locationViewModel;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_core);
 
-        // Récupérer la barre de navigation en bas
         BottomNavigationView bottomNavigationView = findViewById(R.id.bottom_navigation);
 
-        // Ajouter un listener pour les clics sur les éléments de la barre de navigation
         bottomNavigationView.setOnNavigationItemSelectedListener(item -> {
             Fragment selectedFragment = null;
             switch (item.getItemId()) {
@@ -35,11 +36,20 @@ public class CoreActivity extends AppCompatActivity {
                     selectedFragment = new ListWorkmatesLunchWithYouFragment();
                     break;
             }
-            // Remplacer le fragment actuellement affiché par le fragment sélectionné
             getSupportFragmentManager().beginTransaction()
                     .replace(R.id.fragment_container, selectedFragment)
                     .commit();
             return true;
         });
     }
+
+    // pour la partie GPS
+    @Override
+    public void onResume(){
+        super.onResume();
+        if (locationViewModel != null){
+            locationViewModel.refresh();
+        }
+    }
+
 }
