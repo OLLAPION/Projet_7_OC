@@ -43,6 +43,7 @@ import retrofit2.Response;
 public class ListRestaurantFragment extends Fragment {
 
     private static final int LOCATION_PERMISSION_REQUEST_CODE = 0;
+    private static final String TAG = "ListRestaurantFragment";
 
     private RecyclerView recyclerView;
     private RestaurantAdapter adapter;
@@ -78,28 +79,38 @@ public class ListRestaurantFragment extends Fragment {
         // a retirer
         //fetchRestaurants(48.8566, 2.3522); // position de Paris pour l'exemple
 
-        GPSPosition();
+        requestPermissions();
         return view;
     }
 
-
-    private void GPSPosition() {
-        requestPermissions();
-        locationViewModel.getLocationLiveData().observe(this, new Observer<GPSStatus>() {
-            @Override
-            public void onChanged(GPSStatus location) {
-
-                updateLocationUI(location);
-
-            }
-        });
-    }
 
     private void requestPermissions() {
         requestPermissions(new String[]{
                 android.Manifest.permission.ACCESS_FINE_LOCATION,
                 android.Manifest.permission.ACCESS_COARSE_LOCATION
         }, LOCATION_PERMISSION_REQUEST_CODE);
+    }
+
+    @Override
+    public void onRequestPermissionsResult(int requestCode, @NonNull String[] permissions, @NonNull int[] grantResults) {
+        super.onRequestPermissionsResult(requestCode, permissions, grantResults);
+        if (requestCode == LOCATION_PERMISSION_REQUEST_CODE) {
+            if (grantResults.length > 0 && grantResults[0] == PackageManager.PERMISSION_GRANTED) {
+                observeLocation();
+            } else {
+                textViewLatitude.setText("Permission Denied");
+                textViewLongitude.setText("Permission Denied");
+            }
+        }
+    }
+
+    private void observeLocation() {
+        locationViewModel.getLocationLiveData().observe(getViewLifecycleOwner(), new Observer<GPSStatus>() {
+            @Override
+            public void onChanged(GPSStatus location) {
+                updateLocationUI(location);
+            }
+        });
     }
 
     @SuppressLint("SetTextI18n")
@@ -109,6 +120,7 @@ public class ListRestaurantFragment extends Fragment {
                 double latitude = location.getLatitude();
                 double longitude = location.getLongitude();
 
+                Log.d(TAG, "Latitude: " + latitude + ", Longitude: " + longitude);
                 textViewLatitude.setText(String.valueOf(latitude));
                 textViewLongitude.setText(String.valueOf(longitude));
 
@@ -121,6 +133,8 @@ public class ListRestaurantFragment extends Fragment {
                 textViewLatitude.setText("Permission incorrect");
                 textViewLongitude.setText("Permission incorrect");
             }
+        } else {
+            Log.e(TAG, "GPSStatus is null");
         }
     }
 
@@ -142,25 +156,34 @@ public class ListRestaurantFragment extends Fragment {
                     List<Result> results = response.body().getResults();
                     List<RestaurantItem> restaurantItems = new ArrayList<>();
                     for (Result result : results) {
-                        String photoUrl = result.getPhotos() != null && !result.getPhotos().isEmpty()
-                                ? "https://maps.googleapis.com/maps/api/place/photo?maxwidth=400&photoreference=" + result.getPhotos().get(0).getPhotoReference() + "&key=" + apiKey
-                                : null;
-                        restaurantItems.add(new RestaurantItem(
-                                result.getName(),
-                                result.getVicinity(),
-                                result.getRating(),
-                                photoUrl
-                        ));
+                        // si le resultat est null aller chercher les valeurs
+                        if (result != null) {
+                            String name = result.getName();
+                            String vicinity = result.getVicinity();
+                            Double rating = result.getRating();
+                            // Si les valeurs sont null les recuperer
+                            if (name != null && vicinity != null && rating != null) {
+                                String photoUrl = (result.getPhotos() != null && !result.getPhotos().isEmpty())
+                                        ? "https://maps.googleapis.com/maps/api/place/photo?maxwidth=400&photoreference=" + result.getPhotos().get(0).getPhotoReference() + "&key=" + apiKey
+                                        : null;
+                                restaurantItems.add(new RestaurantItem(
+                                        name,
+                                        vicinity,
+                                        rating,
+                                        photoUrl
+                                ));
+                            }
+                        }
                     }
                     adapter.updateData(restaurantItems);
                 } else {
-                    Log.e("ListRestaurantFragment", "Failed to fetch restaurants: " + response.message());
+                    Log.e(TAG, "Failed to fetch restaurants: " + response.message());
                 }
             }
 
             @Override
             public void onFailure(Call<RestaurantsAnswer> call, Throwable t) {
-                Log.e("ListRestaurantFragment", "Error fetching restaurants", t);
+                Log.e(TAG, "Error fetching restaurants", t);
             }
         });
     }
