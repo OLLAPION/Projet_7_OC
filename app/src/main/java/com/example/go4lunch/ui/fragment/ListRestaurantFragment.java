@@ -11,27 +11,31 @@ import android.widget.TextView;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
-import androidx.core.app.ActivityCompat;
-import androidx.core.content.ContextCompat;
 import androidx.fragment.app.Fragment;
+import androidx.lifecycle.LiveData;
 import androidx.lifecycle.Observer;
+import androidx.lifecycle.ViewModelProvider;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.example.go4lunch.BuildConfig;
 import com.example.go4lunch.MainApplication;
 import com.example.go4lunch.R;
+import com.example.go4lunch.model.Restaurant;
+import com.example.go4lunch.model.User;
 import com.example.go4lunch.model.location.GPSStatus;
-import com.example.go4lunch.ui.CoreActivity;
-import com.example.go4lunch.ui.MainActivity;
+import com.example.go4lunch.repository.LunchRepository;
 import com.example.go4lunch.ui.RestaurantItem;
 import com.example.go4lunch.pojo.RestaurantsAnswer;
 import com.example.go4lunch.pojo.Result;
 import com.example.go4lunch.repository.RestaurantRepository;
 import com.example.go4lunch.services.RetrofitMapsApi;
 import com.example.go4lunch.services.RetrofitService;
+import com.example.go4lunch.view.ListRestaurantViewModel;
 import com.example.go4lunch.view.LocationViewModel;
-import com.example.go4lunch.view.RestaurantAdapter;
+import com.example.go4lunch.view.adapter.RestaurantAdapter;
+import com.google.android.gms.maps.model.LatLng;
+import com.google.maps.android.SphericalUtil;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -49,7 +53,9 @@ public class ListRestaurantFragment extends Fragment {
     private RestaurantAdapter adapter;
     private RestaurantRepository restaurantRepository;
 
+    // changer les noms des deux ViewModel car utiliser pour plusieurs class
     private LocationViewModel locationViewModel;
+    private ListRestaurantViewModel viewModel;
     private TextView textViewLatitude;
     private TextView textViewLongitude;
 
@@ -75,9 +81,16 @@ public class ListRestaurantFragment extends Fragment {
         restaurantRepository = new RestaurantRepository(retrofitMapsApi);
         locationViewModel = new LocationViewModel(MainApplication.getApplication());
 
-        // manque un appel au viewmodel pour recuperer la position GPS > observe > fetchrestaurant sur gps workmate
-        // a retirer
-        //fetchRestaurants(48.8566, 2.3522); // position de Paris pour l'exemple
+        /*
+        viewModel = new ViewModelProvider(this).get(ListRestaurantViewModel.class);
+        viewModel.getRestaurantListLiveData().observe(getViewLifecycleOwner(), new Observer<List<Restaurant>>() {
+            @Override
+            public void onChanged(List<Restaurant> restaurants) {
+                adapter.updateData(restaurants);
+            }
+        });
+
+         */
 
         requestPermissions();
         return view;
@@ -138,44 +151,71 @@ public class ListRestaurantFragment extends Fragment {
         }
     }
 
+
+    /*
+    private void fetchRestaurants(double latitude, double longitude) {
+        viewModel.fetchRestaurants(latitude, longitude);
+    }
+
+     */
+
+
     private void fetchRestaurants(double latitude, double longitude) {
         String location = latitude + "," + longitude;
-        // les constantes sont à mettre en tant que static final en haut de la classe
         int radius = 1000;
         String type = "restaurant";
         String apiKey = BuildConfig.google_maps_api;
 
-        //utiliser le viewmodel et mettre cette logique dans le viewmodel > renvoi un Livedata
-
-        // ne pas utiliser le result > RestaurantItem
-        // CAD ne pas utiliser les POJO ? Si oui, comment je ne vois pas
         restaurantRepository.getAllRestaurants(location, radius, type, apiKey).enqueue(new Callback<RestaurantsAnswer>() {
             @Override
             public void onResponse(Call<RestaurantsAnswer> call, Response<RestaurantsAnswer> response) {
                 if (response.isSuccessful() && response.body() != null) {
                     List<Result> results = response.body().getResults();
                     List<RestaurantItem> restaurantItems = new ArrayList<>();
+
+                    Log.d(TAG, "Number of restaurants fetched: " + results.size());
+
                     for (Result result : results) {
-                        // si le resultat est null aller chercher les valeurs
                         if (result != null) {
                             String name = result.getName();
                             String vicinity = result.getVicinity();
                             Double rating = result.getRating();
-                            // Si les valeurs sont null les recuperer
-                            if (name != null && vicinity != null && rating != null) {
-                                String photoUrl = (result.getPhotos() != null && !result.getPhotos().isEmpty())
-                                        ? "https://maps.googleapis.com/maps/api/place/photo?maxwidth=400&photoreference=" + result.getPhotos().get(0).getPhotoReference() + "&key=" + apiKey
-                                        : null;
-                                restaurantItems.add(new RestaurantItem(
-                                        name,
-                                        vicinity,
-                                        rating,
-                                        photoUrl
-                                ));
+
+                            // Construction de l'URL de la photo si disponible
+                            String photoUrl = null;
+                            if (result.getPhotos() != null && !result.getPhotos().isEmpty()) {
+                                photoUrl = "https://maps.googleapis.com/maps/api/place/photo?maxwidth=400&photoreference="
+                                        + result.getPhotos().get(0).getPhotoReference()
+                                        + "&key=" + apiKey;
                             }
+
+                            // Calcul de la distance avec SphericalUtil
+                            LatLng currentLocation = new LatLng(latitude, longitude);
+                            LatLng restaurantLocation = new LatLng(result.getGeometry().getLocation().getLat(), result.getGeometry().getLocation().getLng());
+                            double distance = SphericalUtil.computeDistanceBetween(currentLocation, restaurantLocation);
+
+                            Log.d(TAG, "Restaurant: " + name + ", Distance: " + distance);
+
+                            // Les workmates pour ce restaurant
+                            LiveData<ArrayList<User>> workmatesLiveData = LunchRepository.getInstance(getContext()).getWorkmatesThatAlreadyChooseRestaurantForTodayLunchForThatRestaurant(new Restaurant(result.getPlaceId(), name, vicinity, photoUrl, "10h", "3 étoiles", "www.ollapion.com", "Restaurant_Café_Jeu"));
+
+                            final String finalPhotoUrl = photoUrl;
+                            workmatesLiveData.observe(getViewLifecycleOwner(), new Observer<ArrayList<User>>() {
+                                @Override
+                                public void onChanged(ArrayList<User> workmates) {
+                                    int nbParticipants = workmates.size();
+                                    Restaurant origin = new Restaurant("R1", "Chez Ollapion", "1 rue de la jeunesse", "http://www.ollapion.com/kross.jpg)", "10h", "3 étoiles", "www.ollapion.com", "Restaurant_Café_Jeu");
+
+                                    Log.d(TAG, "Adding restaurant item: " + name + " with distance: " + distance);
+
+                                    restaurantItems.add(new RestaurantItem(
+                                            name, vicinity, rating, finalPhotoUrl, distance, nbParticipants, origin));
+
+                                    adapter.updateData(restaurantItems);
+                                }
+                            });
                         }
                     }
-                    adapter.updateData(restaurantItems);
                 } else {
                     Log.e(TAG, "Failed to fetch restaurants: " + response.message());
                 }
@@ -187,6 +227,7 @@ public class ListRestaurantFragment extends Fragment {
             }
         });
     }
+
 
     @Override
     public void onResume(){

@@ -1,5 +1,7 @@
 package com.example.go4lunch.ui;
 
+import com.example.go4lunch.model.Restaurant;
+
 import java.io.Serializable;
 // n'est pas un modele
 public class RestaurantItem implements Serializable {
@@ -8,11 +10,19 @@ public class RestaurantItem implements Serializable {
     private double rating;
     private String photoUrl;
 
-    public RestaurantItem(String name, String address, double rating, String photoUrl) {
+    private Double distance;
+    private int NbParticipant;
+
+    private Restaurant origin;
+
+    public RestaurantItem(String name, String address, double rating, String photoUrl, Double distance, int nbParticipant, Restaurant origin) {
         this.name = name;
         this.address = address;
         this.rating = rating;
         this.photoUrl = photoUrl;
+        this.distance = distance;
+        NbParticipant = nbParticipant;
+        this.origin = origin;
     }
 
     // Getters and setters
@@ -47,4 +57,26 @@ public class RestaurantItem implements Serializable {
     public void setPhotoUrl(String photoUrl) {
         this.photoUrl = photoUrl;
     }
+
+    public Double getDistance() {
+        return distance;
+    }
+
+    public int getNbParticipant() {
+        return NbParticipant;
+    }
+
+    public void setDistance(Double distance) {
+        this.distance = distance;
+    }
+
+    public void setNbParticipant(int nbParticipant) {
+        NbParticipant = nbParticipant;
+    }
+
+    public Restaurant getOrigin() {
+        return origin;
+    }
+
+
 }

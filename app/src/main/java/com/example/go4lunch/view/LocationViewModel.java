@@ -18,6 +18,9 @@ import com.example.go4lunch.MainApplication;
 import com.example.go4lunch.model.location.GPSStatus;
 import com.google.android.gms.location.LocationServices;
 import com.example.go4lunch.repository.LocationRepository;
+import com.google.maps.android.SphericalUtil;
+import com.google.android.gms.maps.model.LatLng;
+
 
 public class LocationViewModel extends AndroidViewModel {
 
@@ -46,6 +49,14 @@ public class LocationViewModel extends AndroidViewModel {
             locationLiveData.setValue(new GPSStatus(location.getLongitude(), location.getLatitude()));
         }
     }
+
+    public LiveData<Double> calculateDistance(LatLng posGPSA, LatLng posGPSB) {
+        MutableLiveData<Double> distanceLiveData = new MutableLiveData<>();
+        double distance = SphericalUtil.computeDistanceBetween(posGPSA, posGPSB);
+        distanceLiveData.setValue(distance);
+        return distanceLiveData;
+    }
+
 
     public LiveData<GPSStatus> getLocationLiveData() {
         return locationLiveData;
