@@ -5,10 +5,11 @@
     android:layout_height="match_parent"
     tools:context=".ui.fragment.ListWorkmatesLunchWithYouFragment">
 
-    <!-- TODO: Update blank fragment layout -->
-    <TextView
+    <androidx.recyclerview.widget.RecyclerView
+        android:id="@+id/recycler_view_workmates_lunch_with_you"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:text="Je suis la liste de workmates qui va manger avec toi" />
+        android:layout_margin="16dp"
+        tools:listitem="@layout/item_workmate" />
 
 </FrameLayout>

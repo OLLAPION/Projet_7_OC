@@ -42,10 +42,6 @@ public class WorkmateRepository {
     }
 
     private User getFirebaseUserAsWorkmate() {
-        // je simule une user
-        /*
-        return new User("1", "Benjamin", "test@test.fr", "https://sitechecker.pro/wp-content/uploads/2023/05/URL-meaning.jpg");
-        */
 
         FirebaseUser firebaseUser = auth.getCurrentUser();
             if (firebaseUser != null) {
