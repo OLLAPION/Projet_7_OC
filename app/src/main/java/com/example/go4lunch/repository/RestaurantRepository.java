@@ -13,6 +13,7 @@ public class RestaurantRepository {
         this.retrofitMapsApi = retrofitMapsApi;
     }
 
+    // renvoyer un LiveDate de Restaurant au lieu du Call
     public Call<RestaurantsAnswer> getAllRestaurants(String location, int radius, String type, String key) {
         return retrofitMapsApi.getAllRestaurants(location, radius, type, key);
     }

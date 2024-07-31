@@ -3,6 +3,7 @@ package com.example.go4lunch.model;
 import java.io.Serializable;
 import java.util.Date;
 import java.util.List;
+import java.util.Map;
 
 /**
  * Model class representing a restaurant item.
@@ -177,6 +178,20 @@ public class Restaurant implements Serializable {
 
     public Restaurant (){
 
+    }
+
+    // pour test 1 dans ListRestaurantFragment le fetchRestaurant !
+    public static Restaurant fromMap(Map<String, Object> args) {
+        return new Restaurant(
+                (String) args.get("placeId"),
+                (String) args.get("name"),
+                (String) args.get("vicinity"),
+                (String) args.get("photoUrl"),
+                (String) args.get("openingHours"),
+                (String) args.get("rating"),
+                (String) args.get("website"),
+                (String) args.get("typeOfRestaurant")
+        );
     }
 
 }

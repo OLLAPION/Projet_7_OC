@@ -98,6 +98,7 @@ public class LunchRepository {
                 .whereEqualTo("user.id", userId);
     }
 
+    // faire un getBaseQuery4 pour les lunch de la journée pour le fetchFerstaurant de ListRestaurantFragment
     private Query getBaseQuery2(Restaurant restaurant) {
         FirebaseFirestore firestore = FirebaseFirestore.getInstance();
         if (restaurant == null || restaurant.getId() == null || restaurant.getId().isEmpty()) {
@@ -155,6 +156,41 @@ public class LunchRepository {
                 });
 
         return todayLunch;
+    }
+
+    public LiveData<List<Lunch>> getLunchesForToday() {
+        MutableLiveData<List<Lunch>> lunchesLiveData = new MutableLiveData<>();
+        ArrayList<Lunch> lunches = new ArrayList<>();
+
+        FirebaseFirestore.getInstance().collection("Lunch")
+                .whereEqualTo("dayDate", toDay())
+                .get()
+                .addOnCompleteListener(task -> {
+                    if (task.isSuccessful()) {
+                        QuerySnapshot queryDocumentSnapshots = task.getResult();
+                        if (queryDocumentSnapshots != null && !queryDocumentSnapshots.isEmpty()) {
+                            for (QueryDocumentSnapshot document : queryDocumentSnapshots) {
+                                Lunch lunch = document.toObject(Lunch.class);
+                                lunches.add(lunch);
+                            }
+                            lunchesLiveData.postValue(lunches);
+                        } else {
+                            lunchesLiveData.postValue(lunches);
+                        }
+                    } else {
+                        Exception exception = task.getException();
+                        if (exception != null) {
+                            Log.e("LR_getLunchesForToday", "Failed to retrieve lunches", exception);
+                        }
+                        lunchesLiveData.postValue(lunches);
+                    }
+                })
+                .addOnFailureListener(e -> {
+                    Log.e("LR_getLunchesForToday", "Failed to retrieve lunches", e);
+                    lunchesLiveData.postValue(lunches);
+                });
+
+        return lunchesLiveData;
     }
 
     public LiveData<ArrayList<User>> getWorkmatesThatAlreadyChooseRestaurantForTodayLunchForThatRestaurant(Restaurant restaurant) {

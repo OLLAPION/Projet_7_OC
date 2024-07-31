@@ -127,6 +127,9 @@ public class MainActivity extends AppCompatActivity {
 
                 // test checkIfWorkmateChooseRestaurant
                 //testCheckIfWorkmateChooseRestaurant();
+
+                // le like
+                //likeRestaurant();
             }
         });
 
@@ -262,7 +265,7 @@ public class MainActivity extends AppCompatActivity {
         Restaurant restaurant_1 = new Restaurant("R1",
                 "Chez Ollapion",
                 "1 rue de la jeunesse",
-                "![](C:/Users/Ollapion/AppData/Local/Temp/kross.jpg)",
+                "http://www.ollapion.com/kross.jpgg)",
                 "10h",
                 "3 étoiles",
                 "www.ollapion.com",
@@ -271,7 +274,7 @@ public class MainActivity extends AppCompatActivity {
         Restaurant restaurant_2 = new Restaurant("R2",
                 "Chez Ben",
                 "2 rue de la jeunesse",
-                "![](C:/Users/Ollapion/AppData/Local/Temp/kross.jpg)",
+                "http://www.ollapion.com/kross.jpg)",
                 "10h",
                 "1 étoiles",
                 "www.chezBen.com",

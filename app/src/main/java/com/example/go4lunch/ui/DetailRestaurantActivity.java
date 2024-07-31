@@ -1,8 +1,6 @@
 package com.example.go4lunch.ui;
 
 import android.content.Intent;
-import android.content.res.ColorStateList;
-import android.graphics.Color;
 import android.net.Uri;
 import android.os.Bundle;
 import android.util.Log;
@@ -11,10 +9,10 @@ import android.widget.ImageButton;
 import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.Toast;
+import android.os.Handler;
 
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.core.app.ActivityCompat;
-import androidx.lifecycle.LiveData;
 import androidx.lifecycle.ViewModelProvider;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
@@ -22,20 +20,17 @@ import androidx.recyclerview.widget.RecyclerView;
 import com.bumptech.glide.Glide;
 import com.bumptech.glide.load.resource.drawable.DrawableTransitionOptions;
 import com.bumptech.glide.request.RequestOptions;
-import com.example.go4lunch.MainApplication;
 import com.example.go4lunch.R;
 import com.example.go4lunch.model.Restaurant;
 import com.example.go4lunch.model.User;
-import com.example.go4lunch.repository.LunchRepository;
 import com.example.go4lunch.repository.WorkmateRepository;
 import com.example.go4lunch.view.DetailRestaurantViewModel;
-import com.example.go4lunch.view.UserAdapter;
+import com.example.go4lunch.view.adapter.UserAdapter;
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
-import com.squareup.picasso.Picasso;
+import com.google.firebase.auth.FirebaseUser;
 
 import java.io.Serializable;
 import java.util.ArrayList;
-import java.util.List;
 
 // le like ne fonctionne pas sur l'emulateur, mais uniquement sur mon telephone et même le design bug
 // ça reste sur Star on clicked
@@ -62,7 +57,10 @@ public class DetailRestaurantActivity extends AppCompatActivity {
         viewModel = new ViewModelProvider(this).get(DetailRestaurantViewModel.class);
 
         Intent intent = getIntent();
-        restaurant = (Restaurant) intent.getSerializableExtra("restaurant");
+        if (intent != null) {
+            restaurant = (Restaurant) intent.getSerializableExtra("restaurant");
+
+        }
 
         configureComponante();
         configureRecyclerView();
@@ -143,6 +141,7 @@ public class DetailRestaurantActivity extends AppCompatActivity {
      * If no, creates a lunch for this restaurant.
      */
     private void handleWorkmateLunchChoice() {
+
 
         User currentUser_2 = new User();
         currentUser_2.setId("D7rZ2O9j8vVHuLwxHrgnrLTT3mv1");
@@ -228,7 +227,6 @@ public class DetailRestaurantActivity extends AppCompatActivity {
         });
 
     }
-
 
 
     /**

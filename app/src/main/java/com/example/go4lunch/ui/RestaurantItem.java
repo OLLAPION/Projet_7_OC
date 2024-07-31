@@ -3,8 +3,11 @@ package com.example.go4lunch.ui;
 import com.example.go4lunch.model.Restaurant;
 
 import java.io.Serializable;
+import java.util.Collections;
+import java.util.List;
+
 // n'est pas un modele
-public class RestaurantItem implements Serializable {
+public class RestaurantItem implements Serializable, Comparable<RestaurantItem> {
     private String name;
     private String address;
     private double rating;
@@ -78,5 +81,10 @@ public class RestaurantItem implements Serializable {
         return origin;
     }
 
+    // compare la distance entre deux objets
+    @Override
+    public int compareTo(RestaurantItem other) {
+        return this.distance.compareTo(other.distance);
+    }
 
 }
