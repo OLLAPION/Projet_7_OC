@@ -70,24 +70,21 @@ public class ListRestaurantViewModel extends ViewModel {
         String type = "restaurant";
         // Le mieux est de mettre le context dans un fonction privé
         ListRestaurantViewModel lrvm = this;
-        restaurantRepository.getAllRestaurants(location, radius, type, apiKey).enqueue(new Callback<RestaurantsAnswer>() {
-            @Override
-            public void onResponse(Call<RestaurantsAnswer> call, Response<RestaurantsAnswer> response) {
-                if (response.isSuccessful() && response.body() != null) {
-                    List<Result> results = response.body().getResults();
-                    List<RestaurantItem> restaurantItems = new ArrayList<>();
-// ObserveForever ça passe où pas ??? NON !!! > utiliser le "this" > utiliser le lrvm pour utiliser le this du viewModel
-                    // Observe Lunches for today to integrate with restaurant data.
-                    lunchRepository.getLunchesForToday().observeForever(lunches -> {
-                        if (lunches != null) {
-                            for (Result result : results) {
-                                if (result != null) {
-                                    String photoUrl = null;
-                                    if (result.getPhotos() != null && !result.getPhotos().isEmpty()) {
-                                        photoUrl = "https://maps.googleapis.com/maps/api/place/photo?maxwidth=400&photoreference="
-                                                + result.getPhotos().get(0).getPhotoReference()
-                                                + "&key=" + apiKey;
-                                    }
+        restaurantRepository.getAllRestaurants(location, radius, type, apiKey).observeForever(response -> {
+            if (response != null && response.getResults() != null) {
+                List<Result> results = response.getResults();
+                List<RestaurantItem> restaurantItems = new ArrayList<>();
+
+                lunchRepository.getLunchesForToday().observeForever(lunches -> {
+                    if (lunches != null) {
+                        for (Result result : results) {
+                            if (result != null) {
+                                String photoUrl = null;
+                                if (result.getPhotos() != null && !result.getPhotos().isEmpty()) {
+                                    photoUrl = "https://maps.googleapis.com/maps/api/place/photo?maxwidth=400&photoreference="
+                                            + result.getPhotos().get(0).getPhotoReference()
+                                            + "&key=" + apiKey;
+                                }
 
                                     // getPlaceId pour id à ajouter
                                     String name = result.getName();
@@ -107,16 +104,11 @@ public class ListRestaurantViewModel extends ViewModel {
                                 }
                             }
                             // Sort restaurants by distance.
-                            Collections.sort(restaurantItems, Comparator.comparingDouble(RestaurantItem::getDistance));
-                            restaurantListLiveData.setValue(restaurantItems);
-                        }
-                    });
-                }
-            }
-
-            @Override
-            public void onFailure(Call<RestaurantsAnswer> call, Throwable t) {
-                // Handle error.
+                        Collections.sort(restaurantItems, Comparator.comparingDouble(RestaurantItem::getDistance));
+                        restaurantListLiveData.setValue(restaurantItems);
+                    }
+                });
+                // j'ajoute un on Failure ???
             }
         });
     }

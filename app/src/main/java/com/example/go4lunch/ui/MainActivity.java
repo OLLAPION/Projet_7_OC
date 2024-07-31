@@ -486,6 +486,8 @@ public class MainActivity extends AppCompatActivity {
                 });
     }
 
+    // j'ai changé le Call du RestaurantRepository pour un LiveData
+    /*
     private void getRestaurants() {
         // Les paramètres de la requête
         String location = "37.4219999,-122.0840575";
@@ -519,5 +521,7 @@ public class MainActivity extends AppCompatActivity {
             }
         });
     }
+
+     */
 }
 
