@@ -6,4 +6,7 @@
     <!-- RestaurantAdapter the nb of participant to lunch in each restaurants -->
     <string name="distance_text">Distance: %.2f m</string>
     <string name="participants_count">Participants: %d</string>
+
+    <string name="navigation_drawer_open">Open navigation drawer</string>
+    <string name="navigation_drawer_close">Close navigation drawer</string>
 </resources>
