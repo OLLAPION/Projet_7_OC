@@ -68,7 +68,7 @@ public class MainActivity extends AppCompatActivity {
         btnGoCoreActivity= findViewById(R.id.btnGoCoreActivity);
 
         restaurantRepository = new RestaurantRepository(RetrofitService.getRestaurantApi());
-        workmateRepository = new WorkmateRepository();
+        //workmateRepository = new WorkmateRepository();
 
         textViewLatitude = findViewById(R.id.textViewLatitude);
         textViewLongitude = findViewById(R.id.textViewLongitude);
@@ -176,7 +176,7 @@ public class MainActivity extends AppCompatActivity {
                 "1 rue de la jeunesse",
                 "![](C:/Users/Ollapion/AppData/Local/Temp/kross.jpg)",
                 "10h",
-                "3 étoiles",
+                1.3,
                 "www.ollapion.com",
                 "Restaurant_Café_Jeu");
 
@@ -202,7 +202,7 @@ public class MainActivity extends AppCompatActivity {
                 "1 rue de la jeunesse",
                 "![](C:/Users/Ollapion/AppData/Local/Temp/kross.jpg)",
                 "10h",
-                "3 étoiles",
+                1.3,
                 "www.ollapion.com",
                 "Restaurant_Café_Jeu");
         DetailRestaurantActivity.navigate(this, restaurant_1);
@@ -267,7 +267,7 @@ public class MainActivity extends AppCompatActivity {
                 "1 rue de la jeunesse",
                 "http://www.ollapion.com/kross.jpgg)",
                 "10h",
-                "3 étoiles",
+                1.3,
                 "www.ollapion.com",
                 "Restaurant_Café_Jeu");
 
@@ -276,7 +276,7 @@ public class MainActivity extends AppCompatActivity {
                 "2 rue de la jeunesse",
                 "http://www.ollapion.com/kross.jpg)",
                 "10h",
-                "1 étoiles",
+                1.3,
                 "www.chezBen.com",
                 "Restaurant_Café_Jeu");
 
@@ -374,7 +374,7 @@ public class MainActivity extends AppCompatActivity {
                 "1 rue de la jeunesse",
                 "![](C:/Users/Ollapion/AppData/Local/Temp/kross.jpg)",
                 "10h",
-                "3 étoiles",
+                1.3,
                 "www.ollapion.com",
                 "Restaurant_Café_Jeu"
         );
@@ -396,7 +396,7 @@ public class MainActivity extends AppCompatActivity {
                 "1 rue de la jeunesse",
                 "![](C:/Users/Ollapion/AppData/Local/Temp/kross.jpg)",
                 "10h",
-                "3 étoiles",
+                1.3,
                 "www.ollapion.com",
                 "Restaurant_Café_Jeu"
         );
