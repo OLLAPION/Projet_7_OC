@@ -46,6 +46,8 @@ public class LocationViewModel extends AndroidViewModel {
                 locationLiveData.setValue(new GPSStatus(true, true));
             }
         } else{
+            // location jamais null ??? à vérifier
+            // normalement c'est bon ...
             locationLiveData.setValue(new GPSStatus(location.getLongitude(), location.getLatitude()));
         }
     }

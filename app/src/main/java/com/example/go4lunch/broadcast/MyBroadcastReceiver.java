@@ -71,10 +71,9 @@ public class MyBroadcastReceiver extends BroadcastReceiver {
     }
 
 
-// commenter l'interieur de la méthode pour continuer les tests
+
     @Override
     public void onReceive(Context context, Intent intent) {
-
 
         Log.i(TAG, "ALARM TRIGGERED");
 

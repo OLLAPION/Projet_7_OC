@@ -1,12 +1,10 @@
 
 package com.example.go4lunch.pojo;
-
-import java.util.List;
-import javax.annotation.Generated;
 import com.google.gson.annotations.Expose;
 import com.google.gson.annotations.SerializedName;
 
-@Generated("jsonschema2pojo")
+import java.util.List;
+
 public class Result {
 
     @SerializedName("business_status")
@@ -42,9 +40,20 @@ public class Result {
     @SerializedName("price_level")
     @Expose
     private Integer priceLevel;
+
+
+
+    @SerializedName("formatted_phone_number")
+    @Expose
+    private String formatted_phone_number;
     @SerializedName("rating")
     @Expose
     private Double rating;
+
+    @SerializedName("website")
+    @Expose
+    private String website;
+
     @SerializedName("reference")
     @Expose
     private String reference;
@@ -58,7 +67,6 @@ public class Result {
     @Expose
     private Integer userRatingsTotal;
     @SerializedName("vicinity")
-    @Expose
     private String vicinity;
 
     public String getBusinessStatus() {
@@ -79,6 +87,21 @@ public class Result {
 
     public String getIcon() {
         return icon;
+    }
+    public void setWebsite(String website) {
+        this.website = website;
+    }
+
+    public String getWebsite() {
+        return website;
+    }
+
+    public String getFormatted_phone_number() {
+        return formatted_phone_number;
+    }
+
+    public void setFormatted_phone_number(String formatted_phone_number) {
+        this.formatted_phone_number = formatted_phone_number;
     }
 
     public void setIcon(String icon) {

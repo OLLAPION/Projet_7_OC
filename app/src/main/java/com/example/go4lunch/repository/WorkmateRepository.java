@@ -23,14 +23,27 @@ import com.google.firebase.firestore.QueryDocumentSnapshot;
 
 public class WorkmateRepository {
 
+    private static WorkmateRepository instance;
+
     private final FirebaseFirestore firestore = FirebaseFirestore.getInstance();
     private final FirebaseAuth auth = FirebaseAuth.getInstance();
+
     private static final String SUB_COLLECTION = "likedrestaurant" ;
     //mettre public
     private FirebaseUser getWorkmate() {
         return auth.getCurrentUser();
     }
 
+    // singleton (broadcast ....)
+    public WorkmateRepository() {
+    }
+
+    public static  WorkmateRepository getInstance() {
+        if (instance == null) {
+            instance = new WorkmateRepository();
+        }
+        return instance;
+    }
 
     public Task<Void> signOut(Context context) {
         AuthUI authUI = AuthUI.getInstance();
@@ -41,7 +54,7 @@ public class WorkmateRepository {
         return FirebaseFirestore.getInstance().collection("workmates");
     }
 
-    private User getFirebaseUserAsWorkmate() {
+    public User getFirebaseUserAsWorkmate() {
 
         FirebaseUser firebaseUser = auth.getCurrentUser();
             if (firebaseUser != null) {
@@ -81,6 +94,8 @@ public class WorkmateRepository {
         }
     }
 
+
+
     public LiveData<ArrayList<User>> getAllWorkmates() {
         MutableLiveData<ArrayList<User>> liveData = new MutableLiveData<>();
         getWorkmatesCollection().get().addOnCompleteListener(task -> {
@@ -107,6 +122,7 @@ public class WorkmateRepository {
         });
         return liveData;
     }
+
 
 
     public void addLikedRestaurant(Restaurant restaurant) {

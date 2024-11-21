@@ -158,7 +158,8 @@ public class LunchRepository {
         return todayLunch;
     }
 
-    public LiveData<List<Lunch>> getLunchesForToday() {
+    // modification en static (demander par Android Studio)
+    public static LiveData<List<Lunch>> getLunchesForToday() {
         MutableLiveData<List<Lunch>> lunchesLiveData = new MutableLiveData<>();
         ArrayList<Lunch> lunches = new ArrayList<>();
 

@@ -26,13 +26,42 @@ public class Restaurant implements Serializable {
     private String openingHours;
 
     /** Rating stars of the restaurant */
-    private String stars;
+    private Double stars;
 
     /** Website of the restaurant */
     private String website;
 
     /** Type of restaurant */
     private String typeOfRestaurant;
+
+    /** Type of restaurant */
+    private String telephone;
+    private Double latitude;
+    private Double longitude;
+
+    public Double getStars() {
+        return stars;
+    }
+
+    public void setStars(Double stars) {
+        this.stars = stars;
+    }
+
+    public Double getLatitude() {
+        return latitude;
+    }
+
+    public void setLatitude(Double latitude) {
+        this.latitude = latitude;
+    }
+
+    public Double getLongitude() {
+        return longitude;
+    }
+
+    public void setLongitude(Double longitude) {
+        this.longitude = longitude;
+    }
 
     /**
      * Get the unique identifier of the restaurant.
@@ -109,20 +138,6 @@ public class Restaurant implements Serializable {
         this.openingHours = openingHours;
     }
 
-    /**
-     * Get the rating stars of the restaurant.
-     * @return The rating stars of the restaurant.
-     */
-    public String getStars() {
-        return stars;
-    }
-    /**
-     * Set the rating stars of the restaurant.
-     * @param stars The rating stars of the restaurant.
-     */
-    public void setStars(String stars) {
-        this.stars = stars;
-    }
 
     /**
      * Get the website of the restaurant.
@@ -154,6 +169,14 @@ public class Restaurant implements Serializable {
         this.typeOfRestaurant = typeOfRestaurant;
     }
 
+    public String getTelephone() {
+        return telephone;
+    }
+
+    public void setTelephone(String telephone) {
+        this.telephone = telephone;
+    }
+
     /**
      * Constructor to initialize a restaurant object with all attributes.
      * @param id The unique identifier of the restaurant.
@@ -162,10 +185,19 @@ public class Restaurant implements Serializable {
      * @param photo The photo of the restaurant.
      * @param openingHours The opening hours of the restaurant.
      * @param stars The rating stars of the restaurant.
-     * @param website The website of the restaurant.
      * @param typeOfRestaurant The type of restaurant.
      */
-    public Restaurant(String id, String name, String address, String photo, String openingHours, String stars, String website, String typeOfRestaurant) {
+    public Restaurant(String id, String name, String address, String photo, String openingHours, Double stars, String typeOfRestaurant) {
+        this.id = id;
+        this.name = name;
+        this.address = address;
+        this.photo = photo;
+        this.openingHours = openingHours;
+        this.stars = stars;
+        this.typeOfRestaurant = typeOfRestaurant;
+    }
+
+    public Restaurant(String id, String name, String address, String photo, String openingHours, Double stars, String website, String typeOfRestaurant) {
         this.id = id;
         this.name = name;
         this.address = address;
@@ -180,6 +212,28 @@ public class Restaurant implements Serializable {
 
     }
 
+    // 1er tentative du RestaurantRepository
+    /*
+    public static List<Restaurant> fromResults(List<Result> results) {
+        List<Restaurant> restaurants = new ArrayList<>();
+        for (Result result : results) {
+            restaurants.add(new Restaurant(
+                    result.getPlaceId(),
+                    result.getName(),
+                    result.getVicinity(),
+                    result.getPhotoUrl(),
+                    result.getOpeningHours(),
+                    result.getRating(),
+                    result.getWebsite(),
+                    result.getTypeOfRestaurant()
+            ));
+        }
+        return restaurants;
+    }
+
+     */
+
+    /*
     // pour test 1 dans ListRestaurantFragment le fetchRestaurant !
     public static Restaurant fromMap(Map<String, Object> args) {
         return new Restaurant(
@@ -193,5 +247,7 @@ public class Restaurant implements Serializable {
                 (String) args.get("typeOfRestaurant")
         );
     }
+
+     */
 
 }

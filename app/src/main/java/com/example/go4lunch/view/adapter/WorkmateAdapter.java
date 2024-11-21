@@ -1,5 +1,6 @@
 package com.example.go4lunch.view.adapter;
 
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -19,6 +20,12 @@ import java.util.List;
 public class WorkmateAdapter extends RecyclerView.Adapter<WorkmateAdapter.WorkmateViewHolder> {
 
     private final List<User> workmates = new ArrayList<>();
+    private final String TAG = "WorkmateAdapter";
+
+    public WorkmateAdapter(List<User> workmates) {
+        this.workmates.addAll(workmates);
+    }
+
 
     @NonNull
     @Override
@@ -40,6 +47,7 @@ public class WorkmateAdapter extends RecyclerView.Adapter<WorkmateAdapter.Workma
     }
 
     public void setWorkmates(List<User> workmates) {
+        Log.d(TAG, "NB de workmates chargé dans la liste de workmate : " + workmates.size());
         this.workmates.clear();
         this.workmates.addAll(workmates);
         notifyDataSetChanged();
@@ -55,13 +63,18 @@ public class WorkmateAdapter extends RecyclerView.Adapter<WorkmateAdapter.Workma
             avatar = itemView.findViewById(R.id.workmate_avatar);
             name = itemView.findViewById(R.id.workmate_name);
         }
-
+// voir les xml
         void bind(User workmate) {
             name.setText(workmate.getName());
-            Glide.with(itemView.getContext())
-                    .load(workmate.getAvatar())
-                    .placeholder(R.drawable.ic_list_workmate_avatar)
-                    .into(avatar);
+            if (workmate.getAvatar() != null) {
+                Glide.with(itemView.getContext())
+                        .load(workmate.getAvatar())
+                        .placeholder(R.drawable.ic_list_workmate_avatar)
+                        .into(avatar);
+            } else {
+                avatar.setImageResource(R.drawable.ic_user_avatar);
+            }
+
         }
     }
 }

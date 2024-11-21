@@ -89,18 +89,30 @@ public class RestaurantAdapter extends RecyclerView.Adapter<RestaurantAdapter.Re
 
         // je peux faire distanceTextView et participanttextView comme nameTextView, address ...
         public void bind(RestaurantItem restaurantItem) {
-            nameTextView.setText(restaurantItem.getName());
-            addressTextView.setText(restaurantItem.getAddress());
-            ratingBar.setRating((float) restaurantItem.getRating());
-            Glide.with(photoImageView.getContext())
-                    .load(restaurantItem.getPhotoUrl())
-                    .into(photoImageView);
-            participantTextView.setText(itemView.getContext().getString(R.string.participants_count, restaurantItem.getNbParticipant()));
-            // DEbug
-            double distance = restaurantItem.getDistance();
-            Log.d("RestaurantAdapter", "Binding distance: " + distance);
+            if (restaurantItem.getName() != null) {
+                nameTextView.setText(restaurantItem.getName());
+            }
+            if (restaurantItem.getAddress() != null) {
+                addressTextView.setText(restaurantItem.getAddress());
+            }
+            if (restaurantItem.getRating() != null) {
+                ratingBar.setRating(restaurantItem.getRating().floatValue());
+            }
 
-            distanceTextView.setText(itemView.getContext().getString(R.string.distance_text, restaurantItem.getDistance()));
+            if (restaurantItem.getPhotoUrl() != null) {
+                Glide.with(photoImageView.getContext())
+                        .load(restaurantItem.getPhotoUrl())
+                        .into(photoImageView);
+            }
+            if (restaurantItem.getNbParticipant() != null) {
+                participantTextView.setText(itemView.getContext().getString(R.string.participants_count, restaurantItem.getNbParticipant()));
+            }
+            if (restaurantItem.getDistance() != null) {
+                Double distance = restaurantItem.getDistance();
+                Log.d("RestaurantAdapter", "Binding distance: " + distance);
+
+                distanceTextView.setText(itemView.getContext().getString(R.string.distance_text, restaurantItem.getDistance()));
+            }
         }
     }
 }

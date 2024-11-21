@@ -1,6 +1,8 @@
 package com.example.go4lunch.ui;
 
+import android.content.Context;
 import android.content.Intent;
+import android.graphics.drawable.Drawable;
 import android.net.Uri;
 import android.os.Bundle;
 import android.util.Log;
@@ -11,6 +13,7 @@ import android.widget.TextView;
 import android.widget.Toast;
 import android.os.Handler;
 
+import androidx.annotation.Nullable;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.core.app.ActivityCompat;
 import androidx.lifecycle.ViewModelProvider;
@@ -18,8 +21,14 @@ import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.bumptech.glide.Glide;
+import com.bumptech.glide.load.DataSource;
+import com.bumptech.glide.load.engine.DiskCacheStrategy;
+import com.bumptech.glide.load.engine.GlideException;
 import com.bumptech.glide.load.resource.drawable.DrawableTransitionOptions;
+import com.bumptech.glide.request.RequestListener;
 import com.bumptech.glide.request.RequestOptions;
+import com.bumptech.glide.request.target.Target;
+import com.example.go4lunch.BuildConfig;
 import com.example.go4lunch.R;
 import com.example.go4lunch.model.Restaurant;
 import com.example.go4lunch.model.User;
@@ -271,11 +280,39 @@ public class DetailRestaurantActivity extends AppCompatActivity {
         restaurantAddressTextView.setText(restaurant.getAddress());
         restaurantTypeOfRestaurantTextView.setText(restaurant.getTypeOfRestaurant());
 
+
+
+        Log.d("DRA", "Restaurant Details: " + restaurant);
+        Log.d("DRA", "Avant Photo URL" + restaurant.getPhoto());
+
+        String photoUrl = "https://maps.googleapis.com/maps/api/place/photo?maxwidth=400&photoreference=" + restaurant.getPhoto() + "&key=" + BuildConfig.google_maps_api;
+
         Glide.with(this)
-                .load(restaurant.getPhoto())
-                .apply(new RequestOptions().centerCrop())
+                .load(photoUrl)
+                .apply(new RequestOptions()
+                        .centerCrop()
+                        .placeholder(R.drawable.ic_placeholder)
+                        .error(R.drawable.ic_error))
                 .transition(DrawableTransitionOptions.withCrossFade())
+                .listener(new RequestListener<Drawable>() {
+                    @Override
+                    public boolean onLoadFailed(@Nullable GlideException e, Object model, Target<Drawable> target, boolean isFirstResource) {
+                        Log.e("DRA_GLIDE_ERROR", "Failed to load image", e);
+                        return false;
+                    }
+
+                    @Override
+                    public boolean onResourceReady(Drawable resource, Object model, Target<Drawable> target, DataSource dataSource, boolean isFirstResource) {
+                        Log.d("DRA_GLIDE_SUCCESS", "Image loaded successfully");
+                        return false;
+                    }
+                })
                 .into(restaurantPhotoImageView);
+
+
+        Log.d("DRA", "Après Photo URL" + restaurant.getPhoto());
+
+
 
         Glide.with(this)
                 .load(R.drawable.ic_star_button)
@@ -295,7 +332,7 @@ public class DetailRestaurantActivity extends AppCompatActivity {
      * Used to navigate to this activity
      * @param activity the activity that calls this method
      */
-    public static void navigate(MainActivity activity, Restaurant restaurant) {
+    public static void navigate(Context activity, Restaurant restaurant) {
         Intent anIntent = new Intent(activity, DetailRestaurantActivity.class);
         anIntent.putExtra("restaurant", (Serializable) restaurant);
         ActivityCompat.startActivity(activity, anIntent, null);

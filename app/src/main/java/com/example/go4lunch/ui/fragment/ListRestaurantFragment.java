@@ -24,6 +24,7 @@ import com.example.go4lunch.R;
 import com.example.go4lunch.model.Restaurant;
 import com.example.go4lunch.model.User;
 import com.example.go4lunch.model.location.GPSStatus;
+import com.example.go4lunch.pojo.ResultDetails;
 import com.example.go4lunch.repository.LunchRepository;
 import com.example.go4lunch.ui.RestaurantItem;
 import com.example.go4lunch.pojo.RestaurantsAnswer;
@@ -34,10 +35,16 @@ import com.example.go4lunch.services.RetrofitService;
 import com.example.go4lunch.view.ListRestaurantViewModel;
 import com.example.go4lunch.view.LocationViewModel;
 import com.example.go4lunch.view.adapter.RestaurantAdapter;
+import com.google.android.gms.common.api.Status;
 import com.google.android.gms.maps.model.LatLng;
+import com.google.android.libraries.places.api.Places;
+import com.google.android.libraries.places.api.model.Place;
+import com.google.android.libraries.places.widget.AutocompleteSupportFragment;
+import com.google.android.libraries.places.widget.listener.PlaceSelectionListener;
 import com.google.maps.android.SphericalUtil;
 
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.Collections;
 import java.util.Comparator;
 import java.util.HashMap;
@@ -77,6 +84,7 @@ public class ListRestaurantFragment extends Fragment {
     /** TextViews for displaying latitude and longitude */
     private TextView textViewLatitude;
     private TextView textViewLongitude;
+    AutocompleteSupportFragment acsf;
 
 
     public ListRestaurantFragment() {
@@ -99,6 +107,7 @@ public class ListRestaurantFragment extends Fragment {
         // Initialize the ViewModels
         viewModel = new ViewModelProvider(this).get(ListRestaurantViewModel.class);
         locationViewModel = new ViewModelProvider(this).get(LocationViewModel.class);
+
 
         requestPermissions();
         return view;
@@ -155,7 +164,9 @@ public class ListRestaurantFragment extends Fragment {
                 textViewLongitude.setText(String.valueOf(longitude));
 
                 // Fetch the list of restaurants based on the current location
-                viewModel.fetchRestaurants(latitude, longitude);
+                // viewModel.fetchRestaurants(latitude, longitude);
+                // modification du repository et du viewModel
+                fetchRestaurants(latitude, longitude);
 
                 // Update the adapter data when the restaurant list changes
                 viewModel.getRestaurantListLiveData().observe(getViewLifecycleOwner(), restaurantItems -> {
@@ -175,6 +186,71 @@ public class ListRestaurantFragment extends Fragment {
             Log.e(TAG, "GPSStatus is null");
         }
     }
+
+    public void fetchRestaurants(double latitude, double longitude) {
+        String location = latitude + "," + longitude;
+        int radius = 1000;
+        String type = "restaurant";
+
+        viewModel.getLunchesForToday().observe(getViewLifecycleOwner(), lunches -> {
+            if (lunches != null) {
+                viewModel.getAllRestaurants(location, radius, type, BuildConfig.google_maps_api)
+                        .observe(getViewLifecycleOwner(), listRestaurants -> {
+                            if (listRestaurants != null) {
+
+                                List<RestaurantItem> restaurantItems = new ArrayList<>();
+
+                                for (Restaurant r : listRestaurants) {
+                                    Double distance = null;
+
+                                    if(r.getLatitude() != null && r.getLongitude() != null) {
+                                        LatLng currentLocation = new LatLng(latitude, longitude);
+                                        LatLng restaurantLocation = new LatLng(r.getLatitude(), r.getLongitude());
+                                        distance = SphericalUtil.computeDistanceBetween(currentLocation, restaurantLocation);
+
+                                    }
+
+                                    Integer nbParticipants = null;
+                                    if(r.getId() != null){
+                                        nbParticipants = (int) lunches.stream().filter(lunch -> lunch.getRestaurant() != null && lunch.getRestaurant().getId() != null && lunch.getRestaurant().getId().equals(r.getId())).count();
+                                    }
+
+                                    Log.d("Test", "avant RestaurantItem");
+                                    Log.d("Test", String.valueOf(r.getStars() != null));
+                                    if (r.getStars() != null)
+                                        Log.d("Test", String.valueOf(r.getStars()));
+                                    restaurantItems.add(new RestaurantItem(
+                                            r.getName(),
+                                            r.getAddress(),
+                                            r.getStars(),
+                                            "https://maps.googleapis.com/maps/api/place/photo?maxwidth=400&photoreference=" + r.getPhoto() + "&key=" + BuildConfig.google_maps_api,
+                                            distance,
+                                            nbParticipants,
+                                            latitude,
+                                            longitude,
+                                            r
+                                    ));
+                                    Log.d("Test", "après RestaurantItem");
+
+
+                                }
+                                // Sort restaurants by distance.
+                                Collections.sort(restaurantItems);
+                                // Update the UI using the adapter
+                                adapter.updateData(restaurantItems);
+                            }
+
+
+                        });
+
+            }
+
+
+        });
+
+
+    }
+
 
     @Override
     public void onResume() {

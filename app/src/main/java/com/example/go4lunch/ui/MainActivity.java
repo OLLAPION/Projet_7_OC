@@ -36,6 +36,7 @@ import com.google.firebase.auth.FirebaseUser;
 import android.widget.TextView;
 
 
+import java.util.Arrays;
 import java.util.Collections;
 import java.util.List;
 
@@ -75,6 +76,8 @@ public class MainActivity extends AppCompatActivity {
         // faire une factory
         locationViewModel = new LocationViewModel(MainApplication.getApplication());
 
+        //Lance directement l'authentification, mais plante sur gmail
+        //startSignInActivity();
 
         btnGetRestaurants.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -327,7 +330,7 @@ public class MainActivity extends AppCompatActivity {
                 });
     }
 
-
+/*
     private void testGetAllWorkmates() {
         workmateRepository.getAllWorkmates().observe(this, workmates -> {
             if (workmates != null) {
@@ -340,21 +343,21 @@ public class MainActivity extends AppCompatActivity {
         });
     }
 
+ */
+
 
     private void startSignInActivity(){
 
-        // Choose authentication providers
-        List<AuthUI.IdpConfig> providers =
+/*        List<AuthUI.IdpConfig> providers =
                 Collections.singletonList(new AuthUI.IdpConfig.EmailBuilder().build());
 
-        /*
+ */
+
         List<AuthUI.IdpConfig> providers = Arrays.asList(
                 new AuthUI.IdpConfig.EmailBuilder().build(),
                 new AuthUI.IdpConfig.GoogleBuilder().build()
         );
-        */
 
-        // Launch the activity
         startActivityForResult(
                 AuthUI.getInstance()
                         .createSignInIntentBuilder()
@@ -365,6 +368,8 @@ public class MainActivity extends AppCompatActivity {
                         .build(),
                 RC_SIGN_IN);
     }
+
+
 
 
     private void testCreateLunch() {

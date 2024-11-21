@@ -7,26 +7,20 @@ import androidx.lifecycle.ViewModel;
 import com.example.go4lunch.model.Restaurant;
 import com.example.go4lunch.model.User;
 import com.example.go4lunch.repository.LunchRepository;
+import com.example.go4lunch.repository.WorkmateRepository;
 
 import java.util.ArrayList;
 
 public class ListWorkmatesLunchWithYouViewModel extends ViewModel {
 
-    private final LunchRepository lunchRepository;
-    private final MutableLiveData<ArrayList<User>> workmatesLiveData = new MutableLiveData<>();
+    private final WorkmateRepository workmateRepository;
 
 
-    public ListWorkmatesLunchWithYouViewModel(LunchRepository lunchRepository) {
-        this.lunchRepository = lunchRepository;
+    public ListWorkmatesLunchWithYouViewModel() {
+        this.workmateRepository = WorkmateRepository.getInstance();
     }
 
-    public void fetchWorkmatesForTodayLunch(Restaurant restaurant) {
-        lunchRepository.getWorkmatesThatAlreadyChooseRestaurantForTodayLunchForThatRestaurant(restaurant)
-                .observeForever(workmates -> workmatesLiveData.setValue(workmates));
-    }
-
-    public LiveData<ArrayList<User>> getWorkmatesLiveData() {
-        return workmatesLiveData;
-        // dans User mettre un getAllWorkmate
+    public LiveData<ArrayList<User>> getAllWorkmates() {
+        return workmateRepository.getAllWorkmates();
     }
 }
