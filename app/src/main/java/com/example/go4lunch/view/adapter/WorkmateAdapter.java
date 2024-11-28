@@ -1,6 +1,7 @@
 package com.example.go4lunch.view.adapter;
 
 import android.util.Log;
+import android.util.Pair;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -12,6 +13,7 @@ import androidx.recyclerview.widget.RecyclerView;
 
 import com.bumptech.glide.Glide;
 import com.example.go4lunch.R;
+import com.example.go4lunch.model.Restaurant;
 import com.example.go4lunch.model.User;
 
 import java.util.ArrayList;
@@ -19,13 +21,18 @@ import java.util.List;
 
 public class WorkmateAdapter extends RecyclerView.Adapter<WorkmateAdapter.WorkmateViewHolder> {
 
-    private final List<User> workmates = new ArrayList<>();
+    private List<Pair<User, Restaurant>> workmatesWithRestaurants;
     private final String TAG = "WorkmateAdapter";
 
-    public WorkmateAdapter(List<User> workmates) {
-        this.workmates.addAll(workmates);
+    public WorkmateAdapter(List<Pair<User, Restaurant>> workmatesWithRestaurants) {
+        this.workmatesWithRestaurants = workmatesWithRestaurants;
     }
 
+    public void setWorkmatesWithRestaurants(List<Pair<User, Restaurant>> workmatesWithRestaurants) {
+        this.workmatesWithRestaurants = workmatesWithRestaurants;
+        //this.workmatesWithRestaurants = workmatesWithRestaurants != null ? workmatesWithRestaurants : new ArrayList<>();
+        notifyDataSetChanged();
+    }
 
     @NonNull
     @Override
@@ -37,39 +44,46 @@ public class WorkmateAdapter extends RecyclerView.Adapter<WorkmateAdapter.Workma
 
     @Override
     public void onBindViewHolder(@NonNull WorkmateViewHolder holder, int position) {
-        User workmate = workmates.get(position);
-        holder.bind(workmate);
+        Pair<User, Restaurant> item = workmatesWithRestaurants.get(position);
+        User user = item.first;
+        Restaurant restaurant = item.second;
+
+        holder.bind(user, restaurant);
     }
 
     @Override
     public int getItemCount() {
-        return workmates.size();
+        return workmatesWithRestaurants.size();
     }
 
-    public void setWorkmates(List<User> workmates) {
-        Log.d(TAG, "NB de workmates chargé dans la liste de workmate : " + workmates.size());
-        this.workmates.clear();
-        this.workmates.addAll(workmates);
-        notifyDataSetChanged();
-    }
 
     static class WorkmateViewHolder extends RecyclerView.ViewHolder {
 
         private final ImageView avatar;
-        private final TextView name;
+        private final TextView nameWorkmate;
+        private final TextView nameRestaurant;
 
         WorkmateViewHolder(View itemView) {
             super(itemView);
             avatar = itemView.findViewById(R.id.workmate_avatar);
-            name = itemView.findViewById(R.id.workmate_name);
+            nameWorkmate = itemView.findViewById(R.id.workmate_name);
+            nameRestaurant = itemView.findViewById(R.id.restaurant_name);
         }
-// voir les xml
-        void bind(User workmate) {
-            name.setText(workmate.getName());
+
+        void bind(User workmate, Restaurant restaurant) {
+            nameWorkmate.setText(workmate.getName());
+
+            if (restaurant != null) {
+                nameRestaurant.setText(restaurant.getName());
+            } else {
+                nameRestaurant.setText("Aucun restaurant choisi");
+            }
+
             if (workmate.getAvatar() != null) {
                 Glide.with(itemView.getContext())
                         .load(workmate.getAvatar())
                         .placeholder(R.drawable.ic_list_workmate_avatar)
+                        .error(R.drawable.ic_user_avatar)
                         .into(avatar);
             } else {
                 avatar.setImageResource(R.drawable.ic_user_avatar);

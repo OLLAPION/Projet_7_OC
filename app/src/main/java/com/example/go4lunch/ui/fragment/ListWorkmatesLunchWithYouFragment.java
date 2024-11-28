@@ -1,5 +1,6 @@
 package com.example.go4lunch.ui.fragment;
 
+import android.content.Context;
 import android.os.Bundle;
 
 import androidx.annotation.NonNull;
@@ -14,11 +15,13 @@ import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
 import android.util.Log;
+import android.util.Pair;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 
 import com.example.go4lunch.R;
+import com.example.go4lunch.model.Lunch;
 import com.example.go4lunch.model.Restaurant;
 import com.example.go4lunch.model.User;
 import com.example.go4lunch.view.adapter.WorkmateAdapter;
@@ -53,13 +56,38 @@ public class ListWorkmatesLunchWithYouFragment extends Fragment {
 
         viewModel = new ViewModelProvider(this).get(ListWorkmatesLunchWithYouViewModel.class);
 
-        viewModel.getAllWorkmates().observe(getViewLifecycleOwner(), new Observer<ArrayList<User>>() {
-            @Override
-            public void onChanged(ArrayList<User> users) {
-                // Aucune trace dans les logs > Pas déclanché
-                Log.d(TAG, "Nombre de workmates : " + users.size());
-                adapter.setWorkmates(users);
-            }
+
+
+        // Récupération de tous les workmates
+        // En faire une méthode à part
+        viewModel.getAllWorkmates().observe(getViewLifecycleOwner(), users -> {
+            Log.d(TAG, "Nombre de workmates : " + users.size());
+            viewModel.getTodayLunches().observe(getViewLifecycleOwner(), lunches -> {
+                Log.d(TAG, "Nombre de lunches : " + lunches.size());
+                List<String> idWormatesThatHasLunch = new ArrayList<>();
+                for (Lunch lunch : lunches) {
+                    if (! idWormatesThatHasLunch.contains(lunch.getUser().getId())) {
+                        idWormatesThatHasLunch.add(lunch.getUser().getId());
+                    }
+                }
+
+                List<Pair<User, Restaurant>> workmatesWithRestaurants = new ArrayList<>();
+
+                for (Lunch lunch : lunches) {
+                    workmatesWithRestaurants.add(new Pair<>(lunch.getUser(), lunch.getRestaurant()));
+                }
+
+                for (User user : users) {
+                    if (!idWormatesThatHasLunch.contains(user.getId())){
+                        workmatesWithRestaurants.add(new Pair<>(user, null));
+                    }
+
+                }
+
+                // Mettre à jour l'adaptateur après chaque ajout
+                adapter.setWorkmatesWithRestaurants(workmatesWithRestaurants);
+            });
+
         });
 
         return view;
@@ -73,67 +101,3 @@ public class ListWorkmatesLunchWithYouFragment extends Fragment {
 
     }
 }
-/*
-public class ListWorkmatesLunchWithYouFragment extends Fragment {
-
-    private ListWorkmatesLunchWithYouViewModel viewModel;
-    private WorkmateAdapter adapter;
-    private Restaurant selectedRestaurant;
-
-
-    public ListWorkmatesLunchWithYouFragment() {
-    }
-
-    @Nullable
-    @Override
-    public View onCreateView(@NonNull LayoutInflater inflater, @NonNull ViewGroup container, @NonNull Bundle savedInstanceState) {
-        View view = inflater.inflate(R.layout.fragment_list_workmates_lunch_with_you, container, false);
-
-        RecyclerView recyclerView = view.findViewById(R.id.recycler_view_workmates_lunch_with_you);
-        recyclerView.setLayoutManager(new LinearLayoutManager(getContext()));
-
-        adapter = new WorkmateAdapter(new ArrayList<>());
-        recyclerView.setAdapter(adapter);
-
-        // Initialisation du ViewModel avec un ViewModelProvider.Factory pour passer le LunchRepository
-        viewModel = new ViewModelProvider(this, new ViewModelProvider.Factory() {
-            @NonNull
-            @Override
-            public <T extends ViewModel> T create(@NonNull Class<T> modelClass) {
-                return (T) new ListWorkmatesLunchWithYouViewModel(LunchRepository.getInstance(getContext()));
-            }
-        }).get(ListWorkmatesLunchWithYouViewModel.class);
-
-        // viewModel.getAllLunchToDay -> avec lambda pour le resultat
-        // viewModel.getAllWormates
-        // faire un WorkmatesItem pour l'adapter
-
-        // Chargement des workmates si un restaurant est sélectionné
-        if (selectedRestaurant != null) {
-            viewModel.fetchWorkmatesForTodayLunch(selectedRestaurant);
-        }
-
-        observeViewModel();
-
-        return view;
-    }
-
-    private void observeViewModel() {
-        viewModel.getWorkmatesLiveData().observe(getViewLifecycleOwner(), workmates -> {
-            if (workmates != null) {
-                adapter.setWorkmates(workmates);
-                adapter.notifyDataSetChanged();
-            }
-        });
-    }
-
-    // Permet de définir le restaurant sélectionné à partir d'une autre partie de l'application
-    public void setSelectedRestaurant(Restaurant restaurant) {
-        this.selectedRestaurant = restaurant;
-        if (viewModel != null && selectedRestaurant != null) {
-            viewModel.fetchWorkmatesForTodayLunch(selectedRestaurant);
-        }
-    }
-}
-
- */

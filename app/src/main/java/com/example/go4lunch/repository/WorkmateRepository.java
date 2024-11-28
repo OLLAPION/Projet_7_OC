@@ -96,8 +96,8 @@ public class WorkmateRepository {
 
 
 
-    public LiveData<ArrayList<User>> getAllWorkmates() {
-        MutableLiveData<ArrayList<User>> liveData = new MutableLiveData<>();
+    public LiveData<List<User>> getAllWorkmates() {
+        MutableLiveData<List<User>> liveData = new MutableLiveData<>();
         getWorkmatesCollection().get().addOnCompleteListener(task -> {
             if (task.isSuccessful()) {
                 ArrayList<User> workmates = new ArrayList<>();
