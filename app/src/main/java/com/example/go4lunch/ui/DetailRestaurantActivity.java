@@ -36,6 +36,7 @@ import com.example.go4lunch.repository.WorkmateRepository;
 import com.example.go4lunch.view.DetailRestaurantViewModel;
 import com.example.go4lunch.view.adapter.UserAdapter;
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
+import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
 
 import java.io.Serializable;
@@ -43,6 +44,7 @@ import java.util.ArrayList;
 
 // le like ne fonctionne pas sur l'emulateur, mais uniquement sur mon telephone et même le design bug
 // ça reste sur Star on clicked
+// MODIFICATION EFFECTUER -> TESTER VIA MAPFRAGMENT ET LISTRESTAURANTFRAGMENT pour l'étoile
 public class DetailRestaurantActivity extends AppCompatActivity {
 
     /** The recyclerview to display the list of workmates who have chosen to eat in the restaurant */
@@ -150,8 +152,32 @@ public class DetailRestaurantActivity extends AppCompatActivity {
      * If no, creates a lunch for this restaurant.
      */
     private void handleWorkmateLunchChoice() {
+        User currentUser = getCurrentUser();
 
+        if (currentUser != null) {
 
+            viewModel.checkIfWorkmateChoseThisRestaurantForLunch(restaurant, currentUser.getId())
+                    .observe(this, isChosen -> {
+                        if (isChosen) {
+                            Log.d("WKM_2024", "delete Lunch > restaurant : " + restaurant.getId() + " User : " + currentUser.getId());
+                            viewModel.deleteLunch(restaurant, currentUser.getId(), () -> {
+                                configureRecyclerView();
+                                configureRestaurantChoice();
+                            });
+                        } else {
+                            Log.d("WKM_2024", "create Lunch > restaurant : " + restaurant.getId() + " User : " + currentUser.getId());
+                            viewModel.createLunch(restaurant, currentUser, () -> {
+                                configureRecyclerView();
+                                configureRestaurantChoice();
+                            });
+                        }
+                    });
+        } else {
+            Log.e("WKM_2024", "No authenticated user found!");
+            // afficher un message d'erreur ou rediriger vers l'écran de connexion
+        }
+
+/*
         User currentUser_2 = new User();
         currentUser_2.setId("D7rZ2O9j8vVHuLwxHrgnrLTT3mv1");
         currentUser_2.setName("Name_2");
@@ -172,8 +198,9 @@ public class DetailRestaurantActivity extends AppCompatActivity {
                             configureRestaurantChoice();
                         });
                     }
-
                 });
+
+ */
     }
 
     /**
@@ -181,6 +208,26 @@ public class DetailRestaurantActivity extends AppCompatActivity {
      */
     private void configureRestaurantChoice() {
 
+        User currentUser = getCurrentUser();
+
+        if (currentUser != null) {
+            Log.d("FAB_1", "check fzb for user: " + currentUser.getId());
+
+            viewModel.getIsRestaurantChosenLiveData(restaurant, currentUser.getId()).observe(this, isChosen -> {
+                FloatingActionButton fab = findViewById(R.id.fabWorkmateWantToEat);
+                Log.d("FAB_2", "check fzb : " + isChosen);
+                if (isChosen) {
+                    fab.setImageResource(R.drawable.ic_chosen);
+                } else {
+                    fab.setImageResource(R.drawable.ic_not_chosen);
+                }
+            });
+        } else {
+            Log.e("FAB_1", "No authenticated user found!");
+            // afficher un message d'erreur ou rediriger vers l'écran de connexion
+        }
+
+        /*
         User currentUser_1 = new User();
         currentUser_1.setId("D7rZ2O9j8vVHuLwxHrgnrLTT3mv1");
         currentUser_1.setName("Name_2");
@@ -197,7 +244,23 @@ public class DetailRestaurantActivity extends AppCompatActivity {
             }
         });
 
+         */
+
     }
+
+    private User getCurrentUser() {
+        FirebaseUser currentUser = FirebaseAuth.getInstance().getCurrentUser();
+        if (currentUser != null) {
+            // Créer un objet User basé sur l'utilisateur connecté
+            User user = new User();
+            user.setId(currentUser.getUid());
+            user.setName(currentUser.getDisplayName() != null ? currentUser.getDisplayName() : "Anonymous");
+            user.setAvatar(currentUser.getPhotoUrl() != null ? currentUser.getPhotoUrl().toString() : "");
+            return user;
+        }
+        return null;
+    }
+
 
 
     /**
