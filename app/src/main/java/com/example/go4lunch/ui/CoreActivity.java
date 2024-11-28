@@ -27,6 +27,7 @@ import com.example.go4lunch.ui.fragment.MapFragment;
 import com.example.go4lunch.view.LocationViewModel;
 import com.google.android.material.bottomnavigation.BottomNavigationView;
 import com.google.android.material.navigation.NavigationView;
+import com.google.firebase.auth.FirebaseAuth;
 
 import java.util.Calendar;
 
@@ -52,7 +53,7 @@ public class CoreActivity extends AppCompatActivity implements NavigationView.On
         NavigationView navigationView = findViewById(R.id.navigation_view);
         navigationView.setNavigationItemSelectedListener(this);
 
-        // Toggle pour ouvrir/fermer le Drawer
+        // Toggle to open/close the Drawer
         ActionBarDrawerToggle toggle = new ActionBarDrawerToggle(this, drawerLayout, toolbar, R.string.navigation_drawer_open, R.string.navigation_drawer_close);
         drawerLayout.addDrawerListener(toggle);
         toggle.syncState();
@@ -140,20 +141,46 @@ public class CoreActivity extends AppCompatActivity implements NavigationView.On
 
         @Override
     public boolean onNavigationItemSelected(@NonNull MenuItem item) {
-        // Gérer les éléments du drawer
         switch (item.getItemId()) {
             case R.id.menu_item_your_lunch:
-                // Ouvrir le profil pour voir le repas
+                openYourLunchProfile();
                 break;
             case R.id.menu_item_settings:
-                // Ouvrir les paramètres
+                openSettings();
                 break;
             case R.id.menu_item_logout:
-                // Déconnexion
+                logoutUser();
                 break;
         }
         drawerLayout.closeDrawer(GravityCompat.START);
         return true;
+    }
+
+    // Ouvrir le profil pour voir le repas
+    private void openYourLunchProfile() {
+        // faire une class qui recupére le restaurant de l'utilisateur et qui envoie sur DetailRestaurantActivity
+        // Sinon, affiche un message "vous n'avez pas choisi de restaurant pour le moment"
+        Intent intent = new Intent(this, DetailRestaurantActivity.class);
+        startActivity(intent);
+    }
+
+    // Ouvrir les paramètres
+    private void openSettings() {
+        /*
+        Une class qui permet d'activer ou désactiver les notifications
+        Intent intent = new Intent(this, SettingsActivity.class);
+        startActivity(intent);
+
+         */
+    }
+
+    // Déconnexion
+    private void logoutUser() {
+        FirebaseAuth.getInstance().signOut();
+        Intent intent = new Intent(this, AuthActivity.class);
+        intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK); // Efface la pile d'activités
+        startActivity(intent);
+        finish();
     }
 
     @Override
