@@ -6,10 +6,14 @@ import android.app.NotificationManager;
 import android.app.PendingIntent;
 import android.content.Context;
 import android.content.Intent;
+import android.net.Uri;
 import android.os.Build;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.MenuItem;
+import android.view.View;
+import android.widget.ImageView;
+import android.widget.TextView;
 
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.ActionBarDrawerToggle;
@@ -19,6 +23,7 @@ import androidx.core.view.GravityCompat;
 import androidx.drawerlayout.widget.DrawerLayout;
 import androidx.fragment.app.Fragment;
 
+import com.bumptech.glide.Glide;
 import com.example.go4lunch.R;
 import com.example.go4lunch.broadcast.MyBroadcastReceiver;
 import com.example.go4lunch.ui.fragment.ListRestaurantFragment;
@@ -58,6 +63,10 @@ public class CoreActivity extends AppCompatActivity implements NavigationView.On
         drawerLayout.addDrawerListener(toggle);
         toggle.syncState();
 
+        // Configurez l'en-tête du Drawer
+        configureDrawerHeader();
+
+        // Sortir ça d'ici
         // Setup BottomNavigationView
         BottomNavigationView bottomNavigationView = findViewById(R.id.bottom_navigation);
         bottomNavigationView.setOnNavigationItemSelectedListener(item -> {
@@ -81,6 +90,43 @@ public class CoreActivity extends AppCompatActivity implements NavigationView.On
 
         configureAlarm();
     }
+
+    private void configureDrawerHeader() {
+        NavigationView navigationView = findViewById(R.id.navigation_view);
+        // Obtenez la vue de l'en-tête
+        View headerView = navigationView.getHeaderView(0);
+
+        // Références aux TextViews
+        TextView textUserName = headerView.findViewById(R.id.TextUserName);
+        TextView textUserMail = headerView.findViewById(R.id.TextUserMail);
+        ImageView imageUserAvatar = headerView.findViewById(R.id.imageUserAvatar);
+
+        // Obtenez l'utilisateur actuel à partir de FirebaseAuth
+        FirebaseAuth firebaseAuth = FirebaseAuth.getInstance();
+        if (firebaseAuth.getCurrentUser() != null) {
+            String userName = firebaseAuth.getCurrentUser().getDisplayName();
+            String userMail = firebaseAuth.getCurrentUser().getEmail();
+            Uri photoUrl = firebaseAuth.getCurrentUser().getPhotoUrl();
+
+            // Mettez à jour les TextViews
+            textUserName.setText(userName != null ? userName : "Nom indisponible");
+            textUserMail.setText(userMail != null ? userMail : "Email indisponible");
+
+            // Chargez l'avatar si disponible
+            if (photoUrl != null) {
+                Glide.with(this)
+                        .load(photoUrl)
+                        .placeholder(R.drawable.ic_user_avatar) // Image par défaut si l'avatar est indisponible
+                        .error(R.drawable.ic_user_avatar) // Image d'erreur
+                        .circleCrop() // Transforme l'image en cercle
+                        .into(imageUserAvatar);
+            } else {
+                // Avatar par défaut si aucune photo n'est disponible
+                imageUserAvatar.setImageResource(R.drawable.ic_user_avatar);
+            }
+        }
+    }
+
 
 
     private void configureAlarm() {
