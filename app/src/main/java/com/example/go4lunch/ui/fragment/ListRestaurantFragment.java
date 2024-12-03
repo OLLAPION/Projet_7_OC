@@ -7,6 +7,7 @@ import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.ProgressBar;
 import android.widget.TextView;
 
 import androidx.annotation.NonNull;
@@ -81,9 +82,7 @@ public class ListRestaurantFragment extends Fragment {
     /** ViewModel for managing location data */
     private LocationViewModel locationViewModel;
 
-    /** TextViews for displaying latitude and longitude */
-    private TextView textViewLatitude;
-    private TextView textViewLongitude;
+    private TextView textToWait;
     AutocompleteSupportFragment acsf;
 
 
@@ -100,9 +99,7 @@ public class ListRestaurantFragment extends Fragment {
         adapter = new RestaurantAdapter(new ArrayList<>(), getContext());
         recyclerView.setAdapter(adapter);
 
-        // Initialize TextViews for displaying latitude and longitude
-        textViewLatitude = view.findViewById(R.id.textViewLatitude);
-        textViewLongitude = view.findViewById(R.id.textViewLongitude);
+        textToWait = view.findViewById(R.id.texttowait);
 
         // Initialize the ViewModels
         viewModel = new ViewModelProvider(this).get(ListRestaurantViewModel.class);
@@ -132,8 +129,8 @@ public class ListRestaurantFragment extends Fragment {
                 observeLocation();
             } else {
                 // Display a message if permission is denied
-                textViewLatitude.setText("Permission Denied");
-                textViewLongitude.setText("Permission Denied");
+                textToWait.setVisibility(View.VISIBLE);
+                textToWait.setText("Permission Denied");
             }
         }
     }
@@ -154,14 +151,15 @@ public class ListRestaurantFragment extends Fragment {
      */
     @SuppressLint("SetTextI18n")
     private void updateLocationUI(GPSStatus location) {
+        ProgressBar loadingSpinner = getView().findViewById(R.id.loading_spinner);
+
         if (location != null) {
             if (location.getLatitude() != null && location.getLongitude() != null) {
                 double latitude = location.getLatitude();
                 double longitude = location.getLongitude();
 
-                // Display latitude and longitude
-                textViewLatitude.setText(String.valueOf(latitude));
-                textViewLongitude.setText(String.valueOf(longitude));
+                // Cacher le spinner (chargement terminé)
+                loadingSpinner.setVisibility(View.GONE);
 
                 // Fetch the list of restaurants based on the current location
                 // viewModel.fetchRestaurants(latitude, longitude);
@@ -174,13 +172,14 @@ public class ListRestaurantFragment extends Fragment {
                 });
 
             } else if (location.getQuerying()) {
-                // Display a message while querying location
-                textViewLatitude.setText("querying");
-                textViewLongitude.setText("querying");
+                // Display a loading Spinner while querying location
+                loadingSpinner.setVisibility(View.VISIBLE);
+                textToWait.setVisibility(View.GONE);
             } else {
                 // Display a message if location permission is incorrect
-                textViewLatitude.setText("Permission incorrect");
-                textViewLongitude.setText("Permission incorrect");
+                loadingSpinner.setVisibility(View.GONE);
+                textToWait.setVisibility(View.VISIBLE);
+                textToWait.setText("Permission incorrect");
             }
         } else {
             Log.e(TAG, "GPSStatus is null");
