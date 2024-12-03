@@ -2,11 +2,14 @@
 <menu xmlns:android="http://schemas.android.com/apk/res/android">
     <item
         android:id="@+id/menu_item_MapFragment"
-        android:title="MapFragment"/>
+        android:icon="@drawable/ic_item_map"
+        android:title="Map View"/>
     <item
         android:id="@+id/menu_item_ListRestaurantFragment"
-        android:title="ListRestaurantFragment"/>
+        android:icon="@drawable/ic_item_list_restaurants"
+        android:title="List View"/>
     <item
         android:id="@+id/menu_item_ListWorkmatesLunchWithYouFragment"
-        android:title="ListWorkmatesLunchWithYouFragment"/>
+        android:icon="@drawable/ic_item_list_workmates"
+        android:title="Workmates"/>
 </menu>
