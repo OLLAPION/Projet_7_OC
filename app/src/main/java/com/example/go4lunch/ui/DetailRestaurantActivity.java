@@ -73,12 +73,16 @@ public class DetailRestaurantActivity extends AppCompatActivity {
 
         }
 
+
         configureComponante();
         configureRecyclerView();
         configureLike();
         configureRestaurantChoice();
         configureFab();
         configureClickListeners();
+
+
+
     }
 
     /**
@@ -171,6 +175,9 @@ public class DetailRestaurantActivity extends AppCompatActivity {
                                 configureRestaurantChoice();
                             });
                         }
+                        // appelle le LunchRepository via le ViewModel pour supprimer tous les documents dans Lunchs qui
+                        // concerne cet utilisateur qui concerne la date du jour et qui ne concerne pas le Restaurant Current
+                        viewModel.cleanUpLunch(restaurant, currentUser.getId());
                     });
         } else {
             Log.e("WKM_2024", "No authenticated user found!");
@@ -213,7 +220,7 @@ public class DetailRestaurantActivity extends AppCompatActivity {
         if (currentUser != null) {
             Log.d("FAB_1", "check fzb for user: " + currentUser.getId());
 
-            viewModel.getIsRestaurantChosenLiveData(restaurant, currentUser.getId()).observe(this, isChosen -> {
+            viewModel.checkIfWorkmateChoseThisRestaurantForLunch(restaurant, currentUser.getId()).observe(this, isChosen -> {
                 FloatingActionButton fab = findViewById(R.id.fabWorkmateWantToEat);
                 Log.d("FAB_2", "check fzb : " + isChosen);
                 if (isChosen) {
@@ -336,7 +343,7 @@ public class DetailRestaurantActivity extends AppCompatActivity {
         TextView restaurantAddressTextView = findViewById(R.id.restaurantAddressTextView);
         TextView restaurantTypeOfRestaurantTextView = findViewById(R.id.restaurantTypeOfRestaurantTextView);
         ImageView restaurantPhotoImageView = findViewById(R.id.restaurantPhotoImageView);
-        ImageView restaurantStarsImageView = findViewById(R.id.restaurantStar);
+        ImageView restaurantCallImageView = findViewById(R.id.callButton);
         ImageButton restaurantWebsiteImageButton = findViewById(R.id.restaurantWebsiteButton);
 
         restaurantNameTextView.setText(restaurant.getName());
@@ -378,12 +385,10 @@ public class DetailRestaurantActivity extends AppCompatActivity {
 
 
         Glide.with(this)
-                .load(R.drawable.ic_star_button)
-                .into(restaurantStarsImageView);
-
-        Glide.with(this)
                 .load(R.drawable.ic_call)
-                .into(restaurantStarsImageView);
+                .into(restaurantCallImageView);
+
+
 
         Glide.with(this)
                 .load(R.drawable.ic_website)
