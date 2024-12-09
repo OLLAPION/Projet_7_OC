@@ -6,6 +6,7 @@ import android.app.NotificationManager;
 import android.app.PendingIntent;
 import android.content.Context;
 import android.content.Intent;
+import android.content.res.ColorStateList;
 import android.net.Uri;
 import android.os.Build;
 import android.os.Bundle;
@@ -19,6 +20,7 @@ import androidx.annotation.NonNull;
 import androidx.appcompat.app.ActionBarDrawerToggle;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.widget.Toolbar;
+import androidx.core.content.ContextCompat;
 import androidx.core.view.GravityCompat;
 import androidx.drawerlayout.widget.DrawerLayout;
 import androidx.fragment.app.Fragment;
@@ -66,8 +68,7 @@ public class CoreActivity extends AppCompatActivity implements NavigationView.On
         // Configurez l'en-tête du Drawer
         configureDrawerHeader();
 
-        // Sortir ça d'ici
-        // Setup BottomNavigationView
+        // Sortir ça d'ici - Setup BottomNavigationView
         BottomNavigationView bottomNavigationView = findViewById(R.id.bottom_navigation);
         bottomNavigationView.setOnNavigationItemSelectedListener(item -> {
             Fragment selectedFragment = null;
@@ -93,35 +94,29 @@ public class CoreActivity extends AppCompatActivity implements NavigationView.On
 
     private void configureDrawerHeader() {
         NavigationView navigationView = findViewById(R.id.navigation_view);
-        // Obtenez la vue de l'en-tête
         View headerView = navigationView.getHeaderView(0);
 
-        // Références aux TextViews
         TextView textUserName = headerView.findViewById(R.id.TextUserName);
         TextView textUserMail = headerView.findViewById(R.id.TextUserMail);
         ImageView imageUserAvatar = headerView.findViewById(R.id.imageUserAvatar);
 
-        // Obtenez l'utilisateur actuel à partir de FirebaseAuth
         FirebaseAuth firebaseAuth = FirebaseAuth.getInstance();
         if (firebaseAuth.getCurrentUser() != null) {
             String userName = firebaseAuth.getCurrentUser().getDisplayName();
             String userMail = firebaseAuth.getCurrentUser().getEmail();
             Uri photoUrl = firebaseAuth.getCurrentUser().getPhotoUrl();
 
-            // Mettez à jour les TextViews
             textUserName.setText(userName != null ? userName : "Nom indisponible");
             textUserMail.setText(userMail != null ? userMail : "Email indisponible");
 
-            // Chargez l'avatar si disponible
             if (photoUrl != null) {
                 Glide.with(this)
                         .load(photoUrl)
-                        .placeholder(R.drawable.ic_user_avatar) // Image par défaut si l'avatar est indisponible
-                        .error(R.drawable.ic_user_avatar) // Image d'erreur
-                        .circleCrop() // Transforme l'image en cercle
+                        .placeholder(R.drawable.ic_user_avatar)
+                        .error(R.drawable.ic_user_avatar)
+                        .circleCrop()
                         .into(imageUserAvatar);
             } else {
-                // Avatar par défaut si aucune photo n'est disponible
                 imageUserAvatar.setImageResource(R.drawable.ic_user_avatar);
             }
         }
