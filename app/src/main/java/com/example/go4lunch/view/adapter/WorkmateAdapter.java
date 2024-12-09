@@ -84,6 +84,7 @@ public class WorkmateAdapter extends RecyclerView.Adapter<WorkmateAdapter.Workma
                         .load(workmate.getAvatar())
                         .placeholder(R.drawable.ic_list_workmate_avatar)
                         .error(R.drawable.ic_user_avatar)
+                        .circleCrop()
                         .into(avatar);
             } else {
                 avatar.setImageResource(R.drawable.ic_user_avatar);
