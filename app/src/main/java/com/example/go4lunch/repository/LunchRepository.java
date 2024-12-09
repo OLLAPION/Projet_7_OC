@@ -53,34 +53,49 @@ public class LunchRepository {
             return;
         }
 
-        // objet Restaurant a un ID
         if (restaurantChosen.getId() == null || restaurantChosen.getId().isEmpty()) {
             Log.d("LR_createLunch_2", "Error: restaurantChosen has no valid ID");
             return;
         }
 
-        // objet User a un ID
         if (workmate.getId() == null || workmate.getId().isEmpty()) {
             Log.d("LR_createLunch_3", "Error: workmate has no valid ID");
             return;
         }
 
-        Lunch lunch = new Lunch(restaurantChosen, workmate);
-        lunch.setDayDate(toDay());
-
-        FirebaseFirestore.getInstance().collection("Lunch")
-                .add(lunch)
+        // Étape 1 : Supprimer les choix précédents
+        getBaseQuery3(workmate.getId()) // Requête pour les déjeuners existants de cet utilisateur aujourd'hui
+                .get()
                 .addOnCompleteListener(task -> {
                     if (task.isSuccessful()) {
-                        Log.d("LR_createLunch_4", "Lunch created successfully! Document ID: " + task.getResult().getId());
-                        callback.onCreated();
-                    } else {
-                        Log.e("LR_createLunch_5", "Error creating lunch: " + task.getException().getMessage());
+                        QuerySnapshot querySnapshot = task.getResult();
+                        if (querySnapshot != null && !querySnapshot.isEmpty()) {
+                            for (DocumentSnapshot document : querySnapshot.getDocuments()) {
+                                document.getReference().delete(); // Supprime le déjeuner précédent
+                            }
+                        }
                     }
-                })
 
+                    // Étape 2 : Ajouter le nouveau déjeuner après avoir supprimé les anciens
+                    Lunch lunch = new Lunch(restaurantChosen, workmate);
+                    lunch.setDayDate(toDay());
+
+                    FirebaseFirestore.getInstance().collection("Lunch")
+                            .add(lunch)
+                            .addOnCompleteListener(addTask -> {
+                                if (addTask.isSuccessful()) {
+                                    Log.d("LR_createLunch_4", "Lunch created successfully! Document ID: " + addTask.getResult().getId());
+                                    callback.onCreated();
+                                } else {
+                                    Log.e("LR_createLunch_5", "Error creating lunch: " + addTask.getException().getMessage());
+                                }
+                            })
+                            .addOnFailureListener(e -> {
+                                Log.e("LR_createLunch_6", "Error creating lunch: " + e.getMessage());
+                            });
+                })
                 .addOnFailureListener(e -> {
-                    Log.e("LR_createLunch_6", "Error creating lunch: " + e.getMessage());
+                    Log.e("LR_createLunch_7", "Error deleting previous lunches: " + e.getMessage());
                 });
     }
 
@@ -98,7 +113,6 @@ public class LunchRepository {
                 .whereEqualTo("user.id", userId);
     }
 
-    // faire un getBaseQuery4 pour les lunch de la journée pour le fetchFerstaurant de ListRestaurantFragment
     private Query getBaseQuery2(Restaurant restaurant) {
         FirebaseFirestore firestore = FirebaseFirestore.getInstance();
         if (restaurant == null || restaurant.getId() == null || restaurant.getId().isEmpty()) {
@@ -122,7 +136,6 @@ public class LunchRepository {
                 .whereEqualTo("dayDate", toDay())
                 .whereEqualTo("user.id", userId);
     }
-
 
     public LiveData<Lunch> getTodayLunch(String workmateId) {
         MutableLiveData<Lunch> todayLunch = new MutableLiveData<>();
@@ -231,7 +244,6 @@ public class LunchRepository {
 
         return workmatesLiveData;
     }
-
     public MutableLiveData<Boolean> checkIfCurrentWorkmateChoseThisRestaurantForLunch(Restaurant restaurant, String userId) {
         MutableLiveData<Boolean> isChosenLiveData = new MutableLiveData<>();
 

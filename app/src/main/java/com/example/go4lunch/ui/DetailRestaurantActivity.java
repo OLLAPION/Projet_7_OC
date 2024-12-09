@@ -42,9 +42,6 @@ import com.google.firebase.auth.FirebaseUser;
 import java.io.Serializable;
 import java.util.ArrayList;
 
-// le like ne fonctionne pas sur l'emulateur, mais uniquement sur mon telephone et même le design bug
-// ça reste sur Star on clicked
-// MODIFICATION EFFECTUER -> TESTER VIA MAPFRAGMENT ET LISTRESTAURANTFRAGMENT pour l'étoile
 public class DetailRestaurantActivity extends AppCompatActivity {
 
     /** The recyclerview to display the list of workmates who have chosen to eat in the restaurant */
@@ -59,6 +56,8 @@ public class DetailRestaurantActivity extends AppCompatActivity {
     /** The repository : WorkmateRepository */
     private DetailRestaurantViewModel viewModel;
 
+    private String TAG = "DRA";
+
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -70,9 +69,7 @@ public class DetailRestaurantActivity extends AppCompatActivity {
         Intent intent = getIntent();
         if (intent != null) {
             restaurant = (Restaurant) intent.getSerializableExtra("restaurant");
-
         }
-
 
         configureComponante();
         configureRecyclerView();
@@ -80,9 +77,6 @@ public class DetailRestaurantActivity extends AppCompatActivity {
         configureRestaurantChoice();
         configureFab();
         configureClickListeners();
-
-
-
     }
 
     /**
@@ -163,51 +157,24 @@ public class DetailRestaurantActivity extends AppCompatActivity {
             viewModel.checkIfWorkmateChoseThisRestaurantForLunch(restaurant, currentUser.getId())
                     .observe(this, isChosen -> {
                         if (isChosen) {
-                            Log.d("WKM_2024", "delete Lunch > restaurant : " + restaurant.getId() + " User : " + currentUser.getId());
+                            Log.d(TAG, "Details: Restaurant ID = " + restaurant.getId() + ", User ID = " + currentUser.getId());
                             viewModel.deleteLunch(restaurant, currentUser.getId(), () -> {
+                                //viewModel.cleanUpLunch(restaurant, currentUser.getId());
                                 configureRecyclerView();
                                 configureRestaurantChoice();
                             });
                         } else {
-                            Log.d("WKM_2024", "create Lunch > restaurant : " + restaurant.getId() + " User : " + currentUser.getId());
+                            Log.d(TAG, "Details: Restaurant ID = " + restaurant.getId() + ", User ID = " + currentUser.getId());
                             viewModel.createLunch(restaurant, currentUser, () -> {
                                 configureRecyclerView();
                                 configureRestaurantChoice();
                             });
                         }
-                        // appelle le LunchRepository via le ViewModel pour supprimer tous les documents dans Lunchs qui
-                        // concerne cet utilisateur qui concerne la date du jour et qui ne concerne pas le Restaurant Current
-                        viewModel.cleanUpLunch(restaurant, currentUser.getId());
                     });
         } else {
-            Log.e("WKM_2024", "No authenticated user found!");
+            Log.e(TAG, "No authenticated user found!");
             // afficher un message d'erreur ou rediriger vers l'écran de connexion
         }
-
-/*
-        User currentUser_2 = new User();
-        currentUser_2.setId("D7rZ2O9j8vVHuLwxHrgnrLTT3mv1");
-        currentUser_2.setName("Name_2");
-        currentUser_2.setAvatar("Avatar_2");
-
-        viewModel.checkIfWorkmateChoseThisRestaurantForLunch(restaurant, currentUser_2.getId())
-                .observe(this, isChosen -> {
-                    if (isChosen) {
-                        Log.d("WKM_2024", "delete Lunch > restaurant : " + restaurant.getId() + " User : " + currentUser_2.getId());
-                        viewModel.deleteLunch(restaurant, currentUser_2.getId(), () -> {
-                            configureRecyclerView();
-                            configureRestaurantChoice();
-                        });
-                    } else {
-                        Log.d("WKM_2024", "create Lunch > restaurant : " + restaurant.getId() + " User : " + currentUser_2.getId());
-                        viewModel.createLunch(restaurant, currentUser_2, () -> {
-                            configureRecyclerView();
-                            configureRestaurantChoice();
-                        });
-                    }
-                });
-
- */
     }
 
     /**

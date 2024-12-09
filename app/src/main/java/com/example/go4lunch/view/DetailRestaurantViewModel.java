@@ -44,15 +44,6 @@ public class DetailRestaurantViewModel extends ViewModel {
         return lunchRepository.checkIfCurrentWorkmateChoseThisRestaurantForLunch(restaurant, userId);
     }
 
-    /**
-     * Gets LiveData to check if the restaurant is chosen by the user.
-     * @param restaurant The restaurant to check.
-     * @param userId The workmate ID.
-     * @return LiveData representing whether the restaurant is chosen by the user.
-     */
-    public LiveData<Boolean> getIsRestaurantChosenLiveData(Restaurant restaurant, String userId) {
-        return lunchRepository.checkIfCurrentWorkmateChoseThisRestaurantForLunch(restaurant, userId);
-    }
 
     /**
      * Checks if the current workmate likes the restaurant.
