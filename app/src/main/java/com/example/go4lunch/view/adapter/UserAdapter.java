@@ -5,11 +5,13 @@ import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.ImageView;
 import android.widget.TextView;
 
 import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
 
+import com.bumptech.glide.Glide;
 import com.example.go4lunch.R;
 import com.example.go4lunch.model.User;
 
@@ -36,7 +38,16 @@ public class UserAdapter extends RecyclerView.Adapter<UserAdapter.UserViewHolder
     public void onBindViewHolder(@NonNull UserViewHolder holder, int position) {
         User user = userList.get(position);
         holder.nameTextView.setText(user.getName());
-        holder.avatarPhotoView.setText(user.getAvatar());
+        if (user.getAvatar() != null) {
+            Glide.with(holder.itemView.getContext())
+                    .load(user.getAvatar())
+                    .placeholder(R.drawable.ic_list_workmate_avatar)
+                    .error(R.drawable.ic_user_avatar)
+                    .circleCrop()
+                    .into(holder.avatarPhotoView);
+        } else {
+            holder.avatarPhotoView.setImageResource(R.drawable.ic_user_avatar);
+        }
     }
 
     @Override
@@ -54,17 +65,12 @@ public class UserAdapter extends RecyclerView.Adapter<UserAdapter.UserViewHolder
 
     static class UserViewHolder extends RecyclerView.ViewHolder {
         TextView nameTextView;
-        TextView avatarPhotoView;
+        ImageView avatarPhotoView;
 
         UserViewHolder(@NonNull View itemView) {
             super(itemView);
             nameTextView = itemView.findViewById(R.id.nameTextView);
             avatarPhotoView = itemView.findViewById(R.id.avatarPhotoView);
-        }
-
-        public void bind(User user) {
-            nameTextView.setText(user.getName());
-            avatarPhotoView.setText(user.getAvatar());
         }
     }
 }
