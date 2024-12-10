@@ -125,6 +125,7 @@ public class CoreActivity extends AppCompatActivity implements NavigationView.On
 
 
     private void configureAlarm() {
+        Log.d("CA_Config_Alarm", "configureAlarm: Starting alarm configuration");
 
         // Create a notification channel
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
@@ -153,6 +154,7 @@ public class CoreActivity extends AppCompatActivity implements NavigationView.On
             calendar.set(Calendar.MILLISECOND, 0);
         }
 
+        Log.d("CA_Config_Alarm", "configureAlarm: Alarm set for " + calendar.getTime());
 
         // Create an Intent to broadcast to the AlarmReceiver
         Intent intent = new Intent(this, MyBroadcastReceiver.class);
@@ -176,11 +178,12 @@ public class CoreActivity extends AppCompatActivity implements NavigationView.On
                 AlarmManager.INTERVAL_DAY, // interval
                 pendingIntent // pending intent
         );
+        Log.d("CA_Config_Alarm", "configureAlarm: Alarm configured successfully");
 
     }
 
 
-        @Override
+    @Override
     public boolean onNavigationItemSelected(@NonNull MenuItem item) {
         switch (item.getItemId()) {
             case R.id.menu_item_your_lunch:
@@ -197,7 +200,7 @@ public class CoreActivity extends AppCompatActivity implements NavigationView.On
         return true;
     }
 
-    // Ouvrir le profil pour voir le repas
+
     private void openYourLunchProfile() {
         // faire une class qui recupére le restaurant de l'utilisateur et qui envoie sur DetailRestaurantActivity
         // Sinon, affiche un message "vous n'avez pas choisi de restaurant pour le moment"
@@ -205,17 +208,14 @@ public class CoreActivity extends AppCompatActivity implements NavigationView.On
         startActivity(intent);
     }
 
-    // Ouvrir les paramètres
+
     private void openSettings() {
-        /*
-        Une class qui permet d'activer ou désactiver les notifications
         Intent intent = new Intent(this, SettingsActivity.class);
         startActivity(intent);
-
-         */
     }
 
-    // Déconnexion
+
+
     private void logoutUser() {
         FirebaseAuth.getInstance().signOut();
         Intent intent = new Intent(this, AuthActivity.class);
