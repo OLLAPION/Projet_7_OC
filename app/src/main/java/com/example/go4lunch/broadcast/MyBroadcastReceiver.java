@@ -23,7 +23,7 @@ import java.util.List;
 public class MyBroadcastReceiver extends BroadcastReceiver {
 
 
-    private static final boolean NOTIFICATION_DEBUG = true;//CoreActivity.NOTIFICATION_DEBUG;
+    private static final boolean NOTIFICATION_DEBUG = false;//CoreActivity.NOTIFICATION_DEBUG;
 
     private static final String TAG = "ALARM";
 

@@ -15,6 +15,7 @@ import android.view.MenuItem;
 import android.view.View;
 import android.widget.ImageView;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.ActionBarDrawerToggle;
@@ -28,6 +29,7 @@ import androidx.fragment.app.Fragment;
 import com.bumptech.glide.Glide;
 import com.example.go4lunch.R;
 import com.example.go4lunch.broadcast.MyBroadcastReceiver;
+import com.example.go4lunch.repository.LunchRepository;
 import com.example.go4lunch.ui.fragment.ListRestaurantFragment;
 import com.example.go4lunch.ui.fragment.ListWorkmatesLunchWithYouFragment;
 import com.example.go4lunch.ui.fragment.MapFragment;
@@ -35,6 +37,9 @@ import com.example.go4lunch.view.LocationViewModel;
 import com.google.android.material.bottomnavigation.BottomNavigationView;
 import com.google.android.material.navigation.NavigationView;
 import com.google.firebase.auth.FirebaseAuth;
+import com.google.firebase.firestore.DocumentReference;
+import com.google.firebase.firestore.DocumentSnapshot;
+import com.google.firebase.firestore.FirebaseFirestore;
 
 import java.util.Calendar;
 
@@ -202,11 +207,37 @@ public class CoreActivity extends AppCompatActivity implements NavigationView.On
 
 
     private void openYourLunchProfile() {
-        // faire une class qui recupére le restaurant de l'utilisateur et qui envoie sur DetailRestaurantActivity
-        // Sinon, affiche un message "vous n'avez pas choisi de restaurant pour le moment"
-        Intent intent = new Intent(this, DetailRestaurantActivity.class);
-        startActivity(intent);
+        // Récupérer l'ID de l'utilisateur courant
+        FirebaseAuth firebaseAuth = FirebaseAuth.getInstance();
+        String userId = firebaseAuth.getCurrentUser() != null ? firebaseAuth.getCurrentUser().getUid() : null;
+
+        if (userId != null) {
+            // Accéder à LunchRepository pour récupérer le déjeuner de l'utilisateur
+            LunchRepository lunchRepository = LunchRepository.getInstance(this);
+
+            // Récupérer le déjeuner d'aujourd'hui pour l'utilisateur
+            lunchRepository.getTodayLunch(userId).observe(this, lunch -> {
+                if (lunch != null && lunch.getRestaurant() != null) {
+                    // Si un restaurant est trouvé, rediriger vers DetailRestaurantActivity
+                    Intent intent = new Intent(this, DetailRestaurantActivity.class);
+                    intent.putExtra("restaurantId", lunch.getRestaurant().getId());
+                    startActivity(intent);
+                } else {
+                    // Si aucun restaurant n'est choisi, afficher un message
+                    showNoRestaurantMessage();
+                }
+            });
+        } else {
+            // Si l'utilisateur n'est pas authentifié
+            Log.e("CoreActivity", "Utilisateur non authentifié");
+            showNoRestaurantMessage();
+        }
     }
+
+    private void showNoRestaurantMessage() {
+        Toast.makeText(this, "Vous n'avez pas choisi de restaurant pour le moment", Toast.LENGTH_LONG).show();
+    }
+
 
 
     private void openSettings() {

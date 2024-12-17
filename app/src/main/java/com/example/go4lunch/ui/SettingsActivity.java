@@ -3,41 +3,44 @@ package com.example.go4lunch.ui;
 import android.app.AlarmManager;
 import android.app.PendingIntent;
 import android.content.Intent;
-import android.content.SharedPreferences;
 import android.os.Bundle;
-import android.preference.PreferenceManager;
 import android.util.Log;
-import android.view.View;
 import android.widget.Switch;
 
 import androidx.annotation.Nullable;
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.lifecycle.ViewModelProvider;
 
 import com.example.go4lunch.R;
 import com.example.go4lunch.broadcast.MyBroadcastReceiver;
+import com.example.go4lunch.view.SettingsViewModel;
 
 public class SettingsActivity extends AppCompatActivity {
+
+    private SettingsViewModel viewModel;
 
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_settings);
 
-        // Configurer le Switch
         Switch switchNotifications = findViewById(R.id.switch_notifications);
 
-        // Charger l'état actuel depuis SharedPreferences
-        SharedPreferences sharedPreferences = PreferenceManager.getDefaultSharedPreferences(this);
-        boolean isNotificationsEnabled = sharedPreferences.getBoolean("notifications_enabled", true);
-        switchNotifications.setChecked(isNotificationsEnabled);
+        // Initialiser le ViewModel
+        viewModel = new ViewModelProvider(this).get(SettingsViewModel.class);
 
-        // Ajouter un listener pour le Switch
+        // Observer l'état actuel des notifications
+        viewModel.getIsNotificationActive().observe(this, isActive -> {
+            if (isActive != null) {
+                switchNotifications.setChecked(isActive);
+            } else {
+                switchNotifications.setChecked(false); // Par défaut, désactivé si aucune donnée
+            }
+        });
+
+        // Gérer les changements de l'utilisateur
         switchNotifications.setOnCheckedChangeListener((buttonView, isChecked) -> {
-            SharedPreferences.Editor editor = sharedPreferences.edit();
-            editor.putBoolean("notifications_enabled", isChecked);
-            editor.apply();
-
-            // Activer ou désactiver les notifications
+            viewModel.setNotificationActive(isChecked); // Met à jour via le ViewModel
             if (isChecked) {
                 configureAlarm();
             } else {
@@ -47,7 +50,7 @@ public class SettingsActivity extends AppCompatActivity {
     }
 
     private void configureAlarm() {
-        Log.d("SettingsActivity", "Configuring alarm for notifications");
+        Log.d("SettingsActivity", "Configurer l'alarme pour les notifications");
 
         Intent intent = new Intent(this, MyBroadcastReceiver.class);
         PendingIntent pendingIntent = PendingIntent.getBroadcast(
@@ -61,7 +64,7 @@ public class SettingsActivity extends AppCompatActivity {
         if (alarmManager != null) {
             alarmManager.setRepeating(
                     AlarmManager.RTC_WAKEUP,
-                    System.currentTimeMillis() + AlarmManager.INTERVAL_DAY, // Set alarm for next day
+                    System.currentTimeMillis() + AlarmManager.INTERVAL_DAY, // règle l'alarme pour le lendemain
                     AlarmManager.INTERVAL_DAY,
                     pendingIntent
             );
@@ -69,7 +72,7 @@ public class SettingsActivity extends AppCompatActivity {
     }
 
     private void cancelAlarm() {
-        Log.d("SettingsActivity", "Cancelling alarm for notifications");
+        Log.d("SettingsActivity", "Annuler l'alarme pour les notifications");
 
         Intent intent = new Intent(this, MyBroadcastReceiver.class);
         PendingIntent pendingIntent = PendingIntent.getBroadcast(

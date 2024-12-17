@@ -69,9 +69,12 @@ public class WorkmateRepository {
         return null;
     }
 
+    /*
     public void createOrUpdateWorkmate() {
         createOrUpdateWorkmate(false);
     }
+
+     */
 
     public void createOrUpdateWorkmate(Boolean isNotificationActive) {
         User workmate = getFirebaseUserAsWorkmate();

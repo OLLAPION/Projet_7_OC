@@ -29,7 +29,9 @@ import com.example.go4lunch.view.ListWorkmatesLunchWithYouViewModel;
 import com.example.go4lunch.repository.LunchRepository;
 
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 public class ListWorkmatesLunchWithYouFragment extends Fragment {
 
@@ -57,8 +59,7 @@ public class ListWorkmatesLunchWithYouFragment extends Fragment {
         viewModel = new ViewModelProvider(this).get(ListWorkmatesLunchWithYouViewModel.class);
 
 
-
-        // Récupération de tous les workmates
+        // Récupération de tous les workmates et des lunchs
         // En faire une méthode à part
         viewModel.getAllWorkmates().observe(getViewLifecycleOwner(), users -> {
             Log.d(TAG, "Nombre de workmates : " + users.size());
@@ -83,8 +84,6 @@ public class ListWorkmatesLunchWithYouFragment extends Fragment {
                     }
 
                 }
-
-                // Mettre à jour l'adaptateur après chaque ajout
                 adapter.setWorkmatesWithRestaurants(workmatesWithRestaurants);
             });
 
@@ -92,6 +91,8 @@ public class ListWorkmatesLunchWithYouFragment extends Fragment {
 
         return view;
     }
+
+
 
     @Override
     public void onViewCreated(View view, @Nullable Bundle savedInstanceState) {

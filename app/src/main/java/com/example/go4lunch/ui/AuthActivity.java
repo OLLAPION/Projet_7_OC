@@ -2,6 +2,7 @@ package com.example.go4lunch.ui;
 
 import androidx.annotation.Nullable;
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.lifecycle.LiveData;
 
 import android.content.Intent;
 import android.os.Bundle;
@@ -54,7 +55,12 @@ public class AuthActivity extends AppCompatActivity {
         IdpResponse response = IdpResponse.fromResultIntent(data);
         if(resultCode == RESULT_OK){
 
-            WorkmateRepository.getInstance().createOrUpdateWorkmate();
+
+            LiveData<Boolean> isNotificationActiveLiveData = WorkmateRepository.getInstance().getIsNotificationActive();
+            isNotificationActiveLiveData.observe(AuthActivity.this, isNotificationActive -> {
+                WorkmateRepository.getInstance().createOrUpdateWorkmate(isNotificationActive);
+            });
+
 
             // Start CoreActivity
             Intent intent = new Intent(getApplicationContext(), CoreActivity.class);
