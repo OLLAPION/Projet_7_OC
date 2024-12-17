@@ -220,7 +220,8 @@ public class CoreActivity extends AppCompatActivity implements NavigationView.On
                 if (lunch != null && lunch.getRestaurant() != null) {
                     // Si un restaurant est trouvé, rediriger vers DetailRestaurantActivity
                     Intent intent = new Intent(this, DetailRestaurantActivity.class);
-                    intent.putExtra("restaurantId", lunch.getRestaurant().getId());
+                    //intent.putExtra("restaurantId", lunch.getRestaurant().getId());
+                    intent.putExtra("restaurant", lunch.getRestaurant());
                     startActivity(intent);
                 } else {
                     // Si aucun restaurant n'est choisi, afficher un message
