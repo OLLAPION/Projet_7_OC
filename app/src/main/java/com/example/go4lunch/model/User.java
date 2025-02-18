@@ -9,24 +9,11 @@ import java.util.Map;
  * Model class representing a user.
  */
 public class User {
-
-    /** Unique identifier of the user */
-    private String id;
-
-    /** Name of the user */
-    private String name;
-
-    /** Email of the user */
-    private String email;
-
-    /** Avatar of the user */
-    private String avatar;
-
-    /** Notification setting for the user */
-    private Boolean notification;
-
-    /** List of IDs of liked lunches by the user */
-    private List<String> likeOfLunch;
+    private String id; // Id of User
+    private String name; // Name of User
+    private String email; // Email of User
+    private String avatar; // Avatar of user
+    private Boolean notification; // Indicates whether the User has activated or deactivated notifications
 
     /**
      * Get the unique identifier of the user.
@@ -104,21 +91,6 @@ public class User {
     }
 
     /**
-     * Get the list of IDs of liked lunches by the user.
-     * @return The list of IDs of liked lunches.
-     */
-    public List<String> getLikeOfLunch() {
-        return likeOfLunch;
-    }
-    /**
-     * Set the list of IDs of liked lunches for the user.
-     * @param likeOfLunch The list of IDs of liked lunches.
-     */
-    public void setLikeOfLunch(List<String> likeOfLunch) {
-        this.likeOfLunch = likeOfLunch;
-    }
-
-    /**
      * Default constructor.
      */
     public User() {}
@@ -136,7 +108,6 @@ public class User {
         this.email = email;
         this.avatar = avatar;
         this.notification = false;
-        this.likeOfLunch = new ArrayList<>();
     }
 
     /**
@@ -147,19 +118,5 @@ public class User {
     public User(String userName, String userAvatar) {
         this.name = userName;
         this.avatar = userAvatar;
-    }
-
-    /**
-     * Convert the user object to a map.
-     * @return A map representing the user object.
-     */
-    public Map<String, Object> toMap() {
-        HashMap<String, Object> result = new HashMap<>();
-        result.put("id", id);
-        result.put("name", name);
-        result.put("email", email);
-        result.put("avatar", avatar);
-        result.put("notification", notification);
-        return result;
     }
 }

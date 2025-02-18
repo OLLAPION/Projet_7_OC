@@ -13,16 +13,15 @@ import com.example.go4lunch.repository.LunchRepository;
 import com.example.go4lunch.repository.WorkmateRepository;
 import java.util.ArrayList;
 
-// Faire le CRUD pour le ViewModel ???
-// mon observeForever peut-il faire une fuite mémoire ???
-// Un ViewModel par Repository ou un ViewModel par activity/fragment
-
+/**
+ * ViewModel for the DetailRestaurantActivity
+ */
 public class DetailRestaurantViewModel extends ViewModel {
 
-    /** The repository : LunchRepository */
+    // The repository : LunchRepository
     private static LunchRepository lunchRepository;
 
-    /** The repository : WorkmateRepository */
+    // The repository : WorkmateRepository
     private WorkmateRepository workmateRepository;
 
     /**
@@ -30,15 +29,14 @@ public class DetailRestaurantViewModel extends ViewModel {
      */
     public DetailRestaurantViewModel() {
         lunchRepository = LunchRepository.getInstance(MainApplication.getApplication());
-        workmateRepository = new WorkmateRepository();
+        workmateRepository = WorkmateRepository.getInstance();
     }
 
-// modifier le commentaire
     /**
-     * Checks if the workmate chose the restaurant for lunch.
+     * Checks if the workmate chose this restaurant for lunch.
      * @param restaurant The restaurant to check.
      * @param userId The workmate ID.
-     * @return LiveData representing whether the current workmate likes the restaurant.
+     * @return LiveData representing whether the workmate selected this restaurant for Lunch.
      */
     public LiveData<Boolean> checkIfWorkmateChoseThisRestaurantForLunch(Restaurant restaurant, String userId) {
         return lunchRepository.checkIfCurrentWorkmateChoseThisRestaurantForLunch(restaurant, userId);

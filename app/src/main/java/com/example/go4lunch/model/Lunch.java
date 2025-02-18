@@ -1,23 +1,12 @@
 package com.example.go4lunch.model;
 
-import com.google.firebase.firestore.ServerTimestamp;
-
-import java.time.Instant;
-import java.util.Date;
-
 /**
  * This class represents a meal taken by a user at a specific restaurant on a specific date.
  */
 public class Lunch {
-
-    /** User who took the meal */
-    private User user;
-
-    /** Restaurant where the meal was taken */
-    private Restaurant restaurant;
-
-    /** Date when the meal was taken */
-    private Long dayDate;
+    private User user; // User logged in
+    private Restaurant restaurant; // Selected restaurant
+    private Long dayDate; // Today's day
 
     /**
      * Get the user who took the meal.

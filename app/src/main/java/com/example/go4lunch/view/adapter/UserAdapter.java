@@ -18,6 +18,9 @@ import com.example.go4lunch.model.User;
 import java.util.ArrayList;
 import java.util.List;
 
+/**
+ * adapter with only the User's for the recyclerView that DetailRestaurantActivity.
+ */
 public class UserAdapter extends RecyclerView.Adapter<UserAdapter.UserViewHolder> {
 
     private List<User> userList;
@@ -26,7 +29,13 @@ public class UserAdapter extends RecyclerView.Adapter<UserAdapter.UserViewHolder
         this.userList = new ArrayList<>();
     }
 
-
+    /**
+     * Create and initialize a new ViewHolder for each user item.
+     *
+     * @param parent The parent ViewGroup in which the item view will be placed.
+     * @param viewType The view type of the new item.
+     * @return A new ViewHolder for a user item.
+     */
     @NonNull
     @Override
     public UserViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
@@ -34,10 +43,21 @@ public class UserAdapter extends RecyclerView.Adapter<UserAdapter.UserViewHolder
         return new UserViewHolder(view);
     }
 
+    /**
+     * Bind data to the ViewHolder for each user item.
+     *
+     * @param holder The ViewHolder to bind the data to.
+     * @param position The position in the data list.
+     */
     @Override
     public void onBindViewHolder(@NonNull UserViewHolder holder, int position) {
+        // Get the user at the current position
         User user = userList.get(position);
+
+        // Set the user's name in the TextView
         holder.nameTextView.setText(user.getName());
+
+        // If the user has an avatar, load it using Glide, otherwise use a default image
         if (user.getAvatar() != null) {
             Glide.with(holder.itemView.getContext())
                     .load(user.getAvatar())
@@ -50,12 +70,21 @@ public class UserAdapter extends RecyclerView.Adapter<UserAdapter.UserViewHolder
         }
     }
 
+    /**
+     * Get the total number of items in the list.
+     *
+     * @return The size of the user list.
+     */
     @Override
     public int getItemCount() {
         return userList.size();
     }
 
-    // utiliser DiffUtil pour gagner en perfomance et éviter de regenerer l'affichage d'element qui n'ont pas changé
+    /**
+     * Update the list of users and notify the adapter of the changes.
+     *
+     * @param list The new list of users.
+     */
     @SuppressLint("NotifyDataSetChanged")
     public void updateList(List<User> list){
         this.userList = list;
@@ -63,6 +92,9 @@ public class UserAdapter extends RecyclerView.Adapter<UserAdapter.UserViewHolder
         Log.d("AdapterDebug", "User list updated. New size: " + userList.size());
     }
 
+    /**
+     * ViewHolder for binding user data to the views.
+     */
     static class UserViewHolder extends RecyclerView.ViewHolder {
         TextView nameTextView;
         ImageView avatarPhotoView;

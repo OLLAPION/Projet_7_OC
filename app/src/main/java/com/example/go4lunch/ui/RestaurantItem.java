@@ -6,21 +6,54 @@ import java.io.Serializable;
 import java.util.Collections;
 import java.util.List;
 
-// n'est pas un modele
+/**
+ * Represents a restaurant item with detailed information including name, address, rating, photo URL,
+ * distance, number of participants, and geographic coordinates.
+ * This class is used to store and manipulate restaurant data within the application.
+ * It also implements Comparable to allow sorting of restaurants based on their distance.
+ */
 public class RestaurantItem implements Serializable, Comparable<RestaurantItem> {
+
+    // Name of the restaurant
     private String name;
+
+    // Address of the restaurant
     private String address;
+
+    // Rating of the restaurant
     private Double rating;
+
+    // Photo URL of the restaurant
     private String photoUrl;
 
+    // Distance from the user's current location to the restaurant
     private Double distance;
+
+    // Number of participants interested in the restaurant
     private Integer NbParticipant;
 
+    // Latitude of the restaurant's location
     private Double latitude;
+
+    // Longitude of the restaurant's location
     private Double longitude;
 
+    // Original Restaurant object from the model
     private Restaurant origin;
 
+    /**
+     * Constructs a new RestaurantItem with the provided details.
+     *
+     * @param name        Name of the restaurant
+     * @param address     Address of the restaurant
+     * @param rating      Rating of the restaurant
+     * @param photoUrl    URL to the restaurant's photo
+     * @param distance    Distance from the user to the restaurant
+     * @param nbParticipant  Number of participants for the restaurant
+     * @param latitude    Latitude of the restaurant
+     * @param longitude   Longitude of the restaurant
+     * @param origin      Original Restaurant object that this item represents
+     */
     public RestaurantItem(String name, String address, Double rating, String photoUrl, Double distance, Integer nbParticipant, Double latitude, Double longitude, Restaurant origin) {
         this.name = name;
         this.address = address;
@@ -33,9 +66,7 @@ public class RestaurantItem implements Serializable, Comparable<RestaurantItem> 
         this.origin = origin;
     }
 
-    // Getters and setters
-
-
+    // Getters ans Setters
     public String getName() {
         return name;
     }
@@ -108,7 +139,13 @@ public class RestaurantItem implements Serializable, Comparable<RestaurantItem> 
         this.origin = origin;
     }
 
-    // compare la distance entre deux objets
+    /**
+     * Compares two RestaurantItem objects based on their distance from the user.
+     *
+     * @param other The other RestaurantItem to compare with
+     * @return A negative integer, zero, or a positive integer if this RestaurantItem is
+     *         closer, equally distant, or farther than the other one, respectively.
+     */
     @Override
     public int compareTo(RestaurantItem other) {
         if (this.distance == null || other.distance == null)
@@ -116,6 +153,11 @@ public class RestaurantItem implements Serializable, Comparable<RestaurantItem> 
         return this.distance.compareTo(other.distance);
     }
 
+    /**
+     * Returns a string representation of the RestaurantItem object.
+     *
+     * @return A string representing the restaurant's details.
+     */
     @Override
     public String toString() {
         return "RestaurantItem{" +

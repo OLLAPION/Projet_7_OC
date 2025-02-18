@@ -29,6 +29,14 @@ public class MyBroadcastReceiver extends BroadcastReceiver {
 
     private static final int NOTIFICATION_ID = 7; // 007
 
+    /**
+     * Method to create and send a notification
+     *
+     * @param context       The application context
+     * @param intent        The original intent that triggered the BroadcastReceiver
+     * @param restaurant    The selected restaurant for lunch
+     * @param userNames     List of names of workmates joining the lunch
+     */
     private void sendMessage(Context context, Intent intent, Restaurant restaurant, List<String> userNames){
 
         // Build String
@@ -44,23 +52,21 @@ public class MyBroadcastReceiver extends BroadcastReceiver {
         }
         String notificationMessage = sb.toString();
 
-        // Create intent
+        // Create an intent to open CoreActivity when the user clicks the notification
         Intent newIntent = new Intent(context, CoreActivity.class);
         newIntent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK);
 
-        // Create pending intent
-        // (it allows you to execute an action in the future)
+        // Create a PendingIntent to execute the intent later (when clicking the notification)
         PendingIntent pendingIntent = PendingIntent.getActivity(context, 0, newIntent, PendingIntent.FLAG_IMMUTABLE);
 
         // Create notification
         NotificationCompat.Builder builder = new NotificationCompat
                 .Builder(context, CoreActivity.CHANNEL_ID)
-                .setSmallIcon(R.drawable.ic_launcher_background)
+                .setSmallIcon(R.drawable.logo_central)
                 .setContentTitle(CoreActivity.CHANNEL_NAME)
                 .setContentText(notificationMessage)
                 .setAutoCancel(true)
                 .setPriority(NotificationCompat.PRIORITY_HIGH)
-                // (it allows you to specify what should happen when the user interacts with the notification)
                 .setContentIntent(pendingIntent);
 
         // Send notification
@@ -70,13 +76,18 @@ public class MyBroadcastReceiver extends BroadcastReceiver {
         Log.i(TAG,"ALARM NOTIFICATION SENT : " + notificationMessage);
     }
 
-
-
+    /**
+     * Method called when the BroadcastReceiver receives an alarm
+     *
+     * @param context   The application context
+     * @param intent    The intent that triggered the BroadcastReceiver
+     */
     @Override
     public void onReceive(Context context, Intent intent) {
 
         Log.i(TAG, "ALARM TRIGGERED");
 
+        // Debug mode to test sending notification with fake data
         if (NOTIFICATION_DEBUG) {
             Restaurant fakeRestaurant = new Restaurant();
             fakeRestaurant.setName("Fake Restaurant");
@@ -108,10 +119,12 @@ public class MyBroadcastReceiver extends BroadcastReceiver {
                         // Get the list of workmates who have also already chosen the restaurant for today's lunch
                         lunchRepository.getWorkmatesThatAlreadyChooseRestaurantForTodayLunchForThatRestaurant(restaurant).observeForever(workmates -> {
                             if (workmates != null) {
+                                // Create a List of names of the workmates joining the Lunch
                                 List<String> mUsersList = new ArrayList<>();
                                 for (User w : workmates) {
                                     mUsersList.add(w.getName());
                                 }
+                                // Send the notification with Lunchdetails
                                 sendMessage(context, intent, restaurant, mUsersList);
                             } else {
                                 Log.e(TAG, "Unable to get the list of the other workmates that are participants of that lunch");

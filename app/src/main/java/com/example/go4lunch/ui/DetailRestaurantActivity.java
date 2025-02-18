@@ -42,35 +42,57 @@ import com.google.firebase.auth.FirebaseUser;
 import java.io.Serializable;
 import java.util.ArrayList;
 
+/**
+ * DetailRestaurantActivity
+ * This activity displays detailed information about a selected restaurant,
+ * including its name, address, type, and photo. It also allows users to:
+ * - Call the restaurant
+ * - Visit the restaurant's website
+ * - Like or unlike the restaurant
+ * - Mark the restaurant as their lunch choice
+ * - View a list of workmates who have chosen the restaurant for lunch
+ *
+ * It uses ViewModel to handle data operations and observes LiveData for changes.
+ */
 public class DetailRestaurantActivity extends AppCompatActivity {
 
-    /** The recyclerview to display the list of workmates who have chosen to eat in the restaurant */
+    /** RecyclerView to display the list of workmates who have chosen this restaurant */
     RecyclerView recyclerView = null;
 
-    /** The UserAdapter : for the workmates */
+    /** Adapter for managing the list of workmates */
     UserAdapter adapter = null;
 
-    /** The Restaurant Object */
+    /** Selected restaurant object containing details */
     Restaurant restaurant = null;
 
-    /** The repository : WorkmateRepository */
+    /** ViewModel for handling business logic and data operations */
     private DetailRestaurantViewModel viewModel;
 
+    /** Tag used for logging */
     private String TAG = "DRA";
 
-
+    /**
+     * Called when the activity is created.
+     * Initializes the activity, retrieves the restaurant from the intent,
+     * and configures various UI components and functionalities.
+     *
+     * @param savedInstanceState Saved state of the activity
+     */
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_detail_restaurant);
 
+        // Initialize ViewModel
         viewModel = new ViewModelProvider(this).get(DetailRestaurantViewModel.class);
 
+        // Get restaurant from Intent
         Intent intent = getIntent();
         if (intent != null) {
             restaurant = (Restaurant) intent.getSerializableExtra("restaurant");
         }
 
+        // Configure UI components and functionalities
         configureComponante();
         configureRecyclerView();
         configureLike();
@@ -80,7 +102,9 @@ public class DetailRestaurantActivity extends AppCompatActivity {
     }
 
     /**
-     * Configure les écouteurs de clic pour callButton et restaurantWebsiteButton.
+     * Configures click listeners for callButton and websiteButton.
+     * - Call button: Initiates a phone call to the restaurant (if phone number is available)
+     * - Website button: Opens the restaurant's website in a browser (if URL is available)
      */
     private void configureClickListeners() {
         ImageButton callButton = findViewById(R.id.callButton);
@@ -101,11 +125,11 @@ public class DetailRestaurantActivity extends AppCompatActivity {
     }
 
     /**
-     * Méthode pour gérer le clic sur le bouton d'appel.
+     * Handles the click event for the call button.
+     * Initiates a phone call using an implicit intent if the restaurant's phone number is available.
      */
     private void onClickCallButton() {
-        // mon modèle restaurant n'a pas de variable pour le telephoner
-
+        // Uncomment and implement if phone number is available in Restaurant model
         /*
         String phoneNumber = restaurant.getPhoneNumber();
 
@@ -115,13 +139,12 @@ public class DetailRestaurantActivity extends AppCompatActivity {
         } else {
             Toast.makeText(this, "No phone number available", Toast.LENGTH_SHORT).show();
         }
-
-         */
+        */
     }
 
-
     /**
-     * Méthode pour gérer le clic sur le bouton du site Web du restaurant.
+     * Handles the click event for the website button.
+     * Opens the restaurant's website in a browser if the URL is available.
      */
     private void onClickWebsiteButton() {
         String websiteUrl = restaurant.getWebsite();
@@ -135,7 +158,8 @@ public class DetailRestaurantActivity extends AppCompatActivity {
     }
 
     /**
-     * Configures the FloatingActionButton to allow users to mark or unmark a restaurant for lunch.
+     * Configures the FloatingActionButton to allow users to mark or unmark
+     * the restaurant as their lunch choice.
      */
     private void configureFab() {
         FloatingActionButton fab = findViewById(R.id.fabWorkmateWantToEat);
@@ -173,23 +197,23 @@ public class DetailRestaurantActivity extends AppCompatActivity {
                     });
         } else {
             Log.e(TAG, "No authenticated user found!");
-            // afficher un message d'erreur ou rediriger vers l'écran de connexion
         }
     }
 
     /**
-     * Configures the appearance of the FloatingActionButton based on the user's restaurant choice.
+     * Configures the appearance of the FloatingActionButton based on the user's lunch choice.
+     * Displays different icons depending on whether the user chose the restaurant or not.
      */
     private void configureRestaurantChoice() {
 
         User currentUser = getCurrentUser();
 
         if (currentUser != null) {
-            Log.d("FAB_1", "check fzb for user: " + currentUser.getId());
+            Log.d(TAG, "check fzb for user: " + currentUser.getId());
 
             viewModel.checkIfWorkmateChoseThisRestaurantForLunch(restaurant, currentUser.getId()).observe(this, isChosen -> {
                 FloatingActionButton fab = findViewById(R.id.fabWorkmateWantToEat);
-                Log.d("FAB_2", "check fzb : " + isChosen);
+                Log.d(TAG, "check fzb : " + isChosen);
                 if (isChosen) {
                     fab.setImageResource(R.drawable.ic_chosen);
                 } else {
@@ -197,35 +221,18 @@ public class DetailRestaurantActivity extends AppCompatActivity {
                 }
             });
         } else {
-            Log.e("FAB_1", "No authenticated user found!");
-            // afficher un message d'erreur ou rediriger vers l'écran de connexion
+            Log.e(TAG, "No authenticated user found!");
         }
-
-        /*
-        User currentUser_1 = new User();
-        currentUser_1.setId("D7rZ2O9j8vVHuLwxHrgnrLTT3mv1");
-        currentUser_1.setName("Name_2");
-        currentUser_1.setAvatar("Avatar_2");
-        Log.d("FAB_1", "check fzb : ");
-
-        viewModel.getIsRestaurantChosenLiveData(restaurant, currentUser_1.getId()).observe(this, isChosen -> {
-            FloatingActionButton fab = findViewById(R.id.fabWorkmateWantToEat);
-            Log.d("FAB_2", "check fzb : " + isChosen);
-            if (isChosen) {
-                fab.setImageResource(R.drawable.ic_chosen);
-            } else {
-                fab.setImageResource(R.drawable.ic_not_chosen);
-            }
-        });
-
-         */
-
     }
 
+    /**
+     * Retrieves the currently authenticated user from Firebase.
+     *
+     * @return User object containing user details or null if not authenticated
+     */
     private User getCurrentUser() {
         FirebaseUser currentUser = FirebaseAuth.getInstance().getCurrentUser();
         if (currentUser != null) {
-            // Créer un objet User basé sur l'utilisateur connecté
             User user = new User();
             user.setId(currentUser.getUid());
             user.setName(currentUser.getDisplayName() != null ? currentUser.getDisplayName() : "Anonymous");
@@ -237,36 +244,39 @@ public class DetailRestaurantActivity extends AppCompatActivity {
 
 
 
+
     /**
-     * Configures the appearance of the "like" icon based on the workmates like this restaurant.
-     * Add & Delete from firebase using the ViewModel
+     * Configures the like button functionality.
+     * - Displays a filled star if the user likes the restaurant
+     * - Displays an empty star if the user does not like the restaurant
+     * - Updates Firebase when the like status changes
      */
     private void configureLike() {
         ImageView restaurantStar = findViewById(R.id.restaurantStar);
         ImageButton likeButton = findViewById(R.id.likeButton);
 
-        // j'observe l'état initial pour vérifier si le restaurant est aimé
+        // observe the initial state to check if the restaurant is liked
         viewModel.checkIfWorkmateLikeThisRestaurant(restaurant).observe(this, isLiked -> {
             if (isLiked) {
                 restaurantStar.setImageResource(R.drawable.ic_star_on);
-                Log.d("ConfigureLike_1", "Étoile activée");
+                Log.d(TAG, "Star On");
             } else {
                 restaurantStar.setImageResource(R.drawable.ic_star_off);
-                Log.d("ConfigureLike_2", "Étoile désactivée");
+                Log.d(TAG, "Star Off");
             }
         });
 
-        // j'applique les modification grace au viewModel et je change l'apparence
+        // apply the modifications using the viewModel and I change the appearance
         likeButton.setOnClickListener(view -> {
             viewModel.checkIfWorkmateLikeThisRestaurant(restaurant).observe(this, isLiked -> {
                 if (isLiked) {
                     restaurantStar.setImageResource(R.drawable.ic_star_off);
                     viewModel.deleteLikedRestaurant(restaurant);
-                    Log.d("ConfigureLike_3", "Étoile désactivée cliquée");
+                    Log.d(TAG, "Étoile désactivée cliquée");
                 } else {
                     restaurantStar.setImageResource(R.drawable.ic_star_on);
                     viewModel.addLikedRestaurant(restaurant);
-                    Log.d("ConfigureLike_4", "Étoile activée cliquée");
+                    Log.d(TAG, "Étoile activée cliquée");
                 }
                 viewModel.checkIfWorkmateLikeThisRestaurant(restaurant).removeObservers(this);
             });
@@ -280,21 +290,31 @@ public class DetailRestaurantActivity extends AppCompatActivity {
      */
     private void configureRecyclerView(){
 
+        // Initialize the adapter
         adapter = new UserAdapter();
+
+        // Set up the layout manager for the RecyclerView
         recyclerView.setLayoutManager(new LinearLayoutManager(this));
+
+        // Attach the adapter to the RecyclerView
         recyclerView.setAdapter(adapter);
 
-
+        // Observe the list of workmates who chose this restaurant for lunch
         viewModel.getWorkmatesThatAlreadyChooseRestaurantForTodayLunchForThatRestaurant(restaurant)
                 .observe(this, workmates -> {
+                    // Check if the list is not null
                     if (workmates != null) {
-                        Log.d("RecyclerViewDebug_1", "Number of users retrieved: " + workmates.size());
+                        Log.d(TAG, "Number of users retrieved: " + workmates.size());
+
+                        // Log each workmate's name for debugging purposes
                         for (User workmate : workmates) {
-                            Log.d("RecyclerViewDebug_2", "Workmate name: " + workmate.getName());
+                            Log.d(TAG, "Workmate name: " + workmate.getName());
                         }
+                        // Update the adapter with the list of workmates
                         adapter.updateList(workmates);
                     } else {
-                        Log.d("RecyclerViewDebug_3", "No workmates found.");
+                        // If no workmates are found, update the adapter with an empty list
+                        Log.d(TAG, "No workmates found.");
                         adapter.updateList(new ArrayList<>());
                     }
                 });
@@ -305,25 +325,33 @@ public class DetailRestaurantActivity extends AppCompatActivity {
      */
     private void configureComponante(){
 
+        // Initialize RecyclerView for displaying workmates
         recyclerView = findViewById(R.id.recyclerView);
+
+        // Initialize TextViews for restaurant name, address, and type
         TextView restaurantNameTextView = findViewById(R.id.restaurantNameTextView);
         TextView restaurantAddressTextView = findViewById(R.id.restaurantAddressTextView);
         TextView restaurantTypeOfRestaurantTextView = findViewById(R.id.restaurantTypeOfRestaurantTextView);
+
+        // Initialize ImageViews for restaurant photo, call button, and website button
         ImageView restaurantPhotoImageView = findViewById(R.id.restaurantPhotoImageView);
         ImageView restaurantCallImageView = findViewById(R.id.callButton);
         ImageButton restaurantWebsiteImageButton = findViewById(R.id.restaurantWebsiteButton);
 
+        // Set the restaurant name, address, and type in the corresponding TextViews
         restaurantNameTextView.setText(restaurant.getName());
         restaurantAddressTextView.setText(restaurant.getAddress());
         restaurantTypeOfRestaurantTextView.setText(restaurant.getTypeOfRestaurant());
 
+        Log.d(TAG, "Restaurant Details: " + restaurant);
+        Log.d(TAG, "Avant Photo URL" + restaurant.getPhoto());
 
+        // Construct the URL for the restaurant's photo using the Google Places API
+        String photoUrl = "https://maps.googleapis.com/maps/api/place/photo?maxwidth=400&photoreference="
+                + restaurant.getPhoto()
+                + "&key=" + BuildConfig.google_maps_api;
 
-        Log.d("DRA", "Restaurant Details: " + restaurant);
-        Log.d("DRA", "Avant Photo URL" + restaurant.getPhoto());
-
-        String photoUrl = "https://maps.googleapis.com/maps/api/place/photo?maxwidth=400&photoreference=" + restaurant.getPhoto() + "&key=" + BuildConfig.google_maps_api;
-
+        // Load the restaurant's photo using Glide
         Glide.with(this)
                 .load(photoUrl)
                 .apply(new RequestOptions()
@@ -334,33 +362,31 @@ public class DetailRestaurantActivity extends AppCompatActivity {
                 .listener(new RequestListener<Drawable>() {
                     @Override
                     public boolean onLoadFailed(@Nullable GlideException e, Object model, Target<Drawable> target, boolean isFirstResource) {
-                        Log.e("DRA_GLIDE_ERROR", "Failed to load image", e);
+                        Log.e(TAG, "Failed to load image", e);
                         return false;
                     }
 
                     @Override
                     public boolean onResourceReady(Drawable resource, Object model, Target<Drawable> target, DataSource dataSource, boolean isFirstResource) {
-                        Log.d("DRA_GLIDE_SUCCESS", "Image loaded successfully");
+                        Log.d(TAG, "Image loaded successfully");
                         return false;
                     }
                 })
                 .into(restaurantPhotoImageView);
 
+        Log.d(TAG, "Après Photo URL" + restaurant.getPhoto());
 
-        Log.d("DRA", "Après Photo URL" + restaurant.getPhoto());
-
-
-
+        // Load the call icon using Glide
         Glide.with(this)
                 .load(R.drawable.ic_call)
                 .into(restaurantCallImageView);
 
-
-
+        // Load the website icon using Glide
         Glide.with(this)
                 .load(R.drawable.ic_website)
                 .into(restaurantWebsiteImageButton);
     }
+
 
 
     /**
@@ -368,8 +394,13 @@ public class DetailRestaurantActivity extends AppCompatActivity {
      * @param activity the activity that calls this method
      */
     public static void navigate(Context activity, Restaurant restaurant) {
+        // Create an intent to start the DetailRestaurantActivity
         Intent anIntent = new Intent(activity, DetailRestaurantActivity.class);
+
+        // Add the restaurant object as a Serializable extra to the intent
         anIntent.putExtra("restaurant", (Serializable) restaurant);
+
+        // Start the activity with the intent
         ActivityCompat.startActivity(activity, anIntent, null);
     }
 }

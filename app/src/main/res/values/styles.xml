@@ -1,7 +1,12 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
     <!-- Thème principal de l'application -->
-    <style name="AppTheme" parent="Theme.AppCompat.Light.NoActionBar">
+    <style name="AppTheme" parent="Theme.AppCompat.Light.DarkActionBar">
+        <!-- Applique les mêmes couleurs que dans AuthTheme -->
+        <item name="colorPrimary">@color/colorPrimary</item>
+        <item name="colorPrimaryDark">@color/colorPrimaryDark</item>
+        <item name="colorAccent">#F44336</item>
+
         <!-- pour mon drawer -->
         <item name="windowActionBar">false</item>
         <item name="windowNoTitle">true</item>
@@ -14,5 +19,5 @@
         <item name="colorAccent">@color/colorAccent</item>
         <item name="android:windowBackground">@color/backgroundColor</item>
     </style>
-
 </resources>
+

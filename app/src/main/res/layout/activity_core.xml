@@ -14,6 +14,7 @@
         <!-- Barre d'outils -->
         <androidx.appcompat.widget.Toolbar
             android:id="@+id/toolbar"
+            android:elevation="2dp"
             android:layout_width="match_parent"
             android:layout_height="?attr/actionBarSize"
             android:background="?attr/colorPrimary"

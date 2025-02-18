@@ -19,6 +19,9 @@ import com.example.go4lunch.model.User;
 import java.util.ArrayList;
 import java.util.List;
 
+/**
+ * adapter with the User's and the Restaurant's for the recyclerView that ListWorkmatesLunchWithYouFragment.
+ */
 public class WorkmateAdapter extends RecyclerView.Adapter<WorkmateAdapter.WorkmateViewHolder> {
 
     private List<Pair<User, Restaurant>> workmatesWithRestaurants;

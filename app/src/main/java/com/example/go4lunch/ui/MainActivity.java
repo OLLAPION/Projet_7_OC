@@ -44,6 +44,9 @@ import retrofit2.Call;
 import retrofit2.Callback;
 import retrofit2.Response;
 
+/**
+ * the MainActivity is used only to do tests in order to move forward in the design of the application
+ */
 public class MainActivity extends AppCompatActivity {
 
     private Button btnGetRestaurants;

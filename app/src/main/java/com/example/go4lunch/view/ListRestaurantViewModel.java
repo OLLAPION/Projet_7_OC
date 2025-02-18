@@ -27,21 +27,22 @@ import retrofit2.Callback;
 import retrofit2.Response;
 
 /**
- * ViewModel for managing the list of restaurants.
+ * ViewModel for managing the ListRestaurantFragment.
  */
 public class ListRestaurantViewModel extends ViewModel {
 
-    /** LiveData holding the list of RestaurantItems to be observed by the UI. */
+    // LiveData holding the list of RestaurantItems to be observed by the UI.
     private MutableLiveData<List<RestaurantItem>> restaurantListLiveData = new MutableLiveData<>();
 
-    /** Repository for fetching restaurant data from the network. */
+    // Repository for fetching restaurant data from the network.
     private RestaurantRepository restaurantRepository;
 
-    /** Repository for managing lunch data. */
+    // The Repository : LunchRepository
     private LunchRepository lunchRepository;
 
-    /** API key for Google Maps. */
+    // API key for Google Maps.
     private String apiKey;
+
     /**
      * Constructor initializing repositories and API key.
      */
@@ -59,14 +60,26 @@ public class ListRestaurantViewModel extends ViewModel {
         return restaurantListLiveData;
     }
 
+    /**
+     * Fetches a list of all restaurants from the repository based on the provided location, radius, type, and API key.
+     * This method makes a network request to fetch restaurants and returns the result as LiveData.
+     *
+     * @param location The location to search for restaurants around.
+     * @param radius The radius around the location to consider.
+     * @param type The type of restaurant to filter by.
+     * @param key The API key used for the Google Maps API.
+     * @return LiveData containing the list of Restaurant objects fetched from the network.
+     */
     public LiveData<List<Restaurant>> getAllRestaurants(String location, int radius, String type, String key) {
         return restaurantRepository.getAllRestaurants(location, radius, type, key);
     }
 
-    public LiveData<Restaurant> getRestaurantDetail(String key, String placeId) {
-        return restaurantRepository.getRestaurantDetail(key, placeId);
-    }
-
+    /**
+     * Fetches a list of lunches for today from the LunchRepository.
+     * This method returns the lunch activities for today, which could be a list of restaurants or user preferences.
+     *
+     * @return LiveData containing the list of Lunch objects for today.
+     */
     public LiveData<List<Lunch>> getLunchesForToday(){
         return lunchRepository.getLunchesForToday();
     }

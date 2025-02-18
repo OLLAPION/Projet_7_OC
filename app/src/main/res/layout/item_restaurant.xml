@@ -1,5 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:elevation="2dp"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
     android:orientation="vertical"
@@ -7,12 +8,14 @@
 
     <ImageView
         android:id="@+id/restaurant_photo"
+        android:elevation="2dp"
         android:layout_width="match_parent"
         android:layout_height="200dp"
         android:scaleType="centerCrop" />
 
     <TextView
         android:id="@+id/restaurant_name"
+        android:elevation="2dp"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:textSize="18sp"
@@ -21,12 +24,14 @@
 
     <TextView
         android:id="@+id/restaurant_address"
+        android:elevation="2dp"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:paddingTop="4dp" />
 
     <RatingBar
         android:id="@+id/restaurant_rating"
+        android:elevation="2dp"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:numStars="5"
@@ -35,6 +40,7 @@
 
     <TextView
         android:id="@+id/restaurant_distance"
+        android:elevation="2dp"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:paddingTop="4dp"
@@ -44,6 +50,7 @@
 
     <TextView
         android:id="@+id/restaurant_participants"
+        android:elevation="2dp"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:paddingTop="4dp"

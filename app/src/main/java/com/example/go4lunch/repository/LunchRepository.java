@@ -26,16 +26,31 @@ import java.util.Calendar;
 import java.util.Date;
 import java.util.List;
 
+/**
+ * Singleton class responsible for managing lunch data using Firebase Firestore.
+ * Handles operations like creating, retrieving, and deleting Lunch objects.
+ */
 public class LunchRepository {
-    private final MutableLiveData<List<Lunch>> listOfLunch = new MutableLiveData<>();
 
+    // Singleton instance of LunchRepository
     private static LunchRepository sLunchRepository;
 
+    // TAG for logs
+    private String TAG = "LR";
 
+    /**
+     * Private constructor to initialize Firebase.
+     * @param context Application context.
+     */
     private LunchRepository(Context context) {
         FirebaseApp.initializeApp(context);
     }
 
+    /**
+     * Returns the singleton instance of LunchRepository.
+     * @param context Application context.
+     * @return Instance of LunchRepository.
+     */
     public static LunchRepository getInstance(Context context) {
         if (sLunchRepository == null) {
             sLunchRepository = new LunchRepository(context);
@@ -43,40 +58,42 @@ public class LunchRepository {
         return sLunchRepository;
     }
 
+    /**
+     * Converts the current date to a truncated timestamp.
+     * @return The truncated current timestamp in milliseconds.
+     */
     private static Long toDay() {
         return Instant.now().truncatedTo(ChronoUnit.DAYS).toEpochMilli();
     }
 
+    /**
+     * Creates a new lunch for a given restaurant and workmate after removing any previous lunch choices for the day.
+     * @param restaurantChosen The selected restaurant for lunch.
+     * @param workmate The user who chose the lunch.
+     * @param callback The callback to notify the result.
+     */
     public void createLunch(Restaurant restaurantChosen, User workmate, CreateLunchCallBack callback) {
+        // Check if restaurantChosen and workmate are valid
         if (restaurantChosen == null || workmate == null) {
-            Log.d("LR_createLunch_1", "Error: restaurantChosen or workmate is null");
+            Log.d(TAG, "Error: restaurantChosen or workmate is null");
             return;
         }
 
-        if (restaurantChosen.getId() == null || restaurantChosen.getId().isEmpty()) {
-            Log.d("LR_createLunch_2", "Error: restaurantChosen has no valid ID");
-            return;
-        }
-
-        if (workmate.getId() == null || workmate.getId().isEmpty()) {
-            Log.d("LR_createLunch_3", "Error: workmate has no valid ID");
-            return;
-        }
-
-        // Étape 1 : Supprimer les choix précédents
-        getBaseQuery3(workmate.getId()) // Requête pour les déjeuners existants de cet utilisateur aujourd'hui
+        // Delete previous lunches for the workmate
+        getBaseQuery3(workmate.getId())
                 .get()
                 .addOnCompleteListener(task -> {
                     if (task.isSuccessful()) {
                         QuerySnapshot querySnapshot = task.getResult();
                         if (querySnapshot != null && !querySnapshot.isEmpty()) {
+                            // Delete existing lunches for the day
                             for (DocumentSnapshot document : querySnapshot.getDocuments()) {
-                                document.getReference().delete(); // Supprime le déjeuner précédent
+                                document.getReference().delete();
                             }
                         }
                     }
 
-                    // Étape 2 : Ajouter le nouveau déjeuner après avoir supprimé les anciens
+                    // Add the new lunch to Firestore
                     Lunch lunch = new Lunch(restaurantChosen, workmate);
                     lunch.setDayDate(toDay());
 
@@ -84,62 +101,78 @@ public class LunchRepository {
                             .add(lunch)
                             .addOnCompleteListener(addTask -> {
                                 if (addTask.isSuccessful()) {
-                                    Log.d("LR_createLunch_4", "Lunch created successfully! Document ID: " + addTask.getResult().getId());
+                                    Log.d(TAG, "Lunch created successfully!");
                                     callback.onCreated();
                                 } else {
-                                    Log.e("LR_createLunch_5", "Error creating lunch: " + addTask.getException().getMessage());
+                                    Log.e(TAG, "Error creating lunch");
                                 }
                             })
                             .addOnFailureListener(e -> {
-                                Log.e("LR_createLunch_6", "Error creating lunch: " + e.getMessage());
+                                Log.e(TAG, "Error creating lunch");
                             });
                 })
                 .addOnFailureListener(e -> {
-                    Log.e("LR_createLunch_7", "Error deleting previous lunches: " + e.getMessage());
+                    Log.e(TAG, "Error deleting previous lunches");
                 });
     }
 
+    /**
+     * Creates a Firestore query to fetch a specific lunch for a restaurant and user.
+     * @param restaurant The restaurant for the lunch.
+     * @param userId The ID of the user.
+     * @return Firestore query object.
+     */
     private Query getBaseQuery1(Restaurant restaurant, String userId) {
         FirebaseFirestore firestore = FirebaseFirestore.getInstance();
-        if (restaurant == null || restaurant.getId() == null || restaurant.getId().isEmpty()
-                 || userId == null || userId.isEmpty()) {
-            Log.e("LR_getBaseQuery_1", "Error: Invalid parameters in getBaseQuery");
+        if (restaurant == null || userId == null) {
+            Log.e(TAG, "Error: Invalid parameters");
             return null;
         }
-        Log.d("LR_GetBaseQuery_1", "getBaseQuery1 > restaurant : " + restaurant.getId() + " User : " + userId + " Day : " + toDay());
         return firestore.collection("Lunch")
                 .whereEqualTo("restaurant.id", restaurant.getId())
                 .whereEqualTo("dayDate", toDay())
                 .whereEqualTo("user.id", userId);
     }
 
+    /**
+     * Creates a Firestore query to fetch all lunches for a specific restaurant on the current day.
+     * @param restaurant The restaurant for which we want the lunch choices.
+     * @return Firestore query object.
+     */
     private Query getBaseQuery2(Restaurant restaurant) {
         FirebaseFirestore firestore = FirebaseFirestore.getInstance();
-        if (restaurant == null || restaurant.getId() == null || restaurant.getId().isEmpty()) {
-            Log.e("LR_getBaseQuery_2", "Error: Invalid parameters in getBaseQuery");
+        if (restaurant == null) {
+            Log.e(TAG, "Error: Invalid parameters");
             return null;
         }
-
         return firestore.collection("Lunch")
                 .whereEqualTo("restaurant.id", restaurant.getId())
                 .whereEqualTo("dayDate", toDay());
     }
 
+    /**
+     * Creates a Firestore query to fetch all lunches for a specific user on the current day.
+     * @param userId The ID of the user.
+     * @return Firestore query object.
+     */
     private Query getBaseQuery3(String userId) {
         FirebaseFirestore firestore = FirebaseFirestore.getInstance();
-        if (userId == null || userId.isEmpty()) {
-            Log.e("LR_getBaseQuery_3", "Error: Invalid parameters in getBaseQuery");
+        if (userId == null) {
+            Log.e(TAG, "Error: Invalid parameters");
             return null;
         }
-
         return firestore.collection("Lunch")
                 .whereEqualTo("dayDate", toDay())
                 .whereEqualTo("user.id", userId);
     }
 
+    /**
+     * Retrieves the lunch chosen by a specific workmate for the current day.
+     * @param workmateId The ID of the workmate.
+     * @return LiveData object containing the lunch for today.
+     */
     public LiveData<Lunch> getTodayLunch(String workmateId) {
         MutableLiveData<Lunch> todayLunch = new MutableLiveData<>();
-
         getBaseQuery3(workmateId)
                 .get()
                 .addOnCompleteListener(task -> {
@@ -148,30 +181,22 @@ public class LunchRepository {
                         if (queryDocumentSnapshots != null && !queryDocumentSnapshots.isEmpty()) {
                             DocumentSnapshot document = queryDocumentSnapshots.getDocuments().get(0);
                             Lunch lunch = document.toObject(Lunch.class);
-                            todayLunch.postValue(lunch);
-                            Log.d("LR_getTodayLunch_1", "Lunch retrieved successfully: " + lunch.toString());
+                            todayLunch.postValue(lunch);  // Post the Lunch object
                         } else {
-                            todayLunch.postValue(null);
-                            Log.d("LR_getTodayLunch_2", "No lunch found for today.");
+                            todayLunch.postValue(null);  // No Lunch found
                         }
                     } else {
-                        // Gérer l'échec
-                        Exception exception = task.getException();
-                        if (exception != null) {
-                            Log.e("LR_getTodayLunch_3", "Failed to retrieve lunch", exception);
-                        }
-                        todayLunch.postValue(null);
+                        todayLunch.postValue(null);  // Query failed
                     }
                 })
-                .addOnFailureListener(e -> {
-                    todayLunch.postValue(null);
-                    Log.e("LR_getTodayLunch_4", "Failed to retrieve lunch", e);
-                });
-
+                .addOnFailureListener(e -> todayLunch.postValue(null));  // Query failure
         return todayLunch;
     }
 
-    // modification en static (demander par Android Studio)
+    /**
+     * Retrieves all lunches for the current day.
+     * @return LiveData object containing a list of lunches for today.
+     */
     public LiveData<List<Lunch>> getLunchesForToday() {
         MutableLiveData<List<Lunch>> lunchesLiveData = new MutableLiveData<>();
         ArrayList<Lunch> lunches = new ArrayList<>();
@@ -185,28 +210,25 @@ public class LunchRepository {
                         if (queryDocumentSnapshots != null && !queryDocumentSnapshots.isEmpty()) {
                             for (QueryDocumentSnapshot document : queryDocumentSnapshots) {
                                 Lunch lunch = document.toObject(Lunch.class);
-                                lunches.add(lunch);
+                                lunches.add(lunch);  // Add lunch to the list
                             }
-                            lunchesLiveData.postValue(lunches);
+                            lunchesLiveData.postValue(lunches); // Post list of lunches
                         } else {
-                            lunchesLiveData.postValue(lunches);
+                            lunchesLiveData.postValue(lunches); // No lunches found
                         }
                     } else {
-                        Exception exception = task.getException();
-                        if (exception != null) {
-                            Log.e("LR_getLunchesForToday", "Failed to retrieve lunches", exception);
-                        }
-                        lunchesLiveData.postValue(lunches);
+                        lunchesLiveData.postValue(lunches); // Query failed
                     }
                 })
-                .addOnFailureListener(e -> {
-                    Log.e("LR_getLunchesForToday", "Failed to retrieve lunches", e);
-                    lunchesLiveData.postValue(lunches);
-                });
-
+                .addOnFailureListener(e -> lunchesLiveData.postValue(lunches)); // Query failure
         return lunchesLiveData;
     }
 
+    /**
+     * Retrieves a list of workmates who have chosen a specific restaurant for lunch today.
+     * @param restaurant The restaurant selected for lunch.
+     * @return LiveData object containing a list of workmates who have chosen the restaurant.
+     */
     public LiveData<ArrayList<User>> getWorkmatesThatAlreadyChooseRestaurantForTodayLunchForThatRestaurant(Restaurant restaurant) {
         MutableLiveData<ArrayList<User>> workmatesLiveData = new MutableLiveData<>();
         ArrayList<User> workmates = new ArrayList<>();
@@ -220,62 +242,52 @@ public class LunchRepository {
                             for (QueryDocumentSnapshot document : queryDocumentSnapshots) {
                                 Lunch lunch = document.toObject(Lunch.class);
                                 User user = lunch.getUser();
-                                workmates.add(user);
+                                workmates.add(user); // Add workmate to the list
                             }
-                            workmatesLiveData.postValue(workmates);
-                            Log.d("LR_getWorkmatesTh_1", "Workmates who already chose restaurant for today's lunch retrieved successfully: " + workmates.toString());
+                            workmatesLiveData.postValue(workmates); // Post list of workmates
                         } else {
-                            workmatesLiveData.postValue(workmates);
-                            Log.d("LR_getWorkmatesTh_2", "No workmates found who chose restaurant for today's lunch for restaurant: " + restaurant.getName());
+                            workmatesLiveData.postValue(workmates); // No workmates found
                         }
                     } else {
-                        // Handling failure
-                        Exception exception = task.getException();
-                        if (exception != null) {
-                           Log.e("LR_getWorkmatesTh_3", "Failed to retrieve workmates who chose restaurant for today's lunch", exception);
-                        }
-                        workmatesLiveData.postValue(workmates);
+                        workmatesLiveData.postValue(workmates); // Query failed
                     }
                 })
-                .addOnFailureListener(e -> {
-                    workmatesLiveData.postValue(workmates);
-                    Log.e("LR_getWorkmatesTh_4", "Failed to retrieve workmates who chose restaurant for today's lunch", e);
-                });
-
+                .addOnFailureListener(e -> workmatesLiveData.postValue(workmates)); // Query failure
         return workmatesLiveData;
     }
+
+    /**
+     * Checks if a specific workmate has already chosen a specific restaurant for lunch today.
+     * @param restaurant The restaurant to check.
+     * @param userId The ID of the user.
+     * @return LiveData object containing a boolean indicating whether the user chose the restaurant.
+     */
     public MutableLiveData<Boolean> checkIfCurrentWorkmateChoseThisRestaurantForLunch(Restaurant restaurant, String userId) {
         MutableLiveData<Boolean> isChosenLiveData = new MutableLiveData<>();
-
         getBaseQuery1(restaurant, userId)
                 .get()
                 .addOnCompleteListener(task -> {
                     if (task.isSuccessful()) {
                         QuerySnapshot queryDocumentSnapshots = task.getResult();
                         if (queryDocumentSnapshots != null && !queryDocumentSnapshots.isEmpty()) {
-                            isChosenLiveData.postValue(true);
-                            Log.d("LR_checkIfCurrentWork_1", "Current workmate chose this restaurant for lunch: " + restaurant.getName());
+                            isChosenLiveData.postValue(true); // Restaurant chosen
                         } else {
-                            isChosenLiveData.postValue(false);
-                            Log.d("LR_checkIfCurrentWork_2", "Current workmate did not choose this restaurant for lunch: " + restaurant.getName());
+                            isChosenLiveData.postValue(false); // Restaurant not chosen
                         }
                     } else {
-                        // Gérer l'échec
-                        Exception exception = task.getException();
-                        if (exception != null) {
-                            Log.e("LR_checkIfCurrentWork_3", "Failed to check if current workmate chose this restaurant for lunch", exception);
-                        }
-                        isChosenLiveData.postValue(false);
+                        isChosenLiveData.postValue(false); // Query failed
                     }
                 })
-                .addOnFailureListener(e -> {
-                    isChosenLiveData.postValue(false);
-                    Log.e("LR_checkIfCurrentWork_4", "Failed to check if current workmate chose this restaurant for lunch", e);
-                });
-
+                .addOnFailureListener(e -> isChosenLiveData.postValue(false)); // Query failure
         return isChosenLiveData;
     }
 
+    /**
+     * Deletes a specific lunch for a user and restaurant.
+     * @param restaurant The restaurant for which the lunch will be deleted.
+     * @param userId The ID of the user whose lunch will be deleted.
+     * @param callback The callback to notify when the deletion is complete.
+     */
     public void deleteLunch(Restaurant restaurant, String userId, DeleteLunchCallBack callback) {
         getBaseQuery1(restaurant, userId)
                 .get()
@@ -284,21 +296,16 @@ public class LunchRepository {
                         QuerySnapshot queryDocumentSnapshots = task.getResult();
                         if (queryDocumentSnapshots != null && !queryDocumentSnapshots.isEmpty()) {
                             for (QueryDocumentSnapshot document : queryDocumentSnapshots) {
-                                document.getReference().delete();
+                                document.getReference().delete(); // Delete the lunch document
                             }
                         }
-                        Log.e("LR_deleteLunch_0", "deleteLunch successfull");
-                        callback.onDeleted();
+                        callback.onDeleted(); // Notify callback on success
                     } else {
-                        // Si la tâche échoue à être en succès
-                        Exception exception = task.getException();
-                        if (exception != null) {
-                            Log.e("LR_deleteLunch_1", "Task failed to be successful", exception);
-                        }
+                        // Handle failure
                     }
                 })
                 .addOnFailureListener(e -> {
-                    Log.e("LR_deleteLunch_2", "Failed to execute task", e);
+                    Log.e(TAG, "Failed to execute task", e);
                 });
     }
 }

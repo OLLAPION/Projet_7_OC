@@ -9,70 +9,76 @@ import java.util.Map;
  * Model class representing a restaurant item.
  */
 public class Restaurant implements Serializable {
-
-    /** Unique identifier of the restaurant */
-    private String id;
-
-    /** Name of the restaurant */
-    private String name;
-
-    /** Address of the restaurant */
-    private String address;
-
-    /** Photo of the restaurant */
-    private String photo;
-
-    /** Opening hours of the restaurant */
-    private String openingHours;
-
-    /** Rating stars of the restaurant */
-    private Double stars;
-
-    /** Website of the restaurant */
-    private String website;
-
-    /** Type of restaurant */
-    private String typeOfRestaurant;
-
-    /** Type of restaurant */
-    private String telephone;
-    private Double latitude;
-    private Double longitude;
-
+    private String id; // Id of restaurant
+    private String name; // Name of restaurant
+    private String address; // Address of restaurant
+    private String photo; // Photo of restaurant
+    private String openingHours; // Opening hours of restaurant
+    private Double stars; // Popularity of tge restaurant represented by stars
+    private String website; // Website of restaurant
+    private String typeOfRestaurant; // Type of restaurant
+    private String telephone; // Telephone of restaurant
+    private Double latitude; // latitude coordinate of restaurant
+    private Double longitude; // longitude coordinate of restaurant
+    /**
+     * Get the star rating of the restaurant.
+     * @return The star rating.
+     */
     public Double getStars() {
         return stars;
     }
 
+    /**
+     * Set the star rating of the restaurant.
+     * @param stars The star rating.
+     */
     public void setStars(Double stars) {
         this.stars = stars;
     }
 
+    /**
+     * Get the latitude coordinate of the restaurant.
+     * @return The latitude coordinate.
+     */
     public Double getLatitude() {
         return latitude;
     }
 
+    /**
+     * Set the latitude coordinate of the restaurant.
+     * @param latitude The latitude coordinate.
+     */
     public void setLatitude(Double latitude) {
         this.latitude = latitude;
     }
 
+    /**
+     * Get the longitude coordinate of the restaurant.
+     * @return The longitude coordinate.
+     */
     public Double getLongitude() {
         return longitude;
     }
 
+    /**
+     * Set the longitude coordinate of the restaurant.
+     * @param longitude The longitude coordinate.
+     */
     public void setLongitude(Double longitude) {
         this.longitude = longitude;
     }
 
     /**
      * Get the unique identifier of the restaurant.
-     * @return The unique identifier of the restaurant.
+     * @return The unique identifier.
      */
     public String getId() {
         return id;
     }
+
     /**
      * Set the unique identifier of the restaurant.
-     * @param id The unique identifier of the restaurant.
+     * @param id The unique identifier.
      */
     public void setId(String id) {
         this.id = id;
@@ -85,6 +91,7 @@ public class Restaurant implements Serializable {
     public String getName() {
         return name;
     }
+
     /**
      * Set the name of the restaurant.
      * @param name The name of the restaurant.
@@ -100,6 +107,7 @@ public class Restaurant implements Serializable {
     public String getAddress() {
         return address;
     }
+
     /**
      * Set the address of the restaurant.
      * @param address The address of the restaurant.
@@ -109,15 +117,16 @@ public class Restaurant implements Serializable {
     }
 
     /**
-     * Get the photo of the restaurant.
-     * @return The photo of the restaurant.
+     * Get the photo URL of the restaurant.
+     * @return The photo URL.
      */
     public String getPhoto() {
         return photo;
     }
+
     /**
-     * Set the photo of the restaurant.
-     * @param photo The photo of the restaurant.
+     * Set the photo URL of the restaurant.
+     * @param photo The photo URL.
      */
     public void setPhoto(String photo) {
         this.photo = photo;
@@ -125,67 +134,77 @@ public class Restaurant implements Serializable {
 
     /**
      * Get the opening hours of the restaurant.
-     * @return The opening hours of the restaurant.
+     * @return The opening hours.
      */
     public String getOpeningHours() {
         return openingHours;
     }
+
     /**
      * Set the opening hours of the restaurant.
-     * @param openingHours The opening hours of the restaurant.
+     * @param openingHours The opening hours.
      */
     public void setOpeningHours(String openingHours) {
         this.openingHours = openingHours;
     }
 
-
     /**
-     * Get the website of the restaurant.
-     * @return The website of the restaurant.
+     * Get the website URL of the restaurant.
+     * @return The website URL.
      */
     public String getWebsite() {
         return website;
     }
+
     /**
-     * Set the website of the restaurant.
-     * @param website The website of the restaurant.
+     * Set the website URL of the restaurant.
+     * @param website The website URL.
      */
     public void setWebsite(String website) {
         this.website = website;
     }
 
     /**
-     * Get the type of restaurant.
-     * @return The type of restaurant.
+     * Get the type of the restaurant (e.g., Fast Food, Italian, etc.).
+     * @return The type of the restaurant.
      */
     public String getTypeOfRestaurant() {
         return typeOfRestaurant;
     }
+
     /**
-     * Set the type of restaurant.
-     * @param typeOfRestaurant The type of restaurant.
+     * Set the type of the restaurant.
+     * @param typeOfRestaurant The type of the restaurant.
      */
     public void setTypeOfRestaurant(String typeOfRestaurant) {
         this.typeOfRestaurant = typeOfRestaurant;
     }
 
+    /**
+     * Get the telephone number of the restaurant.
+     * @return The telephone number.
+     */
     public String getTelephone() {
         return telephone;
     }
 
+    /**
+     * Set the telephone number of the restaurant.
+     * @param telephone The telephone number.
+     */
     public void setTelephone(String telephone) {
         this.telephone = telephone;
     }
 
     /**
-     * Constructor to initialize a restaurant object with all attributes.
+     * Constructor to initialize a restaurant object with basic attributes.
      * @param id The unique identifier of the restaurant.
      * @param name The name of the restaurant.
      * @param address The address of the restaurant.
-     * @param photo The photo of the restaurant.
+     * @param photo The photo URL of the restaurant.
      * @param openingHours The opening hours of the restaurant.
      * @param stars The rating stars of the restaurant.
-     * @param typeOfRestaurant The type of restaurant.
+     * @param typeOfRestaurant The type of the restaurant.
      */
     public Restaurant(String id, String name, String address, String photo, String openingHours, Double stars, String typeOfRestaurant) {
         this.id = id;
@@ -197,6 +216,17 @@ public class Restaurant implements Serializable {
         this.typeOfRestaurant = typeOfRestaurant;
     }
 
+    /**
+     * Constructor to initialize a restaurant object with website info.
+     * @param id The unique identifier of the restaurant.
+     * @param name The name of the restaurant.
+     * @param address The address of the restaurant.
+     * @param photo The photo URL of the restaurant.
+     * @param openingHours The opening hours of the restaurant.
+     * @param stars The rating stars of the restaurant.
+     * @param website The website URL of the restaurant.
+     * @param typeOfRestaurant The type of the restaurant.
+     */
     public Restaurant(String id, String name, String address, String photo, String openingHours, Double stars, String website, String typeOfRestaurant) {
         this.id = id;
         this.name = name;
@@ -208,46 +238,9 @@ public class Restaurant implements Serializable {
         this.typeOfRestaurant = typeOfRestaurant;
     }
 
-    public Restaurant (){
-
-    }
-
-    // 1er tentative du RestaurantRepository
-    /*
-    public static List<Restaurant> fromResults(List<Result> results) {
-        List<Restaurant> restaurants = new ArrayList<>();
-        for (Result result : results) {
-            restaurants.add(new Restaurant(
-                    result.getPlaceId(),
-                    result.getName(),
-                    result.getVicinity(),
-                    result.getPhotoUrl(),
-                    result.getOpeningHours(),
-                    result.getRating(),
-                    result.getWebsite(),
-                    result.getTypeOfRestaurant()
-            ));
-        }
-        return restaurants;
-    }
-
+    /**
+     * Default constructor.
      */
-
-    /*
-    // pour test 1 dans ListRestaurantFragment le fetchRestaurant !
-    public static Restaurant fromMap(Map<String, Object> args) {
-        return new Restaurant(
-                (String) args.get("placeId"),
-                (String) args.get("name"),
-                (String) args.get("vicinity"),
-                (String) args.get("photoUrl"),
-                (String) args.get("openingHours"),
-                (String) args.get("rating"),
-                (String) args.get("website"),
-                (String) args.get("typeOfRestaurant")
-        );
+    public Restaurant() {
     }
-
-     */
-
 }
