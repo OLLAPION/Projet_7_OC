@@ -1,60 +1,76 @@
 package com.example.go4lunch.model;
 
-import java.util.Date;
-
+/**
+ * This class represents a meal taken by a user at a specific restaurant on a specific date.
+ */
 public class Lunch {
+    private User user; // User logged in
+    private Restaurant restaurant; // Selected restaurant
+    private Long dayDate; // Today's day
 
-    /** Lunch Identifier */
-    // int ou Interger ???
-    private int id;
-
-    /** Lunch User */
-    private User user;
-
-    /** Lunch Restaurant */
-    private Restaurant restaurant;
-
-    /** Lunch dayDate */
-    private Date dayDate;
-
-
-
-    public int getId() {
-        return id;
-    }
-    public void setId(int id) {
-        this.id = id;
-    }
-
+    /**
+     * Get the user who took the meal.
+     * @return The user who took the meal.
+     */
     public User getUser() {
         return user;
     }
+
+    /**
+     * Set the user who took the meal.
+     * @param user The user who took the meal.
+     */
     public void setUser(User user) {
         this.user = user;
     }
 
+    /**
+     * Get the restaurant where the meal was taken.
+     * @return The restaurant where the meal was taken.
+     */
     public Restaurant getRestaurant() {
         return restaurant;
     }
+
+    /**
+     * Set the restaurant where the meal was taken.
+     * @param restaurant The restaurant where the meal was taken.
+     */
     public void setRestaurant(Restaurant restaurant) {
         this.restaurant = restaurant;
     }
 
-    public Date getDayDate() {
+    /**
+     * Get the date when the meal was taken.
+     * @return The date when the meal was taken.
+     */
+    public Long getDayDate() {
         return dayDate;
     }
-    public void setDayDate(Date dayDate) {
+
+    /**
+     * Set the date when the meal was taken.
+     * @param dayDate The date when the meal was taken.
+     */
+    public void setDayDate(Long dayDate) {
         this.dayDate = dayDate;
     }
 
+    /**
+     * Default constructor.
+     */
+    public Lunch() {
+        super();
+    }
 
     /**
-     * Constructor
+     * Parameterized constructor to initialize the meal.
+     * @param restaurant The restaurant where the meal was taken.
+     * @param user The user who took the meal.
      */
-    public Lunch(int id, User user, Restaurant restaurant, Date dayDate) {
-        this.id = id;
+    public Lunch(Restaurant restaurant, User user) {
+        this();
         this.user = user;
         this.restaurant = restaurant;
-        this.dayDate = dayDate;
     }
 }

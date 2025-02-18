@@ -2,7 +2,7 @@
   "project_info": {
     "project_number": "987738773190",
     "project_id": "projet-7-260c7",
-    "storage_bucket": "projet-7-260c7.appspot.com"
+    "storage_bucket": "projet-7-260c7.firebasestorage.app"
   },
   "client": [
     {
@@ -12,7 +12,20 @@
           "package_name": "com.example.go4lunch"
         }
       },
-      "oauth_client": [],
+      "oauth_client": [
+        {
+          "client_id": "987738773190-7v044f6ckhib2g3onr6gk9871ki6lcbe.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "com.example.go4lunch",
+            "certificate_hash": "57b2100f4fef1ad8114743e35847c0462ad556e5"
+          }
+        },
+        {
+          "client_id": "987738773190-jaq8l3mv979jlogeh7jp1rvccatbmkhg.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
       "api_key": [
         {
           "current_key": "AIzaSyC58uNhDk8LAFJ9NuYn415bA3qwN-Dgmpw"
@@ -20,7 +33,12 @@
       ],
       "services": {
         "appinvite_service": {
-          "other_platform_oauth_client": []
+          "other_platform_oauth_client": [
+            {
+              "client_id": "987738773190-jaq8l3mv979jlogeh7jp1rvccatbmkhg.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
         }
       }
     }

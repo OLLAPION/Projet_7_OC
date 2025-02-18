@@ -1,0 +1,15 @@
+<?xml version="1.0" encoding="utf-8"?>
+<menu xmlns:android="http://schemas.android.com/apk/res/android">
+    <item
+        android:id="@+id/menu_item_your_lunch"
+        android:icon="@drawable/ic_your_lunch"
+        android:title="Your lunch" />
+    <item
+        android:id="@+id/menu_item_settings"
+        android:icon="@drawable/ic_settings"
+        android:title="Settings" />
+    <item
+        android:id="@+id/menu_item_logout"
+        android:icon="@drawable/ic_logout"
+        android:title="Logout" />
+</menu>
