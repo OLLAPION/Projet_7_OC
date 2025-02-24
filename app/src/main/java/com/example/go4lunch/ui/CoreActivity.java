@@ -54,12 +54,19 @@ public class CoreActivity extends AppCompatActivity implements NavigationView.On
     private LocationViewModel locationViewModel;
 
     // Tag for logging
-    private String TAG = "CA";
+    private final String TAG = "CA";
 
     // Alarm and notification constants
     public static final boolean ALARM_FIRED_IMMEDIATELY = false;
+    /*
     public static final String CHANNEL_ID = "Go4Lunch";
+
     public static final String CHANNEL_NAME = "LunchAlarm";
+
+     */
+
+    public static String CHANNEL_ID;
+    public static String CHANNEL_NAME;
 
     /**
      * Called when the activity is first created.
@@ -71,6 +78,10 @@ public class CoreActivity extends AppCompatActivity implements NavigationView.On
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_core);
+
+        // Initialisation avec getString()
+        CHANNEL_ID = getString(R.string.notification_channel_id);
+        CHANNEL_NAME = getString(R.string.notification_channel_name);
 
         // Setup Toolbar
         Toolbar toolbar = findViewById(R.id.toolbar);
@@ -116,8 +127,8 @@ public class CoreActivity extends AppCompatActivity implements NavigationView.On
             Uri photoUrl = firebaseAuth.getCurrentUser().getPhotoUrl();
 
             // Display user's name and email
-            textUserName.setText(userName != null ? userName : "Nom indisponible");
-            textUserMail.setText(userMail != null ? userMail : "Email indisponible");
+            textUserName.setText(userName != null ? userName : getString(R.string.user_name_unavailable));
+            textUserMail.setText(userMail != null ? userMail : getString(R.string.user_email_unavailable));
 
             // Display user's profile picture using Glide
             if (photoUrl != null) {
@@ -278,7 +289,7 @@ public class CoreActivity extends AppCompatActivity implements NavigationView.On
 
 
     private void showNoRestaurantMessage() {
-        Toast.makeText(this, "Vous n'avez pas choisi de restaurant pour le moment", Toast.LENGTH_LONG).show();
+        Toast.makeText(this, getString(R.string.no_restaurant_chosen), Toast.LENGTH_LONG).show();
     }
 
 

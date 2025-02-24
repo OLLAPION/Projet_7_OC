@@ -38,7 +38,7 @@ public class WorkmateRepository {
     private static final String SUB_COLLECTION = "likedrestaurant" ;
 
     // TAG for logs
-    private String TAG = "WR";
+    private final String TAG = "WR";
 
     // Private constructor for Singleton pattern
     public WorkmateRepository() {

@@ -4,6 +4,7 @@ import android.app.PendingIntent;
 import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.Intent;
+import android.text.TextUtils;
 import android.util.Log;
 
 import androidx.core.app.NotificationCompat;
@@ -39,6 +40,7 @@ public class MyBroadcastReceiver extends BroadcastReceiver {
      */
     private void sendMessage(Context context, Intent intent, Restaurant restaurant, List<String> userNames){
 
+        /*
         // Build String
         StringBuilder sb = new StringBuilder();
         sb.append("Rembember to go to lunch at ");
@@ -52,6 +54,16 @@ public class MyBroadcastReceiver extends BroadcastReceiver {
         }
         String notificationMessage = sb.toString();
 
+         */
+
+        String userList = userNames.isEmpty() ? context.getString(R.string.notification_no_workmates) : TextUtils.join(", ", userNames);
+        String notificationMessage = context.getString(R.string.notification_message,
+                restaurant.getName(),
+                restaurant.getAddress(),
+                userList);
+
+
+
         // Create an intent to open CoreActivity when the user clicks the notification
         Intent newIntent = new Intent(context, CoreActivity.class);
         newIntent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK);
@@ -63,7 +75,7 @@ public class MyBroadcastReceiver extends BroadcastReceiver {
         NotificationCompat.Builder builder = new NotificationCompat
                 .Builder(context, CoreActivity.CHANNEL_ID)
                 .setSmallIcon(R.drawable.logo_central)
-                .setContentTitle(CoreActivity.CHANNEL_NAME)
+                .setContentTitle(context.getString(R.string.notification_title))
                 .setContentText(notificationMessage)
                 .setAutoCancel(true)
                 .setPriority(NotificationCompat.PRIORITY_HIGH)

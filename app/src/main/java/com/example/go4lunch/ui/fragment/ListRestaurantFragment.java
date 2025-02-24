@@ -159,7 +159,8 @@ public class ListRestaurantFragment extends Fragment {
             } else {
                 // Display a message if permission is denied
                 textToWait.setVisibility(View.VISIBLE);
-                textToWait.setText("Permission Denied");
+                textToWait.setText(getString(R.string.permission_denied));
+
             }
         }
     }
@@ -209,7 +210,7 @@ public class ListRestaurantFragment extends Fragment {
                 // Error with location data, show error message
                 loadingSpinner.setVisibility(View.GONE);
                 textToWait.setVisibility(View.VISIBLE);
-                textToWait.setText("Permission incorrect");
+                textToWait.setText(getString(R.string.permission_denied));
             }
         } else {
             Log.e(TAG, "GPSStatus is null");
@@ -295,7 +296,7 @@ public class ListRestaurantFragment extends Fragment {
 
         // Set up AutocompleteSupportFragment settings
         acsf.setCountries("FR");
-        acsf.setHint("Search a restaurant");
+        acsf.setHint(getString(R.string.search_hint));
         acsf.setPlaceFields(Arrays.asList(Place.Field.NAME));
 
         // Handle place selection and update the map and list accordingly

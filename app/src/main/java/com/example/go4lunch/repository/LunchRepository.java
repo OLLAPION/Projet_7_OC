@@ -36,7 +36,7 @@ public class LunchRepository {
     private static LunchRepository sLunchRepository;
 
     // TAG for logs
-    private String TAG = "LR";
+    private final String TAG = "LR";
 
     /**
      * Private constructor to initialize Firebase.

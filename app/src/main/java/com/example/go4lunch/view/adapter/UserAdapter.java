@@ -25,6 +25,8 @@ public class UserAdapter extends RecyclerView.Adapter<UserAdapter.UserViewHolder
 
     private List<User> userList;
 
+    private static final String TAG = "UA";
+
     public UserAdapter() {
         this.userList = new ArrayList<>();
     }
@@ -89,7 +91,7 @@ public class UserAdapter extends RecyclerView.Adapter<UserAdapter.UserViewHolder
     public void updateList(List<User> list){
         this.userList = list;
         notifyDataSetChanged();
-        Log.d("AdapterDebug", "User list updated. New size: " + userList.size());
+        Log.d(TAG, "User list updated. New size: " + userList.size());
     }
 
     /**

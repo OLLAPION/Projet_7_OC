@@ -15,7 +15,8 @@
         android:src="@drawable/ic_list_workmate_avatar"
         android:layout_marginStart="16dp"
         android:layout_marginEnd="16dp"
-        android:scaleType="centerCrop" />
+        android:scaleType="centerCrop"
+        android:contentDescription="@string/user_avatar_desc"/>
 
     <!-- Conteneur vertical pour les textes -->
     <LinearLayout
@@ -28,7 +29,7 @@
             android:id="@+id/TextUserName"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="Nom"
+            android:text="@string/workmate_name"
             android:textSize="16sp"
             android:textStyle="bold"
             android:textColor="@android:color/white" />
@@ -38,7 +39,7 @@
             android:id="@+id/TextUserMail"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="Mail"
+            android:text="@string/workmate_email"
             android:textSize="14sp"
             android:textColor="@android:color/white" />
     </LinearLayout>

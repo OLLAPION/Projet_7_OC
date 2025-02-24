@@ -19,7 +19,7 @@
         android:elevation="2dp"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:text="Waiting "
+        android:text="@string/waiting_message"
         android:textSize="18sp"
         android:layout_marginBottom="16dp"
         android:layout_marginTop="48dp"
@@ -32,7 +32,8 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_gravity="center"
-        android:visibility="gone" />
+        android:visibility="gone"
+        android:contentDescription="@string/loading_spinner_desc"/>
 
     <androidx.recyclerview.widget.RecyclerView
         android:id="@+id/restaurant_recycler_view"

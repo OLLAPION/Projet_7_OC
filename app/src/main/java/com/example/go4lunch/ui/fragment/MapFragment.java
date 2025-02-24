@@ -389,7 +389,7 @@ public class MapFragment extends Fragment implements OnMapReadyCallback {
 
         // Configure the AutocompleteSupportFragment
         acsf.setCountries("FR");
-        acsf.setHint("Search a restaurant");
+        acsf.setHint(getString(R.string.search_hint));
         acsf.setPlaceFields(Arrays.asList(com.google.android.libraries.places.api.model.Place.Field.NAME));
 
         // Set listener for place selection

@@ -3,13 +3,13 @@
     <item
         android:id="@+id/menu_item_your_lunch"
         android:icon="@drawable/ic_your_lunch"
-        android:title="Your lunch" />
+        android:title="@string/drawer_your_lunch" />
     <item
         android:id="@+id/menu_item_settings"
         android:icon="@drawable/ic_settings"
-        android:title="Settings" />
+        android:title="@string/drawer_settings" />
     <item
         android:id="@+id/menu_item_logout"
         android:icon="@drawable/ic_logout"
-        android:title="Logout" />
+        android:title="@string/drawer_logout" />
 </menu>

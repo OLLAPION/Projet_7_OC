@@ -31,6 +31,8 @@ public class RestaurantAdapter extends RecyclerView.Adapter<RestaurantAdapter.Re
     private List<RestaurantItem> restaurantItemList; // List to hold restaurant items
     private Context context; // Context to access resources and start new activities
 
+    private static final String TAG = "RA";
+
     /**
      * Constructor for the adapter to initialize the restaurant list and context.
      */
@@ -164,7 +166,7 @@ public class RestaurantAdapter extends RecyclerView.Adapter<RestaurantAdapter.Re
             // Set the distance if available
             if (restaurantItem.getDistance() != null) {
                 Double distance = restaurantItem.getDistance();
-                Log.d("RestaurantAdapter", "Binding distance: " + distance);
+                Log.d(TAG, "Binding distance: " + distance);
 
                 // Set the distance text
                 distanceTextView.setText(itemView.getContext().getString(R.string.distance_text, restaurantItem.getDistance()));

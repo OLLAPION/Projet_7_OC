@@ -25,7 +25,6 @@ import java.util.List;
 public class WorkmateAdapter extends RecyclerView.Adapter<WorkmateAdapter.WorkmateViewHolder> {
 
     private List<Pair<User, Restaurant>> workmatesWithRestaurants;
-    private final String TAG = "WorkmateAdapter";
 
     public WorkmateAdapter(List<Pair<User, Restaurant>> workmatesWithRestaurants) {
         this.workmatesWithRestaurants = workmatesWithRestaurants;
@@ -79,7 +78,7 @@ public class WorkmateAdapter extends RecyclerView.Adapter<WorkmateAdapter.Workma
             if (restaurant != null) {
                 nameRestaurant.setText(restaurant.getName());
             } else {
-                nameRestaurant.setText("Aucun restaurant choisi");
+                nameRestaurant.setText(itemView.getContext().getString(R.string.no_restaurant_chosen));
             }
 
             if (workmate.getAvatar() != null) {

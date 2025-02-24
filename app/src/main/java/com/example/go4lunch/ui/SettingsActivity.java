@@ -24,7 +24,7 @@ public class SettingsActivity extends AppCompatActivity {
     // ViewModel to manage the state of notifications
     private SettingsViewModel viewModel;
     // Tag for logs
-    private String TAG = "SA";
+    private final String TAG = "SA";
 
     /**
      * Called when the activity is created.

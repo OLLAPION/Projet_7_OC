@@ -14,7 +14,8 @@
         android:layout_height="40dp"
         android:src="@drawable/ic_list_workmate_avatar"
         android:layout_marginEnd="16dp"
-        android:scaleType="centerCrop" />
+        android:scaleType="centerCrop"
+        android:contentDescription="@string/workmate_avatar_desc" />
 
     <!-- Conteneur vertical pour les textes -->
     <LinearLayout
@@ -27,7 +28,7 @@
             android:id="@+id/workmate_name"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="Workmate Name"
+            android:text="@string/item_workmate_name"
             android:textSize="16sp"
             android:textStyle="bold"
             android:textColor="@android:color/black" />
@@ -37,7 +38,7 @@
             android:id="@+id/restaurant_name"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="Restaurant Name"
+            android:text="@string/item_restaurant_name"
             android:textSize="14sp"
             android:textColor="@android:color/darker_gray" />
     </LinearLayout>

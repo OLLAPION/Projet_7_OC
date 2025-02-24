@@ -13,7 +13,8 @@
         app:layout_constraintHeight_percent="0.4"
         android:scaleType="centerCrop"
         app:layout_constraintTop_toTopOf="parent"
-        android:src="@drawable/ic_restaurant_photo" />
+        android:src="@drawable/ic_restaurant_photo"
+        android:contentDescription="@string/restaurant_photo_desc"/>
 
     <com.google.android.material.floatingactionbutton.FloatingActionButton
         android:id="@+id/fabWorkmateWantToEat"
@@ -26,6 +27,7 @@
         app:layout_constraintTop_toBottomOf="@id/restaurantPhotoImageView"
         app:layout_constraintEnd_toEndOf="parent"
         android:src="@drawable/ic_chosen"
+        android:contentDescription="@string/fab_workmate_desc"
         />
 
     <androidx.constraintlayout.widget.ConstraintLayout
@@ -44,7 +46,7 @@
             android:ellipsize="end"
             android:lines="1"
             android:padding="8dp"
-            android:text="Le Zinc très très long texte juste pour tester"
+            android:text="@string/very_long_text_to_test"
             android:textColor="#FFFFFF"
             android:textSize="18sp"
             app:layout_constraintHorizontal_bias="0"
@@ -62,7 +64,8 @@
             android:src="@drawable/ic_star_off"
             app:layout_constraintEnd_toEndOf="@id/guideline"
             app:layout_constraintStart_toEndOf="@+id/restaurantNameTextView"
-            app:layout_constraintTop_toTopOf="parent" />
+            app:layout_constraintTop_toTopOf="parent"
+            android:contentDescription="@string/restaurant_star_desc"/>
 
         <androidx.constraintlayout.widget.Guideline
             android:id="@+id/guideline"
@@ -76,7 +79,7 @@
             android:layout_width="0dp"
             android:layout_height="wrap_content"
             android:padding="8dp"
-            android:text="French Restaurant"
+            android:text="@string/french_restaurant"
             android:textColor="#FFFFFF"
             android:textSize="18sp"
             app:layout_constraintEnd_toStartOf="@id/restaurantAddressTextView"
@@ -88,7 +91,7 @@
             android:layout_width="0dp"
             android:layout_height="wrap_content"
             android:padding="8dp"
-            android:text=" - 12 rue du Faubourg Poissonnière"
+            android:text="@string/address"
             android:textColor="#FFFFFF"
             android:textSize="18sp"
             app:layout_constraintEnd_toEndOf="parent"
@@ -114,14 +117,15 @@
             app:layout_constraintEnd_toStartOf="@+id/likeButton"
             app:layout_constraintHorizontal_bias="0.5"
             app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toTopOf="parent" />
+            app:layout_constraintTop_toTopOf="parent"
+            android:contentDescription="@string/call_button_desc"/>
 
         <TextView
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_marginTop="8dp"
             android:layout_marginBottom="8dp"
-            android:text="CALL"
+            android:text="@string/call_action"
             android:textColor="#FF0000"
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintEnd_toEndOf="@id/callButton"
@@ -138,14 +142,15 @@
             app:layout_constraintEnd_toStartOf="@+id/restaurantWebsiteButton"
             app:layout_constraintHorizontal_bias="0.5"
             app:layout_constraintStart_toEndOf="@+id/callButton"
-            app:layout_constraintTop_toTopOf="parent" />
+            app:layout_constraintTop_toTopOf="parent"
+            android:contentDescription="@string/like_button_desc"/>
 
         <TextView
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_marginTop="8dp"
             android:layout_marginBottom="8dp"
-            android:text="LIKE"
+            android:text="@string/like_action"
             android:textColor="#FF0000"
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintEnd_toEndOf="@id/likeButton"
@@ -162,14 +167,15 @@
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintHorizontal_bias="0.5"
             app:layout_constraintStart_toEndOf="@+id/likeButton"
-            app:layout_constraintTop_toTopOf="parent" />
+            app:layout_constraintTop_toTopOf="parent"
+            android:contentDescription="@string/website_button_desc"/>
 
         <TextView
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_marginTop="8dp"
             android:layout_marginBottom="8dp"
-            android:text="WEBSITE"
+            android:text="@string/website_action"
             android:textColor="#FF0000"
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintEnd_toEndOf="@id/restaurantWebsiteButton"

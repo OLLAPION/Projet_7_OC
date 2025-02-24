@@ -69,7 +69,7 @@ public class DetailRestaurantActivity extends AppCompatActivity {
     private DetailRestaurantViewModel viewModel;
 
     /** Tag used for logging */
-    private String TAG = "DRA";
+    private final String TAG = "DRA";
 
     /**
      * Called when the activity is created.
@@ -137,7 +137,7 @@ public class DetailRestaurantActivity extends AppCompatActivity {
             Intent intent = new Intent(Intent.ACTION_DIAL, Uri.parse("tel:" + phoneNumber));
             startActivity(intent);
         } else {
-            Toast.makeText(this, "No phone number available", Toast.LENGTH_SHORT).show();
+            Toast.makeText(this, getString(R.string.toast_no_phone), Toast.LENGTH_SHORT).show();
         }
         */
     }
@@ -153,7 +153,7 @@ public class DetailRestaurantActivity extends AppCompatActivity {
             Intent intent = new Intent(Intent.ACTION_VIEW, Uri.parse(websiteUrl));
             startActivity(intent);
         } else {
-            Toast.makeText(this, "No website URL available", Toast.LENGTH_SHORT).show();
+            Toast.makeText(this, getString(R.string.toast_no_website), Toast.LENGTH_SHORT).show();
         }
     }
 
@@ -235,7 +235,7 @@ public class DetailRestaurantActivity extends AppCompatActivity {
         if (currentUser != null) {
             User user = new User();
             user.setId(currentUser.getUid());
-            user.setName(currentUser.getDisplayName() != null ? currentUser.getDisplayName() : "Anonymous");
+            user.setName(currentUser.getDisplayName() != null ? currentUser.getDisplayName() : getString(R.string.anonymous_user));
             user.setAvatar(currentUser.getPhotoUrl() != null ? currentUser.getPhotoUrl().toString() : "");
             return user;
         }
