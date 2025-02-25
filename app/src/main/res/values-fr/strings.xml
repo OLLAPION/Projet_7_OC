@@ -1,0 +1,100 @@
+<resources>
+    <!-- activity_detail_restaurant.xml -->
+    <string name="very_long_text_to_test">Le Zinc très très long texte juste pour tester</string>
+    <string name="french_restaurant">Restaurant français</string>
+    <string name="address">- 12 rue du Faubourg Poissonnière</string>
+
+    <string name="call_action">APPELER</string>
+    <string name="like_action">AIMER</string>
+    <string name="website_action">SITE WEB</string>
+
+    <string name="restaurant_photo_desc">Photo du Restaurant</string>
+    <string name="fab_workmate_desc">Bouton indiquand que le workmate veut manger dans ce restaurant</string>
+    <string name="restaurant_star_desc">Avis du Restaurant</string>
+    <string name="call_button_desc">Appeller restaurant</string>
+    <string name="like_button_desc">Marque le restaurant de "JAIME"</string>
+    <string name="website_button_desc">Site Web du restaurant</string>
+
+    <!-- activity_main.xml = c'est une classe de testes -->
+    <string name="btn_get_restaurants">Chercher tous les Restaurant</string>
+    <string name="btn_get_detail_restaurant">Chercher le Detail dun Restaurant</string>
+    <string name="btn_get_gps_position">Chercher la position GPS</string>
+    <string name="btn_go_core_activity">Aller dans la CoreActivity</string>
+    <string name="latitude_label">Latitude:</string>
+    <string name="longitude_label">Longitude:</string>
+
+    <!-- activity_settings -->
+    <string name="enable_notifications">Activer les notifications</string>
+    <string name="notifications">Notifications</string>
+
+    <!-- drawer_nav_header -->
+    <string name="workmate_name">Nom</string>
+    <string name="workmate_email">Mail</string>
+    <string name="user_avatar_desc">Avatar de l utilisateur</string>
+
+    <!-- fragment_list_restaurant -->
+    <string name="waiting_message">Patientez</string>
+    <string name="loading_spinner_desc">Chargement en cours</string>
+
+    <!-- fragment_map -->
+    <string name="gps_position_button">Position GPS</string>
+
+    <!-- item_restaurant.xml : RestaurantAdapter.java -->
+    <string name="distance_text">Distance : %.2f m</string>
+    <string name="participants_count">Participants : %d</string>
+    <string name="item_restaurant_photo_desc">Photo du restaurant</string>
+
+    <!-- item_workmate.xml -->
+    <string name="item_workmate_name">Nom du collegue</string>
+    <string name="item_restaurant_name">Nom du restaurant</string>
+    <string name="workmate_avatar_desc">Avatar du collègue</string>
+
+    <!-- list_item_user.xml -->
+    <string name="item_list_workmate_avatar_desc">Avatar du collègue dans la liste</string>
+    <string name="item_list_workmate_name_desc">Nom du collègue dans la liste</string>
+
+    <!-- bottom_navigation_menu.xml -->
+    <string name="text_button_map_view">La carte</string>
+    <string name="text_button_list_view">Liste</string>
+    <string name="text_button_workmates">Collègues</string>
+
+    <!-- drawer_menu.xml -->
+    <string name="drawer_your_lunch">Voir le restaurant du déjeuner</string>
+    <string name="drawer_settings">paramètre pour les notifications</string>
+    <string name="drawer_logout">déconnexion</string>
+
+    <!-- MyBroadcastReceiver.java -->
+    <string name="notification_message">Rappelle toi d aller dejeuner à %1$s danc le restaurant : %2$s avec %3$s</string>
+    <string name="notification_no_workmates">toi même</string>
+    <string name="notification_title">Alarme du déjeuner</string>
+
+    <!-- CoreActivity.java -->
+    <string name="user_name_unavailable">Nom indisponible</string>
+    <string name="user_email_unavailable">Email indisponible</string>
+    <string name="no_restaurant_chosen">Vous n avez pas choisi de restaurant pour le moment</string>
+    <string name="notification_channel_id">Go4Lunch</string>
+    <string name="notification_channel_name">Alarme du déjeuner</string>
+
+    <!-- DetailRestaurantActivity.java -->
+    <string name="toast_no_phone">Aucun numéro de téléphone disponible</string>
+    <string name="toast_no_website">Aucun site web disponible</string>
+    <string name="anonymous_user">Anonyme</string>
+
+    <!-- ListRestaurantFragment.java -->
+    <string name="permission_denied">Permission refusé</string>
+    <string name="search_hint">Rechercher un restaurant</string>
+
+    <!-- WorkmateAdapter.java -->
+    <string name="no_restaurant_chosen_adapter">Aucun restaurant choisi</string>
+
+    <string name="app_name">Go4Lunch</string>
+    <string name="like_button_content_description">Bouton Jaime</string>
+
+    <string name="hello_blank_fragment">Bonjour fragment vierge</string>
+
+    <string name="navigation_drawer_open">Ouvrir le tiroir de navigation</string>
+    <string name="navigation_drawer_close">Fermer le tiroir de navigation</string>
+
+    <string name="google_maps_key">${google_maps_api}</string>
+
+</resources>

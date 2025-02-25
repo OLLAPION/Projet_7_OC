@@ -40,22 +40,6 @@ public class MyBroadcastReceiver extends BroadcastReceiver {
      */
     private void sendMessage(Context context, Intent intent, Restaurant restaurant, List<String> userNames){
 
-        /*
-        // Build String
-        StringBuilder sb = new StringBuilder();
-        sb.append("Rembember to go to lunch at ");
-        sb.append(restaurant.getName());
-        sb.append(" restaurant in : ");
-        sb.append(restaurant.getAddress());
-        sb.append(" with ");
-        for (String s : userNames) {
-            sb.append(s);
-            sb.append(", ");
-        }
-        String notificationMessage = sb.toString();
-
-         */
-
         String userList = userNames.isEmpty() ? context.getString(R.string.notification_no_workmates) : TextUtils.join(", ", userNames);
         String notificationMessage = context.getString(R.string.notification_message,
                 restaurant.getName(),

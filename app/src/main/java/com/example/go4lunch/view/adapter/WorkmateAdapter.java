@@ -32,7 +32,6 @@ public class WorkmateAdapter extends RecyclerView.Adapter<WorkmateAdapter.Workma
 
     public void setWorkmatesWithRestaurants(List<Pair<User, Restaurant>> workmatesWithRestaurants) {
         this.workmatesWithRestaurants = workmatesWithRestaurants;
-        //this.workmatesWithRestaurants = workmatesWithRestaurants != null ? workmatesWithRestaurants : new ArrayList<>();
         notifyDataSetChanged();
     }
 

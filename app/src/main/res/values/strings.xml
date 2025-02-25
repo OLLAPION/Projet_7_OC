@@ -1,12 +1,4 @@
 <resources>
-    <string name="app_name">Go4Lunch</string>
-    <string name="like_button_content_description">Like button</string>
-
-    <string name="hello_blank_fragment">Hello blank fragment</string>
-
-    <string name="navigation_drawer_open">Open navigation drawer</string>
-    <string name="navigation_drawer_close">Close navigation drawer</string>
-
     <!-- activity_detail_restaurant.xml -->
     <string name="very_long_text_to_test">The Zinc very long text just to test</string>
     <string name="french_restaurant">French Restaurant</string>
@@ -94,5 +86,16 @@
 
     <!-- WorkmateAdapter.java -->
     <string name="no_restaurant_chosen_adapter">no restaurant chosen</string>
+
+    <string name="app_name">Go4Lunch</string>
+    <string name="like_button_content_description">Like button</string>
+
+    <string name="hello_blank_fragment">Hello blank fragment</string>
+
+    <string name="navigation_drawer_open">Open navigation drawer</string>
+    <string name="navigation_drawer_close">Close navigation drawer</string>
+
+    <string name="google_maps_key">${google_maps_api}</string>
+
 
 </resources>

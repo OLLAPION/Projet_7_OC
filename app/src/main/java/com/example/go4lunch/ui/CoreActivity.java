@@ -58,12 +58,6 @@ public class CoreActivity extends AppCompatActivity implements NavigationView.On
 
     // Alarm and notification constants
     public static final boolean ALARM_FIRED_IMMEDIATELY = false;
-    /*
-    public static final String CHANNEL_ID = "Go4Lunch";
-
-    public static final String CHANNEL_NAME = "LunchAlarm";
-
-     */
 
     public static String CHANNEL_ID;
     public static String CHANNEL_NAME;
