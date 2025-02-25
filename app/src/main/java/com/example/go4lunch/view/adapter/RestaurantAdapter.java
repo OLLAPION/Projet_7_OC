@@ -15,9 +15,9 @@ import androidx.recyclerview.widget.RecyclerView;
 
 import com.bumptech.glide.Glide;
 import com.example.go4lunch.R;
-import com.example.go4lunch.model.Restaurant;
-import com.example.go4lunch.ui.RestaurantItem;
-import com.example.go4lunch.ui.DetailRestaurantActivity;
+import com.example.go4lunch.model.bo.Restaurant;
+import com.example.go4lunch.view.RestaurantItem;
+import com.example.go4lunch.view.DetailRestaurantActivity;
 
 import java.util.ArrayList;
 import java.util.List;

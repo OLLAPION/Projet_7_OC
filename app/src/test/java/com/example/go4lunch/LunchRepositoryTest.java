@@ -7,17 +7,14 @@ import androidx.arch.core.executor.testing.InstantTaskExecutorRule;
 import androidx.lifecycle.LiveData;
 import androidx.lifecycle.MutableLiveData;
 
-import com.example.go4lunch.model.Lunch;
-import com.example.go4lunch.model.Restaurant;
-import com.example.go4lunch.model.User;
-import com.example.go4lunch.repository.LunchRepository;
-import com.google.firebase.firestore.*;
+import com.example.go4lunch.model.bo.Lunch;
+import com.example.go4lunch.model.bo.Restaurant;
+import com.example.go4lunch.model.bo.User;
+import com.example.go4lunch.model.repository.LunchRepository;
 
 import org.junit.Before;
 import org.junit.Rule;
 import org.junit.Test;
-import org.mockito.ArgumentCaptor;
-import org.mockito.Mock;
 import org.mockito.MockitoAnnotations;
 
 import java.util.ArrayList;

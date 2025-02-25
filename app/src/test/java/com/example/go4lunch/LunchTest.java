@@ -3,9 +3,9 @@ package com.example.go4lunch;
 import static org.junit.Assert.*;
 import org.junit.Before;
 import org.junit.Test;
-import com.example.go4lunch.model.Lunch;
-import com.example.go4lunch.model.Restaurant;
-import com.example.go4lunch.model.User;
+import com.example.go4lunch.model.bo.Lunch;
+import com.example.go4lunch.model.bo.Restaurant;
+import com.example.go4lunch.model.bo.User;
 
 public class LunchTest {
 

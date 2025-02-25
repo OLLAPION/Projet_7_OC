@@ -3,14 +3,12 @@ package com.example.go4lunch;
 import static org.mockito.Mockito.*;
 import static org.junit.Assert.*;
 
-import com.example.go4lunch.pojo.RestaurantsAnswer;
-import com.example.go4lunch.pojo.ResultDetails;
-import com.example.go4lunch.services.RetrofitMapsApi;
-import com.example.go4lunch.services.RetrofitService;
-import com.example.go4lunch.pojo.Result;
-import com.google.gson.Gson;
-import com.google.gson.GsonBuilder;
-import okhttp3.OkHttpClient;
+import com.example.go4lunch.model.pojo.RestaurantsAnswer;
+import com.example.go4lunch.model.pojo.ResultDetails;
+import com.example.go4lunch.model.services.RetrofitMapsApi;
+import com.example.go4lunch.model.services.RetrofitService;
+import com.example.go4lunch.model.pojo.Result;
+
 import org.junit.Before;
 import org.junit.Test;
 import org.mockito.*;

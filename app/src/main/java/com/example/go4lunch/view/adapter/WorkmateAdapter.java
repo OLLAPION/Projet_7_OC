@@ -1,6 +1,5 @@
 package com.example.go4lunch.view.adapter;
 
-import android.util.Log;
 import android.util.Pair;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -13,10 +12,9 @@ import androidx.recyclerview.widget.RecyclerView;
 
 import com.bumptech.glide.Glide;
 import com.example.go4lunch.R;
-import com.example.go4lunch.model.Restaurant;
-import com.example.go4lunch.model.User;
+import com.example.go4lunch.model.bo.Restaurant;
+import com.example.go4lunch.model.bo.User;
 
-import java.util.ArrayList;
 import java.util.List;
 
 /**
